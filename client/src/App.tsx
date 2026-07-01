@@ -1,85 +1,74 @@
-import { useEffect, useState } from 'react'
-import './App.css'
+import { useEffect, useState } from 'react';
+import { Routes, Route, Link } from "react-router-dom";
 
-interface Person {
+import AcceptPage from "./pages/accept";
+import SentPage from "./pages/sent";
+
+import './assets/css/Reset.css'
+import './assets/css/App.css'
+
+interface User {
+    id: string;
+
     name: string;
-    age: number;
-    sex: string;
-    car: Car;
+    email: string;
+    passwordHash: string;
+
+    letters: Letter[];
+    sentLetters: Letter[];
+    acceptLetters: Letter[];
 }
 
-interface Car {
-    model: string;
-    plate: string;
-    volume: number;
-    createYear: number;
+interface Letter {
+    id: string;
+    title: string;
+    text: string;
+
+    addresseeId: string;
+    addressee: User;
+
+    recipientId: string;
+    recipient: User;
+    isSent: boolean;
 }
 
 function App() {
-    const [mode, setMode] = useState<1 | 2>(1);//(1) - значение по умолчанию
+    const [user, setUser] = useState<User | null>(null);
 
-    const [person, setPerson] = useState<Person | null>(null);
-    const [people, setPeople] = useState<Person[]>([]);
-
+    //этот код выполняется один раз при запуске, и отвечает за обслуживание
+    //mode динамический, если он меняется, пройдет устловная конструкция
     useEffect(() => {
-        if (mode === 1) {
-            fetch("https://localhost:7094/api/person")
-                .then(r => r.json())
-                .then(data => setPerson(data))
-                .catch(console.error);
-        }
-
-        if (mode === 2) {
-            fetch("https://localhost:7094/api/personList")
-                .then(r => r.json())
-                .then(data => setPeople(data))
-                .catch(console.error);
-        }
-    }, [mode]);
-
-    <button onClick={() => setMode(mode === 1 ? 2 : 1)}>
-        Режим: {mode}
-    </button>
+        fetch("https://localhost:7094/api/User")
+            .then(r => r.json())
+            .then(data => setUser(data))
+            .catch(console.error);
+    }, []);
 
     return (
-        <div>
-            <button onClick={() => setMode(mode === 1 ? 2 : 1)}>
-                Режим: {mode}
-            </button>
-
-            {mode === 1 && person && (
-                <>
-                    <h3>Чувачело</h3>
-                    <p>Имя: {person.name}</p>
-                    <p>Возраст: {person.age}</p>
-                    <p>Пол: {person.sex}</p>
-
-                    <h3>Его тачила</h3>
-                    <p>Модель: {person.car.model}</p>
-                    <p>Номер: {person.car.plate}</p>
-                    <p>Объём: {person.car.volume}</p>
-                    <p>Год: {person.car.createYear}</p>
-                </>
-            )}
-
-            {mode === 2 && people.map((p, i) => (
-                <div key={i}>
-                    <h3>Чувачело {i}</h3>
-                    <p>Имя: {p.name}</p>
-                    <p>Возраст: {p.age}</p>
-                    <p>Пол: {p.sex}</p>
-
-                    <h3>Его тачила</h3>
-                    <p>{p.car.model}</p>
-                    <p>{p.car.plate}</p>
-                    <p>{p.car.volume}</p>
-                    <p>{p.car.createYear}</p>
-
-                    <hr />
+        <div className="parent-container">
+            <div className="main-container">
+                <div className="topbar">
+                    
+                    <p className="website-logo">ТипоПочта</p>
+                    <nav>
+                        <Link to="/sent">Отправленные</Link>
+                        <Link to="/accept">Полученные</Link>
+                    </nav>
+                    <Routes>
+                        <Route path="/sent" element={<SentPage />} />
+                        <Route path="/accept" element={<AcceptPage />} />
+                    </Routes>
                 </div>
-            ))}
+                <div className="letters-block">
+                    {user?.letters?.map((l, i) => (
+                        <div className="letter" key={i}>
+                            <p className="letter-text">{l.text} {i}</p>
+                        </div>
+                    ))}
+                </div>
+            </div>
         </div>
     );
-}
 
+}
 export default App;
