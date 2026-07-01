@@ -16,41 +16,68 @@ interface Car {
 }
 
 function App() {
+    const [mode, setMode] = useState<1 | 2>(1);//(1) - значение по умолчанию
+
     const [person, setPerson] = useState<Person | null>(null);
+    const [people, setPeople] = useState<Person[]>([]);
 
     useEffect(() => {
-        fetch("https://localhost:7094/api/person")
-            .then(async (response) => {
-                console.log("status:", response.status);
+        if (mode === 1) {
+            fetch("https://localhost:7094/api/person")
+                .then(r => r.json())
+                .then(data => setPerson(data))
+                .catch(console.error);
+        }
 
-                const text = await response.text();
-                console.log("raw:", text);
+        if (mode === 2) {
+            fetch("https://localhost:7094/api/personList")
+                .then(r => r.json())
+                .then(data => setPeople(data))
+                .catch(console.error);
+        }
+    }, [mode]);
 
-                return JSON.parse(text);
-            })
-            .then(data => setPerson(data))
-            .catch(error => console.error(error));
-    }, []);
-
-    console.log(person);
+    <button onClick={() => setMode(mode === 1 ? 2 : 1)}>
+        Режим: {mode}
+    </button>
 
     return (
         <div>
-            {person ? (
+            <button onClick={() => setMode(mode === 1 ? 2 : 1)}>
+                Режим: {mode}
+            </button>
+
+            {mode === 1 && person && (
                 <>
+                    <h3>Чувачело</h3>
                     <p>Имя: {person.name}</p>
                     <p>Возраст: {person.age}</p>
                     <p>Пол: {person.sex}</p>
 
-                    <h3>Машина</h3>
+                    <h3>Его тачила</h3>
                     <p>Модель: {person.car.model}</p>
                     <p>Номер: {person.car.plate}</p>
                     <p>Объём: {person.car.volume}</p>
                     <p>Год: {person.car.createYear}</p>
                 </>
-            ) : (
-                <p>Хозяин, сборка не собралась, разбей монитор</p>
             )}
+
+            {mode === 2 && people.map((p, i) => (
+                <div key={i}>
+                    <h3>Чувачело {i}</h3>
+                    <p>Имя: {p.name}</p>
+                    <p>Возраст: {p.age}</p>
+                    <p>Пол: {p.sex}</p>
+
+                    <h3>Его тачила</h3>
+                    <p>{p.car.model}</p>
+                    <p>{p.car.plate}</p>
+                    <p>{p.car.volume}</p>
+                    <p>{p.car.createYear}</p>
+
+                    <hr />
+                </div>
+            ))}
         </div>
     );
 }
