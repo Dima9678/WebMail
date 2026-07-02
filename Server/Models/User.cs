@@ -6,9 +6,9 @@
         public string Name { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public List<Letter> Letters { get; set; }
-        public List<Letter> SentLetters { get; set; }
-        public List<Letter> AcceptLetters { get; set; }
+        public List<Letter> Letters { get; set; } = new List<Letter>();
+        public List<Letter> SentLetters { get; set; } = new List<Letter>();
+        public List<Letter> AcceptLetters { get; set; } = new List<Letter>();
 
         public User() 
         {

@@ -3,34 +3,15 @@ import { Routes, Route, Link } from "react-router-dom";
 
 import AcceptPage from "./pages/accept";
 import SentPage from "./pages/sent";
+import SignInPage from "./pages/signin";
+import SignUpPage from "./pages/signup";
+import HomePage from "./pages/homepage";
 
 import './assets/css/Reset.css'
 import './assets/css/App.css'
 
-interface User {
-    id: string;
-
-    name: string;
-    email: string;
-    passwordHash: string;
-
-    letters: Letter[];
-    sentLetters: Letter[];
-    acceptLetters: Letter[];
-}
-
-interface Letter {
-    id: string;
-    title: string;
-    text: string;
-
-    addresseeId: string;
-    addressee: User;
-
-    recipientId: string;
-    recipient: User;
-    isSent: boolean;
-}
+import type { User } from './interfaces/User';
+import type { Letter } from './interfaces/Letter';
 
 function App() {
     const [user, setUser] = useState<User | null>(null);
@@ -45,29 +26,16 @@ function App() {
     }, []);
 
     return (
-        <div className="parent-container">
-            <div className="main-container">
-                <div className="topbar">
-                    
-                    <p className="website-logo">ТипоПочта</p>
-                    <nav>
-                        <Link to="/sent">Отправленные</Link>
-                        <Link to="/accept">Полученные</Link>
-                    </nav>
-                    <Routes>
-                        <Route path="/sent" element={<SentPage />} />
-                        <Route path="/accept" element={<AcceptPage />} />
-                    </Routes>
-                </div>
-                <div className="letters-block">
-                    {user?.letters?.map((l, i) => (
-                        <div className="letter" key={i}>
-                            <p className="letter-text">{l.text} {i}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
-        </div>
+        <>
+            <Routes>
+                <Route path="/" element={<HomePage user={user} />} />
+                <Route path="/sent" element={<SentPage user={user} />} />
+                <Route path="/accept" element={<AcceptPage user={user} />} />
+                <Route path="/singin" element={<SignInPage />} />
+                <Route path="/singup" element={<SignUpPage />} />
+            </Routes>
+        </>
+
     );
 
 }

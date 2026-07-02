@@ -10,15 +10,28 @@ namespace Server.Controllers
         [HttpGet]
         public User Get()
         {
+            Random rnd = new Random();
             User user = new User();
             //Напиши бд
-            user.Letters = new List<Letter>();
             for (int i = 0; i < 15; i++)
             {
-                user.Letters.Add(new Letter()
+                Letter newLetter = new Letter()
                 {
-                    Text = "Письмо"
-                });
+                    IsSent = rnd.Next(0, 2) == 0 ? true : false
+                };
+
+                if (newLetter.IsSent)
+                {
+                    newLetter.Text = "Исходящее письмо";
+                    user.SentLetters.Add(newLetter);
+                }
+                else
+                {
+                    newLetter.Text = "Входящее письмо";
+                    user.AcceptLetters.Add(newLetter);
+                }
+
+                user.Letters.Add(newLetter);
             }
             Console.WriteLine("Запрос");
             return user;

@@ -4,13 +4,11 @@ import { Routes, Route, Link } from "react-router-dom";
 import type { User } from "../interfaces/User";
 import type { Letter } from "../interfaces/Letter";
 
-import HomePage from "../pages/homepage";
-
 interface HomePageProps {
     user: User | null;
 }
 
-function Accept({ user }: HomePageProps) {
+function homepage({ user }: HomePageProps) {
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -18,14 +16,14 @@ function Accept({ user }: HomePageProps) {
 
                     <p className="website-logo">ТипоПочта</p>
                     <nav>
-                        <Link to="/" className="links">Главная</Link>
+                        <Link to="/sent" className="links">Отправленные </Link>
+                        <Link to="/accept" className="links">Полученные</Link>
                     </nav>
-                    <p className="accept">Полученные</p>
                 </div>
                 <div className="letters-block">
-                    {user?.acceptLetters?.map((l, i) => (
+                    {user?.letters?.map((l, i) => (
                         <div className="letter" key={i}>
-                            <p className="letter-text">{l.text} {l.isSent} {i}</p>
+                            <p className="letter-text">{l.text} {i}</p>
                         </div>
                     ))}
                 </div>
@@ -33,4 +31,5 @@ function Accept({ user }: HomePageProps) {
         </div>
     );
 }
-export default Accept;
+
+export default homepage;
