@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Server.Models;
+using Domain;
+using Persistence;
 
 namespace Server.Controllers
 {
@@ -7,6 +8,7 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
+        private DatabaseContext _db {  get; set; }
         [HttpGet]
         public User Get()
         {
@@ -30,8 +32,10 @@ namespace Server.Controllers
                     newLetter.Text = "Входящее письмо";
                     user.AcceptLetters.Add(newLetter);
                 }
-
-                user.Letters.Add(newLetter);
+            /*
+                _db.Users.Add(user);
+                _db.SaveChanges();
+            */
             }
             Console.WriteLine("Запрос");
             return user;

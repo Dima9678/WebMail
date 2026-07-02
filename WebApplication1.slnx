@@ -3,5 +3,7 @@
     <Build />
     <Deploy />
   </Project>
+  <Project Path="Domain/Domain.csproj" Id="36fc5a73-eb9c-433b-96d4-9560e81e47c4" />
+  <Project Path="Persistence/Persistence.csproj" Id="772a4448-75ad-448c-a023-a138868eb4a5" />
   <Project Path="Server/Server.csproj" />
 </Solution>

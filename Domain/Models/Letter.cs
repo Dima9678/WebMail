@@ -1,4 +1,4 @@
-﻿namespace Server.Models
+﻿namespace Domain
 {
     public class Letter
     {
@@ -14,8 +14,6 @@
         public Letter()
         {
             Id = Guid.NewGuid();
-            AddresseeId = Guid.NewGuid();
-            RecipientId = Guid.NewGuid();
         }
     }
 }
