@@ -16,8 +16,11 @@ function homepage({ user }: HomePageProps) {
 
                     <p className="website-logo">ТипоПочта</p>
                     <nav>
-                        <Link to="/sent" className="links">Отправленные </Link>
+                        <Link to="/sent" className="links">Отправленные</Link>
                         <Link to="/accept" className="links">Полученные</Link>
+                        <Link to="/newletter" className="links">Написать</Link>
+                        <Link to="/signin" className="links">Вход</Link>
+                        <Link to="/singup" className="links">Регистрация</Link>
                     </nav>
                 </div>
                 <div className="letters-block">

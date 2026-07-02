@@ -1,8 +1,9 @@
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Persistence;
 using Microsoft.OpenApi;
+using Persistence;
 
 namespace Server
 {
@@ -11,7 +12,10 @@ namespace Server
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
-
+            builder.Services.AddDbContext<DatabaseContext>(options =>
+            {
+                options.UseNpgsql("Host=localhost;Username=Mail;Password=11111111;Database=WebMail");
+            });
             // Add services to the container.
             builder.Services.AddCors(options =>
             {

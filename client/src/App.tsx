@@ -6,6 +6,7 @@ import SentPage from "./pages/sent";
 import SignInPage from "./pages/signin";
 import SignUpPage from "./pages/signup";
 import HomePage from "./pages/homepage";
+import NewLetter from "./pages/newletter";
 
 import './assets/css/Reset.css'
 import './assets/css/App.css'
@@ -33,6 +34,7 @@ function App() {
                 <Route path="/accept" element={<AcceptPage user={user} />} />
                 <Route path="/singin" element={<SignInPage />} />
                 <Route path="/singup" element={<SignUpPage />} />
+                <Route path="/newletter" element={<NewLetter />} />
             </Routes>
         </>
 

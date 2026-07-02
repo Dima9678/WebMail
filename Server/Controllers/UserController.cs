@@ -37,7 +37,6 @@ namespace Server.Controllers
                 _db.SaveChanges();
             */
             }
-            Console.WriteLine("Запрос");
             return user;
         }
     }

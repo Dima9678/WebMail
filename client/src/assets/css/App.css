@@ -50,3 +50,49 @@
 .accept {
     font-size: 15px;
 }
+
+
+.signup-main-container{
+    width: 100vw;
+    height: 100vh;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    
+}
+.signup-main-box {
+    width: 25%;
+    border: 2px solid #824C30;
+    border-radius: 10px;
+    overflow: hidden;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.login-input-box {
+    width: 90%;
+    height: 35px;
+    border: 2px solid #824C30;
+    border-radius: 7px;
+    margin-bottom: 15px;
+    padding: 10px;
+    color: #824C30;
+    font-size: 16px;
+}
+
+.login-form-name {
+    margin-bottom: 15px;
+    font-size:30px;
+    color: #5C311A;
+}
+
+.login-label {
+    text-align: left;
+    margin-bottom: 10px;
+}
