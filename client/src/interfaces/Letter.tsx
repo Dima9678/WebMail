@@ -5,7 +5,7 @@ export interface Letter {
     id: string;
     title: string;
     text: string;
-
+    sentTime: string;
     addresseeId: string;
     addressee: User;
 

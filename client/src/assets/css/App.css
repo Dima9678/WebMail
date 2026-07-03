@@ -26,8 +26,10 @@
     justify-content: center;
 }
 
-.website-logo{
-    font-size:35px;
+.website-logo {
+    font-weight: bold;
+    color: #4D1B00;
+    font-size: 35px;
 }
 
 .letters-block {
@@ -43,8 +45,11 @@
     padding:5px;
     font-size: 20px;
 }
-.links{
-    font-size:20px;
+.links {
+    font-size: 16px;
+    color: #5C311A;
+    font-weight: bold;
+    margin: 0 5px;
 }
 .sent
 .accept {
