@@ -9,7 +9,7 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
-    const [success, setSuccess] = useState(false);
+    const [resultMessage, setResultMessage] = useState("");
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -29,7 +29,7 @@ function Signup() {
         });
 
         if (response.ok) {
-            setSuccess(true);
+            setResultMessage("Успешно");
             setName("");
             setLogin("");
             setPassword("");
@@ -37,7 +37,8 @@ function Signup() {
             setEmail("");
         }
         else {
-            setSuccess(false);
+            const message = await response.text();
+            setResultMessage(message);
         }
     };
     return (
@@ -72,8 +73,8 @@ function Signup() {
                         value={repeatPassword}
                         onChange={(e) => setRepeatPassword(e.target.value)}
                     />
+                    <p className="error-message">{resultMessage}</p>
                     <button type="submit">Зарегистрироваться</button>
-                    {success && <p>Успешная регистрация</p>}
                 </form>
             </div>
         </div>
