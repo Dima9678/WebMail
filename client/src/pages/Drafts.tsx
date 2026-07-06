@@ -1,7 +1,7 @@
-function Sent() {
+function Drafts() {
   return (
     <p>Hello world!</p>
   );
 }
 
-export default Sent;
+export default Drafts;

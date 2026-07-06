@@ -1,7 +1,7 @@
-function signin() {
+function Spam() {
   return (
     <p>Hello world!</p>
   );
 }
 
-export default signin;
+export default Spam;

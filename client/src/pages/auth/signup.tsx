@@ -1,5 +1,6 @@
 import type React from "react";
-import { useState } from "react";
+import { useEffect, useState } from 'react';
+import { Routes, Route, Link } from "react-router-dom";
 
 
 
@@ -9,7 +10,9 @@ function Signup() {
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
+
     const [resultMessage, setResultMessage] = useState("");
+    const [authResult, setAuthResult] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -17,6 +20,7 @@ function Signup() {
 
         const response = await fetch("https://localhost:7094/api/auth/register", {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -29,7 +33,8 @@ function Signup() {
         });
 
         if (response.ok) {
-            setResultMessage("Успешно");
+            setAuthResult(true);
+            setResultMessage("Успешно, теперь вы можете войти в свой аккаунт");
             setName("");
             setLogin("");
             setPassword("");
@@ -38,6 +43,7 @@ function Signup() {
         }
         else {
             const message = await response.text();
+            setAuthResult(false);
             setResultMessage(message);
         }
     };
@@ -73,7 +79,16 @@ function Signup() {
                         value={repeatPassword}
                         onChange={(e) => setRepeatPassword(e.target.value)}
                     />
-                    <p className="error-message">{resultMessage}</p>
+                    {authResult ? (
+                        <>
+                            <p className="error-message">{resultMessage}</p>
+                            <nav>
+                                <Link to="/signin" className="links">Вход</Link>
+                            </nav>
+                        </>
+                    ) : (
+                        <p className="error-message">{resultMessage}</p>
+                    )}
                     <button type="submit">Зарегистрироваться</button>
                 </form>
             </div>

@@ -7,7 +7,6 @@ export interface User {
     email: string;
     passwordHash: string;
 
-    letters: Letter[];
     sentLetters: Letter[];
     acceptLetters: Letter[];
 }

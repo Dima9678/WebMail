@@ -16,15 +16,31 @@ namespace Server
             {
                 options.UseNpgsql("Host=localhost;Username=Mail;Password=11111111;Database=WebMail");
             });
+
+            builder.Services
+            .AddAuthentication("Cookies")
+            .AddCookie("Cookies", options =>
+            {
+
+                options.LoginPath = "/api/User/login";
+                options.Cookie.Name = "auth_cookie";
+                options.Cookie.HttpOnly = true;
+                options.Cookie.SameSite = SameSiteMode.None;
+                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+            });
+
+            builder.Services.AddAuthorization();
             // Add services to the container.
             builder.Services.AddCors(options =>
             {
                 options.AddPolicy("react", policy =>
                 {
                     policy
+                        .WithOrigins("http://localhost:49981")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
-                        .AllowAnyOrigin();
+                        .AllowCredentials();
+
                 });
             });
 
@@ -43,6 +59,7 @@ namespace Server
 
             app.UseCors("react");
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
