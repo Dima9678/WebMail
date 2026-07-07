@@ -48,48 +48,53 @@ function Signup() {
         }
     };
     return (
-        <div className="signup-main-container">
-            <div className="signup-main-box">
-                <form onSubmit={handleSubmit}>
-                    <p className="login-form-name">Регистрация</p>
+        <div className="sign-main-container">
+            <div className="sign-main-box">
+                <div className="sign-topbar">MyMail</div>
+                <form onSubmit={handleSubmit} className="sign-form">
+                    <p className="sign-page-name">Регистрация</p>
                     <input
-                        className="login-input-box"
+                        className="sign-input-box"
                         placeholder="Имя"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                     />
-                    <label className="login-label">Создайте свой адрес электронной почты. Он должен заканчиваться на @mymail.com</label>
+                    <div className="email-create-main">
+                        <input
+                            className="email-create-input-box"
+                            placeholder="Создайте почту"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
+                        <p className="email-create-template">@mymail.com</p>
+                    </div>
+                    
                     <input
-                        className="login-input-box"
-                        placeholder="Введите адрес"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <input
-                        className="login-input-box"
+                        className="sign-input-box"
                         placeholder="Пароль"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
                     <input
-                        className="login-input-box"
+                        className="sign-input-box"
                         placeholder="Повторите пароль"
                         type="password"
                         value={repeatPassword}
                         onChange={(e) => setRepeatPassword(e.target.value)}
                     />
+                    <p className="have-a-account-message">Уже есть аккаунт? <Link to="/signin" className="links">Вход</Link></p>
                     {authResult ? (
                         <>
-                            <p className="error-message">{resultMessage}</p>
+                            <p className="sign-error-message">{resultMessage}</p>
                             <nav>
                                 <Link to="/signin" className="links">Вход</Link>
                             </nav>
                         </>
                     ) : (
-                        <p className="error-message">{resultMessage}</p>
+                        <p className="sign-error-message">{resultMessage}</p>
                     )}
-                    <button type="submit">Зарегистрироваться</button>
+                    <button type="submit" className="submit-login-button">Создать аккаунт</button>
                 </form>
             </div>
         </div>

@@ -34,25 +34,26 @@ function Signin() {
         }
     };
     return (
-        <div className="signup-main-container">
-            <div className="signup-main-box">
-                <form onSubmit={handleSubmit}>
-                    <p className="login-form-name">Вход в аккаунт</p>
+        <div className="sign-main-container">
+            <div className="sign-main-box">
+                <div className="sign-topbar">MyMail</div>
+                <form onSubmit={handleSubmit} className="sign-form">
+                    <p className="sign-page-name">Вход в аккаунт</p>
                     <input
-                        className="login-input-box"
+                        className="sign-input-box"
                         placeholder="Адрес почты"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                     />
                     <input
-                        className="login-input-box"
+                        className="sign-input-box"
                         placeholder="Пароль"
                         type="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <p className="error-message">{resultMessage}</p>
-                    <button type="submit">Зарегистрироваться</button>
+                    <p className="sign-error-message">{resultMessage}</p>
+                    <button type="submit" className="submit-login-button">Войти</button>
                 </form>
             </div>
         </div>
