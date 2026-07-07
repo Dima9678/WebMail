@@ -119,7 +119,7 @@ namespace Server.Controllers
                 {
                     new Claim(ClaimTypes.NameIdentifier, userInDb.Id.ToString()),
                     new Claim(ClaimTypes.Name, userInDb.Name),
-                    new Claim(ClaimTypes.NameIdentifier, userInDb.Email)
+                    new Claim(ClaimTypes.Email, userInDb.Email)
                 };
 
                 var identity = new ClaimsIdentity(claims, "Cookies");
@@ -141,10 +141,10 @@ namespace Server.Controllers
         [HttpGet("me")]
         public IActionResult Me()
         {
-            return Ok(new
+            return Ok(new AuthUserData()
             {
                 Name = User.Identity?.Name,
-                Email = User.FindFirst(ClaimTypes.NameIdentifier)?.Value,
+                Email = User.FindFirst(ClaimTypes.Email)?.Value,
                 Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
             });
         }
@@ -168,5 +168,12 @@ namespace Server.Controllers
     {
         public string Email { get; set; }
         public string Password { get; set; }
+    }
+
+    public class AuthUserData
+    {
+        public string Name { get; set; }
+        public string Email { get; set; }
+        public string Id { get; set; }
     }
 }

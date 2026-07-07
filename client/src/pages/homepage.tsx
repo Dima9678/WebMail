@@ -3,23 +3,27 @@ import { Routes, Route, Link } from "react-router-dom";
 
 import type { User } from "../interfaces/User";
 import type { Letter } from "../interfaces/Letter";
-import type { LetterDto } from "../interfaces/LetterDto";
 
 
 interface HomePageProps {
     user: User | null;
 }
 
+interface AuthUserData {
+    name: string;
+    email: string;
+    id: string;
+}
+
 function homepage({ user }: HomePageProps) {
-    const [me, setMe] = useState(false);
+    const [me, setMe] = useState<AuthUserData | null>();
     const [isAuth, setIsAuth] = useState(false);
     const [maxOnPage, setMaxOnPage] = useState(20);
     const [LettersPage, setLettersPage] = useState(1);
 
-    const [letters, setLetters] = useState<LetterDto[] | null>([]);
-
     useEffect(() => {
         async function loadMe() {
+
             const response = await fetch("https://localhost:7094/api/auth/me", {
                 credentials: "include"
             });
@@ -36,20 +40,6 @@ function homepage({ user }: HomePageProps) {
         loadMe();
     }, []);
 
-    useEffect(() => {
-        async function loadData() {
-            const response = await fetch("https://localhost:7094/api/test", {
-                credentials: "include"
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setLetters(data);
-            }
-        }
-        loadData();
-    }, []);
-
 
     return (
         <div className="parent-container">
@@ -58,10 +48,18 @@ function homepage({ user }: HomePageProps) {
                     <div className="centered-container">
                         <Link to="/" className="website-logo">MyMail</Link>
                     </div>
-                    <div className="auth-buttons">
-                        <Link to="/signin" className="auth-button">Вход</Link>
-                        <Link to="/signup" className="auth-button">Регистраци</Link>
-                    </div>
+                    {isAuth === true ? (
+                        <div className="auth-buttons">
+
+                            <Link to="/signin" className="auth-button">Вход</Link>
+                            <Link to="/signup" className="auth-button">Регистрация</Link>
+                        </div>
+                    ) : (
+                        <div className="auth-buttons">
+                            <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                        </div>
+                    )}
+
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
@@ -81,24 +79,33 @@ function homepage({ user }: HomePageProps) {
                             <div className="pagination">{maxOnPage * LettersPage - maxOnPage + 1}-{maxOnPage * LettersPage} из {maxOnPage}
                             </div>
                         </div>
+
                         <div className="letters">
-                            {letters.map(letter =>
-                                letter.isReaden ? (
-                                    <div className="letter-read">
-                                        <img src="/images/starred.svg" alt="star"></img>
-                                        <p className="letter-sender-read">{letter.author}</p>
-                                        <p className="letter-theme-read">{letter.title}</p>
-                                        <p className="letter-text-read"> - {letter.text}</p>
-                                        <p className="letter-date-read">{new Date(letter.date).toDateString()}</p>
-                                    </div>
-                                ) : (
-                                    <div className="letter-unread">
-                                        <img src="/images/unstarred.svg" alt="unst"></img>
-                                        <p className="letter-sender-unread">{letter.author}</p>
-                                        <p className="letter-theme-unread">{letter.title}</p>
-                                        <p className="letter-text-unread"> - {letter.text}</p>
-                                        <p className="letter-date-unread">{new Date(letter.date).toDateString()}</p>
-                                    </div>
+                            {user === null ? (
+                                <p>Данные не пришли</p>
+                            ) : (
+                                user.acceptLetters.map((letter, i) =>
+                                    letter.isReaden ? (
+                                        <div key={i} className="letter-read">
+                                            <img src="/images/starred.svg" alt="star" />
+                                            <p className="letter-sender-read">{letter.adresseeName}</p>
+                                            <p className="letter-theme-read">{letter.title}</p>
+                                            <p className="letter-text-read"> - {letter.text}</p>
+                                            <p className="letter-date-read">
+                                                {new Date(letter.date).toDateString()}
+                                            </p>
+                                        </div>
+                                    ) : (
+                                        <div key={i} className="letter-unread">
+                                            <img src="/images/unstarred.svg" alt="unst" />
+                                            <p className="letter-sender-unread">{letter.adresseeName}</p>
+                                            <p className="letter-theme-unread">{letter.title}</p>
+                                            <p className="letter-text-unread"> - {letter.text}</p>
+                                            <p className="letter-date-unread">
+                                                {new Date(letter.date).toDateString()}
+                                            </p>
+                                        </div>
+                                    )
                                 )
                             )}
                         </div>

@@ -17,6 +17,7 @@ function Signup() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
+        setEmail(email + "@mymail.com");
 
         const response = await fetch("https://localhost:7094/api/auth/register", {
             method: "POST",

@@ -20,11 +20,15 @@ import './assets/css/App.css'
 import type { User } from './interfaces/User';
 
 function App() {
+    console.log("APP RENDER");
     const [user, setUser] = useState<User | null>(null);
+
 
     //этот код выполняется один раз при запуске, и отвечает за обслуживание
     //mode динамический, если он меняется, пройдет устловная конструкция
+    console.log("before effect");
     useEffect(() => {
+        console.log("run");
         fetch("https://localhost:7094/api/User", {
             credentials: "include"
         })
@@ -35,6 +39,10 @@ function App() {
             .then(data => setUser(data))
             .catch(console.error);
     }, []);
+
+    if (user == null) {
+        console.log("user on app is null");
+    }
 
     return (
         <>

@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -22,32 +23,23 @@ namespace Server.Controllers
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
             var user = await _db.Users
-    .Include(u => u.SentLetters)
-        .ThenInclude(l => l.Recipient)
-    .Include(u => u.SentLetters)
-        .ThenInclude(l => l.Addressee)
-    .Include(u => u.AcceptLetters)
-        .ThenInclude(l => l.Recipient)
-    .Include(u => u.AcceptLetters)
-        .ThenInclude(l => l.Addressee)
-    .SingleOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+     .Include(u => u.SentLetters)
+         .ThenInclude(l => l.Recipient)
+     .Include(u => u.AcceptLetters)
+         .ThenInclude(l => l.Addressee)
+     .SingleOrDefaultAsync(u => u.Id == Guid.Parse(userId));
 
 
-            return Ok(new UserDto()
+            UserDTO dto = new UserDTO()
             {
-                SentLetters = user.SentLetters.Select(l => new LetterDto
-                {
-                    Id = l.Id,
-                    Title = l.Title,
-                    Text = l.Text,
-                    SendTime = l.SendTime,
-                    RecipientId = l.RecipientId,
-                    AddresseeId = l.AddresseeId
-                }).ToList(),
-                AcceptLetters = user.AcceptLetters.Select(l => new LetterDto
+                Name = user.Name,
+                Email = user.Email,
+                Id = user.Id,
+
+                SentLetters = user.SentLetters.Select(l => new LetterDTO
                 {
                     Id = l.Id,
                     Title = l.Title,
@@ -55,30 +47,25 @@ namespace Server.Controllers
                     SendTime = l.SendTime,
                     RecipientId = l.RecipientId,
                     AddresseeId = l.AddresseeId,
+                    IsReaden = l.IsReaden,
+                    Starred = l.Starred
+                }).ToList(),
+
+                AcceptLetters = user.AcceptLetters.Select(l => new LetterDTO
+                {
+                    Id = l.Id,
+                    Title = l.Title,
+                    Text = l.Text,
+                    SendTime = l.SendTime,
+                    RecipientId = l.RecipientId,
+                    AddresseeId = l.AddresseeId,
+                    AdresseeName = l.Addressee.Name,
+                    IsReaden = l.IsReaden,
+                    Starred = l.Starred
                 }).ToList()
+            };
 
-            });
-        }
-
-
-        public class UserDto
-        {
-            public Guid Id { get; set; }
-            public string Name { get; set; }
-            public string Email { get; set; }
-            public List<LetterDto> SentLetters { get; set; }
-            public List<LetterDto> AcceptLetters { get; set; }
-        }
-        public class LetterDto
-        {
-            public Guid Id { get; set; }
-            public string Title { get; set; }
-            public string Text { get; set; }
-            public string Author { get; set; }
-            public bool IsReaden { get; set; }
-            public DateTime SendTime { get; set; }
-            public Guid RecipientId { get; set; }
-            public Guid AddresseeId { get; set; }
+            return Ok(dto);
         }
     }
 

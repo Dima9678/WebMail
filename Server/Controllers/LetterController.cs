@@ -1,9 +1,9 @@
-﻿using Domain;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Security.Claims;
+using Domain.Models;
 
 namespace Server.Controllers
 {
@@ -37,7 +37,6 @@ namespace Server.Controllers
                 Title = request.Title,
                 Text = request.Text,
                 SendTime = DateTime.UtcNow,
-                IsSent = true,
 
             };
             _db.Letters.Add(letter);

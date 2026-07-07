@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.Extensions.DependencyInjection;
+using Domain.Models;
 using Domain;
 
 namespace Persistence
