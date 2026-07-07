@@ -154,6 +154,11 @@
     overflow-x: hidden; /* скрыть горизонтальную */
 }
 
+.please-sign{
+    margin: 20px;
+    font-size: 30px;
+}
+
 .letter-read {
     padding-left: 10px;
     background-color: white;
@@ -352,4 +357,79 @@
     border-radius: 20px;
     width: 300px;
     height: 60px;
+}
+
+.write-letter{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.write-letter-topbar {
+    height: 90px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 3px solid #24367D;
+    color: #24367D;
+    font-size: 40px;
+}
+
+.write-letter-form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.write-letter-recipient,
+.write-letter-title,
+.write-letter-text {
+    outline: none;
+    border-bottom: 3px solid #24367D;
+    padding: 5px;
+    font-size: 20px;
+}
+
+    .write-letter-recipient::placeholder,
+    .write-letter-title::placeholder,
+    .write-letter-text::placeholder{
+        color: #24367D;
+        opacity: 0.50;
+    }
+
+.write-letter-recipient,
+.write-letter-title{
+    height: 40px;
+}
+
+.write-letter-text{
+    height: 550px;
+}
+
+.submit-button-centrer{
+    display: flex;
+    flex: 1;
+    height: 100vh;
+    justify-content: space-between;
+    padding: 0 20px;
+    align-items: center;
+}
+
+.write-letter-submit-button {
+    width: 200px;
+    height: 50px;
+    font-size: 25px;
+    color: white;
+    background-color: #24367D;
+    border-radius: 10px;
+}
+
+.write-letter-sucsess-message {
+    font-size: 25px;
+    color: #0C910C;
+}
+
+.write-letter-error-message {
+    font-size: 25px;
+    color: #910C0C;
 }

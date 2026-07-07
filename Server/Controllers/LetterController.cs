@@ -21,10 +21,30 @@ namespace Server.Controllers
         [HttpPost("write")]
         public async Task<IActionResult> Write([FromBody] NewLetterRequest request)
         {
+            ValidationCheck check = new ValidationCheck();
+
             var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
             if (userInDb == null)
             {
                 return BadRequest("Такого пользователя не существует");
+            }
+            //вынести валидацию
+            if (request.Recipient == null)
+            {
+                return BadRequest("Не введен получатель");
+            }
+            if (request.Title == null)
+            {
+                return BadRequest("Тема письма не может быть пустой");
+            }
+            if (request.Text == null)
+            {
+                return BadRequest("Текст письма не может быть пустым");
+            }
+
+            if (!check.CorrectEmai(request.Recipient))
+            {
+                return BadRequest("Некорректный формат почты получателя");
             }
 
             string? adresseeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;

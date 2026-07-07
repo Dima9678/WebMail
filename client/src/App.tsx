@@ -6,6 +6,7 @@ import SignUpPage from "./pages/auth/signup";
 import LogoutPage from "./pages/auth/logout";
 
 import HomePage from "./pages/homepage";
+import NewLetter from "./pages/newletter";
 
 import AllMailsPage from "./pages/allmails";
 import SentPage from "./pages/sent";
@@ -51,6 +52,8 @@ function App() {
                 <Route path="/signin" element={<SignInPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
                 <Route path="/logout" element={<LogoutPage />} />
+
+                <Route path="/newletter" element={<NewLetter />} />
 
                 <Route path="/allmails" element={<AllMailsPage />} />
                 <Route path="/sent" element={<SentPage />} />

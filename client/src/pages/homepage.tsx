@@ -48,7 +48,7 @@ function homepage({ user }: HomePageProps) {
                     <div className="centered-container">
                         <Link to="/" className="website-logo">MyMail</Link>
                     </div>
-                    {isAuth === true ? (
+                    {isAuth === false ? (
                         <div className="auth-buttons">
 
                             <Link to="/signin" className="auth-button">Вход</Link>
@@ -82,7 +82,7 @@ function homepage({ user }: HomePageProps) {
 
                         <div className="letters">
                             {user === null ? (
-                                <p>Данные не пришли</p>
+                                <p className="please-sign">Войдите в свой аккаунт или зарегиструйтесь</p>
                             ) : (
                                 user.acceptLetters.map((letter, i) =>
                                     letter.isReaden ? (
