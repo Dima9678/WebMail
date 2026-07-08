@@ -7,6 +7,7 @@
         public UserDTO Recipient { get; set; }
         public Guid RecipientId { get; set; }
         public string AdresseeName { get; set; }
+        public string AdresseeEmail { get; set; }
         public bool IsReaden { get; set; }
         public bool Starred { get; set; }
         public DateTime SendTime { get; set; }

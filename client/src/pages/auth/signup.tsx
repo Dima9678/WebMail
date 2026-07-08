@@ -51,7 +51,7 @@ function Signup() {
     return (
         <div className="sign-main-container">
             <div className="sign-main-box">
-                <div className="sign-topbar">MyMail</div>
+                <Link to="/" className="sign-topbar">MyMail</Link>
                 <form onSubmit={handleSubmit} className="sign-form">
                     <p className="sign-page-name">Регистрация</p>
                     <input

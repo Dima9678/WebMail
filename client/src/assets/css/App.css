@@ -102,7 +102,7 @@
     margin-bottom: 15px;
 }
 
-.leftbar-navigation-button{
+.leftbar-navigation-button {
     padding: 10px;
     width: 55px;
     height: 55px;
@@ -115,7 +115,7 @@
     text-decoration: none;
 }
 
-.leftbar-navigation-button-style{
+.leftbar-navigation-button-style {
     max-height: 35px;
     max-width: 35px;
 }
@@ -136,10 +136,9 @@
     padding: 0 30px;
 }
 
-.reload-button{
+.reload-button {
     width: 40px;
     height: 40px;
-
     display: flex;
     justify-content: center;
     align-items: center;
@@ -184,7 +183,7 @@
     overflow-x: hidden; /* скрыть горизонтальную */
 }
 
-.please-sign{
+.please-sign {
     margin: 20px;
     font-size: 30px;
 }
@@ -198,12 +197,18 @@
     display: flex;
     display: grid;
     align-items: center;
-    grid-template-columns: 30px 200px 330px minmax(0, 1fr) 130px;
+    grid-template-columns: 30px 200px minmax(0, 1fr) 130px;
     font-size: 20px;
 }
 
 .letter-read {
     background-color: white;
+}
+
+.letter-content {
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
 }
 
 .letter-sender-read,
@@ -229,7 +234,6 @@
 
 .letter-unread {
     background-color: #CED8FF;
-    
 }
 
 .letter-sender-unread,
@@ -280,7 +284,6 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    //justify-content: center;
 }
 
 .sign-topbar {
@@ -389,7 +392,7 @@
     height: 60px;
 }
 
-.write-letter{
+.write-letter {
     flex: 1;
     display: flex;
     flex-direction: column;
@@ -422,21 +425,21 @@
 
     .write-letter-recipient::placeholder,
     .write-letter-title::placeholder,
-    .write-letter-text::placeholder{
+    .write-letter-text::placeholder {
         color: #24367D;
         opacity: 0.50;
     }
 
 .write-letter-recipient,
-.write-letter-title{
+.write-letter-title {
     height: 40px;
 }
 
-.write-letter-text{
+.write-letter-text {
     height: 550px;
 }
 
-.submit-button-centrer{
+.submit-button-centrer {
     display: flex;
     flex: 1;
     height: 100vh;
@@ -462,4 +465,61 @@
 .write-letter-error-message {
     font-size: 25px;
     color: #910C0C;
+}
+
+
+.one-letter-topbar {
+    width: 100%;
+    height: 60px;
+    border-bottom: 3px solid #24367D;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.arrow {
+
+}
+
+.one-letter-main-container{
+    padding: 20px;
+}
+
+.one-letter-title {
+    color: #1A1A1A;
+    font-size: 35px;
+    margin-bottom: 30px;
+}
+
+.one-letter-info{
+    display: flex;
+    justify-content: space-between;
+    text-wrap:nowrap;
+    margin-bottom: 40px;
+}
+
+.one-letter-adressee-name {
+    font-size: 20px;
+    color: #262626;
+}
+
+.one-letter-data-block{
+    display: flex;
+    gap: 10px;
+}
+
+.one-letter-adressee-email {
+    color: #262626;
+}
+
+.one-letter-sending-date,
+.one-letter-sending-time {
+    color: #404040;
+}
+
+.one-letter-sending-text {
+    color: #1A1A1A;
+    text-indent: 15px;
+    font-size: 18px;
 }

@@ -4,9 +4,12 @@ import { Routes, Route, Link } from "react-router-dom";
 import SignInPage from "./pages/auth/signin";
 import SignUpPage from "./pages/auth/signup";
 import LogoutPage from "./pages/auth/logout";
+import MyProfilePage from "./pages/myprofile";
 
 import HomePage from "./pages/homepage";
 import NewLetter from "./pages/newletter";
+
+import Letter from "./pages/letter";
 
 import AllMailsPage from "./pages/allmails";
 import SentPage from "./pages/sent";
@@ -44,9 +47,11 @@ function App() {
                 <Route path="/" element={<HomePage user={user}  />} />
                 <Route path="/signin" element={<SignInPage />} />
                 <Route path="/signup" element={<SignUpPage />} />
-                <Route path="/logout" element={<LogoutPage />} />
+                <Route path="/auth/logout" element={<LogoutPage />} />
+                <Route path="/myprofile" element={<MyProfilePage />} />
 
                 <Route path="/newletter" element={<NewLetter />} />
+                <Route path="/letter/:id" element={<Letter />} />
 
                 <Route path="/allmails" element={<AllMailsPage />} />
                 <Route path="/sent" element={<SentPage />} />

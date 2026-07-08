@@ -12,6 +12,7 @@ export interface Letter {
     recipientId: string;
 
     adresseeName: string;
+    adresseeEmail: string;
 
     isReaden: boolean;
     starred: boolean;

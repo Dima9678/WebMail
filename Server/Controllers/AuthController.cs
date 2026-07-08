@@ -67,7 +67,6 @@ namespace Server.Controllers
 
             user.PasswordHash = hashedPassword;
 
-            Console.WriteLine("Юзер создан");
             _db.Users.Add(user);
             _db.SaveChanges();
             return Ok();
@@ -77,11 +76,6 @@ namespace Server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
-            Console.WriteLine("Попытка входа");
-            Console.WriteLine(request.Email);
-            Console.WriteLine(request.Password);
-
-
             request.Email = request.Email.Trim();
             request.Email = request.Email.ToLower();
             request.Password = request.Password.Trim();
@@ -101,9 +95,6 @@ namespace Server.Controllers
             }
 
             string hashedPassword = _hasher.HashPassword(new User(), request.Password);
-
-            Console.WriteLine(hashedPassword);
-            Console.WriteLine(userInDb.PasswordHash);
 
             var result = _hasher.VerifyHashedPassword(
             userInDb,

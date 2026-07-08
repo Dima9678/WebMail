@@ -117,25 +117,29 @@ function homepage({ user }: HomePageProps) {
                             ) : (
                                 acceptLetters.map((letter, i) =>
                                     letter.isReaden ? (
-                                        <div key={i} className="letter-read">
+                                        <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
                                             <img src="/images/starred.svg" alt="star" />
                                             <p className="letter-sender-read">{letter.adresseeName}</p>
-                                            <p className="letter-theme-read">{letter.title}</p>
-                                            <p className="letter-text-read"> - {letter.text}</p>
+                                            <div className="letter-content">
+                                                <p className="letter-theme-read">{letter.title}</p>
+                                                <p className="letter-text-read"> - {letter.text}</p>
+                                            </div>
                                             <p className="letter-date-read">
-                                                {new Date(letter.sendTime).toString()}
+                                                {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
                                             </p>
-                                        </div>
+                                        </Link>
                                     ) : (
-                                        <div key={i} className="letter-unread">
+                                        <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
                                             <img src="/images/unstarred.svg" alt="unst" />
                                             <p className="letter-sender-unread">{letter.adresseeName}</p>
-                                            <p className="letter-theme-unread">{letter.title}</p>
-                                            <p className="letter-text-unread"> - {letter.text}</p>
+                                            <div className="letter-content">
+                                                <p className="letter-theme-unread">{letter.title}</p>
+                                                <p className="letter-text-unread"> - {letter.text}</p>
+                                            </div>
                                             <p className="letter-date-unread">
-                                                    {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
+                                                {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
                                             </p>
-                                        </div>
+                                        </Link>
                                     )
                                 )
                             )}

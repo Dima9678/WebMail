@@ -1,5 +1,6 @@
 import type React from "react";
 import { useState } from "react";
+import { Route, Link } from "react-router-dom";
 
 function Signin() {
     
@@ -36,7 +37,7 @@ function Signin() {
     return (
         <div className="sign-main-container">
             <div className="sign-main-box">
-                <div className="sign-topbar">MyMail</div>
+                <Link to="/" className="sign-topbar">MyMail</Link>
                 <form onSubmit={handleSubmit} className="sign-form">
                     <p className="sign-page-name">Вход в аккаунт</p>
                     <input

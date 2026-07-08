@@ -67,10 +67,25 @@ namespace Server.Controllers
         [HttpGet("{id:guid}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var letter = await _db.Letters.SingleOrDefaultAsync(l => l.Id == id);
+            var letterInDb = await _db.Letters
+                .Include(u => u.Addressee)
+                .SingleOrDefaultAsync(l => l.Id == id);
 
-            if (letter == null)
+            if (letterInDb == null)
                 return NotFound();
+
+            LetterDTO letter= new LetterDTO()
+            {
+                Id = letterInDb.Id,
+                AdresseeName = letterInDb.Addressee.Name,
+                Title = letterInDb.Title,
+                Text = letterInDb.Text,
+                SendTime = letterInDb.SendTime,
+                Starred = letterInDb.Starred,
+            };
+
+            letterInDb.IsReaden = true;
+            await _db.SaveChangesAsync();
 
             return Ok(letter);
         }
@@ -88,9 +103,12 @@ namespace Server.Controllers
                 {
                     Id = l.Id,
                     AdresseeName = l.Addressee.Name,
+                    AdresseeEmail = l.Addressee.Email,
+                    IsReaden = l.IsReaden,
                     Title= l.Title,
                     Text = l.Text,
                     SendTime = l.SendTime,
+                    Starred = l.Starred,
 
                 })
                 .ToListAsync();
