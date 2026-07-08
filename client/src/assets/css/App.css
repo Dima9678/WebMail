@@ -88,7 +88,21 @@
     gap: 12px;
 }
 
-.leftbar-navigation-button {
+.new-letter-button {
+    padding: 10px;
+    width: 55px;
+    height: 55px;
+    border-radius: 10px;
+    background-color: #24367D;
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-bottom: 15px;
+}
+
+.leftbar-navigation-button{
     padding: 10px;
     width: 55px;
     height: 55px;
@@ -160,7 +174,7 @@
 
 .letters {
     width: 100%;
-    height: 750px;
+    height: 600px;
     overflow-y: auto; /* вертикальная прокрутка */
     overflow-x: hidden; /* скрыть горизонтальную */
 }
@@ -170,17 +184,21 @@
     font-size: 30px;
 }
 
+.letter-unread,
 .letter-read {
     padding-left: 10px;
-    background-color: white;
     height: 40px;
     width: 100%;
-    border-bottom: 3px solid #24367D;
+    border-bottom: 2px solid #24367D;
     display: flex;
     display: grid;
     align-items: center;
-    grid-template-columns: 30px 200px 450px 1fr 120px;
+    grid-template-columns: 30px 200px 330px minmax(0, 1fr) 130px;
     font-size: 20px;
+}
+
+.letter-read {
+    background-color: white;
 }
 
 .letter-sender-read,
@@ -194,25 +212,19 @@
 }
 
 .letter-theme-read {
-    text-align: right;
     margin-right: 5px;
 }
 
 .letter-text-read {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     color: #6D79AC;
 }
 
 .letter-unread {
-    padding-left: 10px;
     background-color: #CED8FF;
-    height: 40px;
-    width: 100%;
-    border-bottom: 3px solid #24367D;
-    display: flex;
-    display: grid;
-    align-items: center;
-    grid-template-columns: 30px 200px 450px 1fr 120px;
-    font-size: 20px;
+    
 }
 
 .letter-sender-unread,
@@ -226,11 +238,13 @@
 }
 
 .letter-theme-unread {
-    text-align: right;
     margin-right: 5px;
 }
 
 .letter-text-unread {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
     color: #485899;
 }
 

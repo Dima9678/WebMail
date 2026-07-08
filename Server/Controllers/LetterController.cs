@@ -83,6 +83,7 @@ namespace Server.Controllers
 
             var userLetters = await _db.Letters
                 .Where(l => l.RecipientId == userId)
+                .OrderByDescending(l => l.SendTime)
                 .Select(l => new LetterDTO
                 {
                     Id = l.Id,

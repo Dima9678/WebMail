@@ -16,5 +16,5 @@ export interface Letter {
     isReaden: boolean;
     starred: boolean;
 
-    date: Date;
+    sendTime: Date;
 }

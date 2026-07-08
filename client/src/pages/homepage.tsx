@@ -22,6 +22,15 @@ function homepage({ user }: HomePageProps) {
     const [LettersPage, setLettersPage] = useState(1);
     const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
 
+    const [startIndex, setStartIndex] = useState(maxOnPage * LettersPage - maxOnPage + 1);
+    const [endIndex, setEndIndex] = useState(maxOnPage * LettersPage);
+
+
+
+    for (let entry of acceptLetters) {
+        console.log(entry.sendTime);
+    }
+
     useEffect(() => {
         async function loadMe() {
 
@@ -54,10 +63,12 @@ function homepage({ user }: HomePageProps) {
         const data = await response.json();
 
         setAcceptLetters(data);
+
+        if (data.length < maxOnPage) {
+            setEndIndex(data.length);
+            setMaxOnPage(data.length);
+        }
     }
-
-    console.log();
-
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -80,6 +91,7 @@ function homepage({ user }: HomePageProps) {
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
+                        <Link to="/newletter" className="new-letter-button"><img src="/images/pencil.svg" alt="написать"></img></Link>
                         <Link to="/allmails" className="leftbar-navigation-button"><img src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img src="/images/star.svg" alt="звезда"></img></Link>
@@ -95,7 +107,7 @@ function homepage({ user }: HomePageProps) {
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
                             </div>
-                            <div className="pagination">{maxOnPage * LettersPage - maxOnPage + 1}-{maxOnPage * LettersPage} из {maxOnPage}
+                            <div className="pagination">{startIndex}-{endIndex} из {maxOnPage}
                             </div>
                         </div>
 
@@ -111,7 +123,7 @@ function homepage({ user }: HomePageProps) {
                                             <p className="letter-theme-read">{letter.title}</p>
                                             <p className="letter-text-read"> - {letter.text}</p>
                                             <p className="letter-date-read">
-                                                {new Date(letter.date).toDateString()}
+                                                {new Date(letter.sendTime).toString()}
                                             </p>
                                         </div>
                                     ) : (
@@ -121,7 +133,7 @@ function homepage({ user }: HomePageProps) {
                                             <p className="letter-theme-unread">{letter.title}</p>
                                             <p className="letter-text-unread"> - {letter.text}</p>
                                             <p className="letter-date-unread">
-                                                {new Date(letter.date).toDateString()}
+                                                    {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
                                             </p>
                                         </div>
                                     )
