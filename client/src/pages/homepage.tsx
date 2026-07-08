@@ -91,13 +91,13 @@ function homepage({ user }: HomePageProps) {
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                        <Link to="/newletter" className="new-letter-button"><img src="/images/pencil.svg" alt="написать"></img></Link>
-                        <Link to="/allmails" className="leftbar-navigation-button"><img src="/images/envelope.svg" alt="конверт"></img></Link>
-                        <Link to="/sent" className="leftbar-navigation-button"><img src="/images/plane.svg" alt="самолет"></img></Link>
-                        <Link to="/starred" className="leftbar-navigation-button"><img src="/images/star.svg" alt="звезда"></img></Link>
-                        <Link to="/drafts" className="leftbar-navigation-button"><img src="/images/draft.svg" alt="черновики"></img></Link>
-                        <Link to="/spam" className="leftbar-navigation-button"><img src="/images/spam.svg" alt="спам"></img></Link>
-                        <Link to="/trash" className="leftbar-navigation-button"><img src="/images/trash.svg" alt="корзина"></img></Link>
+                        <Link to="/newletter" className="new-letter-button"><img className="leftbar-navigation-button-style" src="/images/pencil.svg" alt="написать"></img></Link>
+                        <Link to="/allmails" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
+                        <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
+                        <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
+                        <Link to="/drafts" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/draft.svg" alt="черновики"></img></Link>
+                        <Link to="/spam" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/spam.svg" alt="спам"></img></Link>
+                        <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
                     <div className="letters-block">
 

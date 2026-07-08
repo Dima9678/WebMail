@@ -63,9 +63,6 @@ namespace Server.Controllers
                 Name = request.Name,
                 Email = request.Email,
             };
-            //537 689 93 17
-            //dmitry9678@mymail.com
-            //5376899317
             string hashedPassword = _hasher.HashPassword(new User() ,request.Password);
 
             user.PasswordHash = hashedPassword;
