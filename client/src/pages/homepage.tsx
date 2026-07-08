@@ -20,6 +20,7 @@ function homepage({ user }: HomePageProps) {
     const [isAuth, setIsAuth] = useState(false);
     const [maxOnPage, setMaxOnPage] = useState(20);
     const [LettersPage, setLettersPage] = useState(1);
+    const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
 
     useEffect(() => {
         async function loadMe() {
@@ -38,8 +39,24 @@ function homepage({ user }: HomePageProps) {
         }
 
         loadMe();
+        refreshLetters();
     }, []);
 
+    async function refreshLetters() {
+        const response = await fetch('https://localhost:7094/api/letter/getuserletters',
+            {
+                credentials: "include",
+            });
+
+        if (!response.ok)
+            throw new Error(await response.text());
+
+        const data = await response.json();
+
+        setAcceptLetters(data);
+    }
+
+    console.log();
 
     return (
         <div className="parent-container">
@@ -71,7 +88,9 @@ function homepage({ user }: HomePageProps) {
                         <Link to="/trash" className="leftbar-navigation-button"><img src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
                     <div className="letters-block">
+
                         <div className="letters-topbar">
+                            <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
@@ -84,7 +103,7 @@ function homepage({ user }: HomePageProps) {
                             {user === null ? (
                                 <p className="please-sign">Войдите в свой аккаунт или зарегиструйтесь</p>
                             ) : (
-                                user.acceptLetters.map((letter, i) =>
+                                acceptLetters.map((letter, i) =>
                                     letter.isReaden ? (
                                         <div key={i} className="letter-read">
                                             <img src="/images/starred.svg" alt="star" />

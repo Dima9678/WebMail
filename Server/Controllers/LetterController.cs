@@ -74,6 +74,28 @@ namespace Server.Controllers
 
             return Ok(letter);
         }
+
+        [Authorize]
+        [HttpGet("getuserletters")]
+        public async Task<IActionResult> GetUserLetters()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var userLetters = await _db.Letters
+                .Where(l => l.RecipientId == userId)
+                .Select(l => new LetterDTO
+                {
+                    Id = l.Id,
+                    AdresseeName = l.Addressee.Name,
+                    Title= l.Title,
+                    Text = l.Text,
+                    SendTime = l.SendTime,
+
+                })
+                .ToListAsync();
+            return Ok(userLetters);
+        }
+        
     }
 
     public class NewLetterRequest

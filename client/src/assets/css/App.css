@@ -60,9 +60,10 @@
 .auth-button {
     display: flex;
     text-align: center;
+    align-items: center;
     justify-content: center;
     height: 35px;
-    width: 100px;
+    width: 140px;
     background-color: white;
     border-radius: 10px;
     color: #24367D;
@@ -111,13 +112,23 @@
     height: 90px;
     border-bottom: 3px solid #24367D;
     display: flex;
-    justify-content: space-around;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+}
+
+.reload-button{
+    width: 40px;
+    height: 40px;
+
+    display: flex;
+    justify-content: center;
     align-items: center;
 }
 
 .search-string {
     padding: 0 20px 0 20px;
-    width: 700px;
+    width: 600px;
     height: 55px;
     border-radius: 20px;
     background-color: #2B4191;
