@@ -30,16 +30,13 @@ namespace Server.Controllers
             Console.WriteLine(request.Password);
             Console.WriteLine(request.RepeatPassword);
 
+            request.Email += "@mymail.com";
+
             request.Name = request.Name.Trim();
             request.Email = request.Email.Trim();
             request.Email = request.Email.ToLower();
             request.Password = request.Password.Trim();
             request.RepeatPassword = request.Password.Trim();
-
-            if (!_val.CorrectEmai(request.Email))
-            {
-                return BadRequest("Невалидное значение Email");
-            }
 
             if (!_val.EqualInputPasswords(request.Password, request.RepeatPassword))
             {
@@ -49,6 +46,11 @@ namespace Server.Controllers
             if (!_val.PasswordLength(request.Password))
             {
                 return BadRequest("Длина пароля должна быть больше либо равна 8 символам");
+            }
+
+            if (request.Email.Contains("kal"))
+            {
+                return BadRequest("Иди нахер со своим калом");
             }
 
             //поиск юзера
@@ -63,12 +65,25 @@ namespace Server.Controllers
                 Name = request.Name,
                 Email = request.Email,
             };
-            string hashedPassword = _hasher.HashPassword(new User() ,request.Password);
+            string hashedPassword = _hasher.HashPassword(new User(), request.Password);
 
             user.PasswordHash = hashedPassword;
 
+            var claims = new List<Claim>
+                {
+                    new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                    new Claim(ClaimTypes.Name, user.Name),
+                    new Claim(ClaimTypes.Email, user.Email)
+                };
+
+            var identity = new ClaimsIdentity(claims, "Cookies");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync("Cookies", principal);
+
             _db.Users.Add(user);
             _db.SaveChanges();
+
             return Ok();
 
         }
@@ -76,6 +91,10 @@ namespace Server.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] UserLoginRequest request)
         {
+            Console.WriteLine("Попытка регистрации");
+            Console.WriteLine(request.Email);
+            Console.WriteLine(request.Password);
+
             request.Email = request.Email.Trim();
             request.Email = request.Email.ToLower();
             request.Password = request.Password.Trim();
@@ -122,7 +141,7 @@ namespace Server.Controllers
                 return BadRequest("Неверный пароль");
             }
 
-            
+
         }
 
         [Authorize]

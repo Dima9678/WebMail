@@ -1,6 +1,6 @@
 function Starred() {
   return (
-    <p>Hello world!</p>
+      <p>Эта функция пока недоступна</p>
   );
 }
 

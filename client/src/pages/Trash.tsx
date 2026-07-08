@@ -1,6 +1,6 @@
 function Trash() {
   return (
-    <p>Hello world!</p>
+      <p>Эта функция пока недоступна</p>
   );
 }
 

@@ -184,6 +184,7 @@
 }
 
 .please-sign {
+    color: #6D79AC;
     margin: 20px;
     font-size: 30px;
 }
@@ -365,13 +366,19 @@
 .have-a-account-message {
     color: #24367D;
     font-size: 25px;
-    margin-bottom: 70px;
+    margin-bottom: 40px;
 }
 
 .links {
     text-decoration: none;
     font-size: 25px;
     color: #24367D;
+}
+
+.sign-error-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .sign-error-message {

@@ -21,6 +21,11 @@ namespace Server.Controllers
         [HttpPost("write")]
         public async Task<IActionResult> Write([FromBody] NewLetterRequest request)
         {
+            Console.WriteLine("Попытка написания письма");
+            Console.WriteLine(request.Recipient);
+            Console.WriteLine(request.Title);
+            Console.WriteLine(request.Text);
+
             ValidationCheck check = new ValidationCheck();
 
             var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);

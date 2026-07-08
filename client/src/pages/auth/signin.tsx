@@ -7,6 +7,7 @@ function Signin() {
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
     const [resultMessage, setResultMessage] = useState("");
+    const [authResult, setAuthResult] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -28,6 +29,7 @@ function Signin() {
             setResultMessage("Успешно");
             setPassword("");
             setEmail("");
+            setAuthResult(true);
         }
         else {
             const message = await response.text();
@@ -53,7 +55,17 @@ function Signin() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
-                    <p className="sign-error-message">{resultMessage}</p>
+                    {authResult ? (
+                        <div className="sign-error-container">
+                            <p className="sign-error-message">{resultMessage}</p>
+                            <Link to="/" className="links">На главную</Link>
+                        </div>
+
+                    ) : (
+                        <div className="sign-error-container">
+                            <p className="sign-error-message">{resultMessage}</p>
+                        </div>
+                    )}
                     <button type="submit" className="submit-login-button">Войти</button>
                 </form>
             </div>

@@ -17,8 +17,6 @@ function Signup() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        setEmail(email + "@mymail.com");
-
         const response = await fetch("https://localhost:7094/api/auth/register", {
             method: "POST",
             credentials: "include",
@@ -35,7 +33,7 @@ function Signup() {
 
         if (response.ok) {
             setAuthResult(true);
-            setResultMessage("Успешно, теперь вы можете войти в свой аккаунт");
+            setResultMessage("Успешно");
             setName("");
             setLogin("");
             setPassword("");
@@ -69,7 +67,7 @@ function Signup() {
                         />
                         <p className="email-create-template">@mymail.com</p>
                     </div>
-                    
+
                     <input
                         className="sign-input-box"
                         placeholder="Пароль"
@@ -86,14 +84,15 @@ function Signup() {
                     />
                     <p className="have-a-account-message">Уже есть аккаунт? <Link to="/signin" className="links">Вход</Link></p>
                     {authResult ? (
-                        <>
+                        <div className="sign-error-container">
                             <p className="sign-error-message">{resultMessage}</p>
-                            <nav>
-                                <Link to="/signin" className="links">Вход</Link>
-                            </nav>
-                        </>
+                            <Link to="/" className="links">На главную</Link>
+                        </div>
+
                     ) : (
-                        <p className="sign-error-message">{resultMessage}</p>
+                        <div className="sign-error-container">
+                                <p className="sign-error-message">{resultMessage}</p>
+                        </div>
                     )}
                     <button type="submit" className="submit-login-button">Создать аккаунт</button>
                 </form>

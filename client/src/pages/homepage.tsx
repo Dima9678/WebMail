@@ -24,6 +24,7 @@ function homepage({ user }: HomePageProps) {
 
     const [startIndex, setStartIndex] = useState(maxOnPage * LettersPage - maxOnPage + 1);
     const [endIndex, setEndIndex] = useState(maxOnPage * LettersPage);
+    const [messagesTotal, setMessagesTotal] = useState(0);
 
 
 
@@ -67,6 +68,11 @@ function homepage({ user }: HomePageProps) {
         if (data.length < maxOnPage) {
             setEndIndex(data.length);
             setMaxOnPage(data.length);
+            setMessagesTotal(data.length)
+
+            if (data.length === 0) {
+                setStartIndex(0);
+            }
         }
     }
     return (
@@ -115,34 +121,40 @@ function homepage({ user }: HomePageProps) {
                             {user === null ? (
                                 <p className="please-sign">Войдите в свой аккаунт или зарегиструйтесь</p>
                             ) : (
-                                acceptLetters.map((letter, i) =>
-                                    letter.isReaden ? (
-                                        <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
-                                            <img src="/images/starred.svg" alt="star" />
-                                            <p className="letter-sender-read">{letter.adresseeName}</p>
-                                            <div className="letter-content">
-                                                <p className="letter-theme-read">{letter.title}</p>
-                                                <p className="letter-text-read"> - {letter.text}</p>
-                                            </div>
-                                            <p className="letter-date-read">
-                                                {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
-                                            </p>
-                                        </Link>
-                                    ) : (
-                                        <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
-                                            <img src="/images/unstarred.svg" alt="unst" />
-                                            <p className="letter-sender-unread">{letter.adresseeName}</p>
-                                            <div className="letter-content">
-                                                <p className="letter-theme-unread">{letter.title}</p>
-                                                <p className="letter-text-unread"> - {letter.text}</p>
-                                            </div>
-                                            <p className="letter-date-unread">
-                                                {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
-                                            </p>
-                                        </Link>
+
+                                 messagesTotal === 0 ? (
+                                    <p className="please-sign">Входящих сообщений нет</p>
+                                ) : (
+
+
+                                    acceptLetters.map((letter, i) =>
+                                        letter.isReaden ? (
+                                            <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
+                                                <img src="/images/starred.svg" alt="star" />
+                                                <p className="letter-sender-read">{letter.adresseeName}</p>
+                                                <div className="letter-content">
+                                                    <p className="letter-theme-read">{letter.title}</p>
+                                                    <p className="letter-text-read"> - {letter.text}</p>
+                                                </div>
+                                                <p className="letter-date-read">
+                                                    {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
+                                                </p>
+                                            </Link>
+                                        ) : (
+                                            <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
+                                                <img src="/images/unstarred.svg" alt="unst" />
+                                                <p className="letter-sender-unread">{letter.adresseeName}</p>
+                                                <div className="letter-content">
+                                                    <p className="letter-theme-unread">{letter.title}</p>
+                                                    <p className="letter-text-unread"> - {letter.text}</p>
+                                                </div>
+                                                <p className="letter-date-unread">
+                                                    {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
+                                                </p>
+                                            </Link>
+                                        )
                                     )
-                                )
-                            )}
+                                ))}
                         </div>
                     </div>
                 </div>
