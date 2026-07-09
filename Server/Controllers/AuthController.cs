@@ -140,20 +140,6 @@ namespace Server.Controllers
             {
                 return BadRequest("Неверный пароль");
             }
-
-
-        }
-
-        [Authorize]
-        [HttpGet("me")]
-        public IActionResult Me()
-        {
-            return Ok(new AuthUserData()
-            {
-                Name = User.Identity?.Name,
-                Email = User.FindFirst(ClaimTypes.Email)?.Value,
-                Id = User.FindFirst(ClaimTypes.NameIdentifier)?.Value
-            });
         }
 
         [HttpPost("logout")]

@@ -1,23 +1,60 @@
 import { useEffect, useState } from 'react';
-import { Routes, Route, Link, useParams } from "react-router-dom";
-
+import { Link, useParams } from "react-router-dom";
 
 import type { User } from "../interfaces/User";
 import type { Letter } from "../interfaces/Letter";
 
+
 function letter() {
     const [letter, setLetter] = useState<Letter>();
+    const [user, setUser] = useState<User | null>(null);
     const { id } = useParams();
 
     useEffect(() => {
-        fetch(`https://localhost:7094/api/letter/${id}`, {
-            credentials: "include"
-        })
-            .then(async r => {
-                if (!r.ok) throw new Error(await r.text());
-                return r.json();
-            })
-            .then(data => setLetter(data))
+        async function loadData() {
+            try {
+                const userResponse = await fetch("https://localhost:7094/api/User", {
+                    credentials: "include"
+                });
+
+                let currentUser: User | null = null;
+
+                if (userResponse.status !== 401) {
+                    if (!userResponse.ok) {
+                        throw new Error(await userResponse.text());
+                    }
+
+                    currentUser = await userResponse.json();
+                    setUser(currentUser);
+                }
+
+                const letterResponse = await fetch(
+                    `https://localhost:7094/api/letter/${id}`,
+                    {
+                        credentials: "include"
+                    }
+                );
+
+                if (!letterResponse.ok) {
+                    throw new Error(await letterResponse.text());
+                }
+
+                const letterData: Letter = await letterResponse.json();
+
+                // если письмо не от текущего пользователя,
+                // здесь можно отправлять запрос на прочтение
+                if (currentUser?.email !== letterData.adresseeEmail) {
+                    // запрос на установку IsReaden
+                }
+
+                setLetter(letterData);
+
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        loadData();
 
     }, [id]);
 
@@ -36,7 +73,7 @@ function letter() {
                 <div className="main-content">
                     <nav className="sidebar">
                         <Link to="/newletter" className="new-letter-button"><img className="leftbar-navigation-button-style" src="/images/pencil.svg" alt="написать"></img></Link>
-                        <Link to="/allmails" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
+                        <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
                         <Link to="/drafts" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/draft.svg" alt="черновики"></img></Link>

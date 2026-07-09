@@ -4,9 +4,6 @@ import { Link } from "react-router-dom";
 import type { User } from "../interfaces/User";
 
 
-interface HomePageProps {
-    user: User | null;
-}
 
 interface AuthUserData {
     name: string;
@@ -14,29 +11,36 @@ interface AuthUserData {
     id: string;
 }
 
-function newletter({ user }: HomePageProps) {
+function newletter() {
     const [me, setMe] = useState<AuthUserData | null>();
 
     const [recipient, setRecipient] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
+    const [user, setUser] = useState<User | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
 
     useEffect(() => {
-        async function loadMe() {
-
-            const response = await fetch("https://localhost:7094/api/auth/me", {
-                credentials: "include"
-            });
-
-            if (response.ok) {
-                const data = await response.json();
-                setMe(data);
-            }
-        }
-
-        loadMe();
+        fetch("https://localhost:7094/api/User", {
+            credentials: "include"
+        })
+            .then(async r => {
+                if (r.status === 401) {
+                    setUser(null);
+                    return null;
+                }
+                if (!r.ok) {
+                    throw new Error(await r.text());
+                }
+                return r.json();
+            })
+            .then(data => {
+                if (data) {
+                    setUser(data);
+                }
+            })
+            .catch(console.error);
     }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -97,7 +101,7 @@ function newletter({ user }: HomePageProps) {
                         <form onSubmit={handleSubmit} className="write-letter-form">
                             <input
                                 className="write-letter-recipient"
-                                placeholder="Адресат"
+                                placeholder="Получатель"
                                 value={recipient}
                                 onChange={(e) => setRecipient(e.target.value)}
                             >

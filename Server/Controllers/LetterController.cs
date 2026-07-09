@@ -119,7 +119,73 @@ namespace Server.Controllers
                 .ToListAsync();
             return Ok(userLetters);
         }
-        
+        [Authorize]
+        [HttpGet("getuserstarredletters")]
+        public async Task<IActionResult> GetUserStarredLetters()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var userLetters = await _db.Letters
+                .Where(l => l.RecipientId == userId)
+                .Where(l => l.Starred == true)
+                .OrderByDescending(l => l.SendTime)
+                .Select(l => new LetterDTO
+                {
+                    Id = l.Id,
+                    AdresseeName = l.Addressee.Name,
+                    AdresseeEmail = l.Addressee.Email,
+                    IsReaden = l.IsReaden,
+                    Title= l.Title,
+                    Text = l.Text,
+                    SendTime = l.SendTime,
+                    Starred = l.Starred,
+
+                })
+                .ToListAsync();
+            return Ok(userLetters);
+        }
+        [Authorize]
+        [HttpGet("getusersentletters")]
+        public async Task<IActionResult> GetUserSentLetters()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var userLetters = await _db.Letters
+                .Where(l => l.AddresseeId == userId)
+                .OrderByDescending(l => l.SendTime)
+                .Select(l => new LetterDTO
+                {
+                    Id = l.Id,
+                    RecipientName = l.Recipient.Name,
+                    RecipientEmail = l.Recipient.Email,
+                    IsReaden = l.IsReaden,
+                    Title= l.Title,
+                    Text = l.Text,
+                    SendTime = l.SendTime,
+                    Starred = l.Starred,
+
+                })
+                .ToListAsync();
+            return Ok(userLetters);
+        }
+
+        [Authorize]
+        [HttpPut("changestarred/{id:guid}")]
+        public async Task<IActionResult> ChangeStarred(Guid id)
+        {
+            var letter = await _db.Letters
+        .FirstOrDefaultAsync(l => l.Id == id);
+
+            if (letter == null)
+                return NotFound();
+
+            letter.Starred = !letter.Starred;
+
+            await _db.SaveChangesAsync();
+
+            return Ok();
+        }
+
     }
 
     public class NewLetterRequest

@@ -8,6 +8,8 @@
         public Guid RecipientId { get; set; }
         public string AdresseeName { get; set; }
         public string AdresseeEmail { get; set; }
+        public string RecipientName { get; set; }
+        public string RecipientEmail { get; set; }
         public bool IsReaden { get; set; }
         public bool Starred { get; set; }
         public DateTime SendTime { get; set; }
