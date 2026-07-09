@@ -4,20 +4,11 @@ import { Link } from "react-router-dom";
 import type { User } from "../interfaces/User";
 
 
-
-interface AuthUserData {
-    name: string;
-    email: string;
-    id: string;
-}
-
 function newletter() {
-    const [me, setMe] = useState<AuthUserData | null>();
-
     const [recipient, setRecipient] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
-    const [user, setUser] = useState<User | null>(null);
+    const [, setUser] = useState<User | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
 

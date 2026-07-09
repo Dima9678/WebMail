@@ -1,12 +1,12 @@
 import type React from "react";
-import { useEffect, useState  } from 'react';
-import { Routes, Route, Link} from "react-router-dom";
+import { useState } from 'react';
+import { Link } from "react-router-dom";
 
 
 
 function Signup() {
     const [name, setName] = useState("");
-    const [login, setLogin] = useState("");
+    const [, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");

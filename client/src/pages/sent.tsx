@@ -6,7 +6,7 @@ import type { User } from "../interfaces/User";
 
 function Sent() {
     const [maxOnPage, setMaxOnPage] = useState(20);
-    const [LettersPage, setLettersPage] = useState(1);
+    const [LettersPage,] = useState(1);
     const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
 
     const [user, setUser] = useState<User | null>(null);

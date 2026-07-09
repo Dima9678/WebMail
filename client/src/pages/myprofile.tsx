@@ -1,4 +1,4 @@
-import { Routes, Route, Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 function myprofile() {
   return (

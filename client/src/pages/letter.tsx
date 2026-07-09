@@ -7,7 +7,7 @@ import type { Letter } from "../interfaces/Letter";
 
 function letter() {
     const [letter, setLetter] = useState<Letter>();
-    const [user, setUser] = useState<User | null>(null);
+    const [, setUser] = useState<User | null>(null);
     const { id } = useParams();
 
     useEffect(() => {

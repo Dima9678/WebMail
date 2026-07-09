@@ -5,6 +5,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
 using Persistence;
 
+//cloudflared tunnel --url http://localhost:49981
+
 namespace Server
 {
     public class Program
@@ -36,7 +38,6 @@ namespace Server
                 options.AddPolicy("react", policy =>
                 {
                     policy
-                        .WithOrigins("http://localhost:49981")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
