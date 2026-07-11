@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Security.Claims;
 using Domain.Models;
+using Server.Validators;
 
 namespace Server.Controllers
 {

@@ -1,6 +1,6 @@
 ﻿using System.Security.Cryptography.X509Certificates;
 
-namespace Server.Controllers
+namespace Server.Validators
 {
     public class ValidationCheck
     {
@@ -25,22 +25,6 @@ namespace Server.Controllers
                 return false;
             }
             return true;
-
-            /*
-             var hasher = new PasswordHasher<User>();
-            var result = hasher.VerifyHashedPassword(
-            user,
-            user.UserPasswordHash,
-            password);
-
-            if (result == PasswordVerificationResult.Success)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }*/
         }
 
         public bool PasswordLength(string password)
