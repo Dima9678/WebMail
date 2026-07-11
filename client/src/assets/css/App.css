@@ -171,6 +171,11 @@
         opacity: 0.65;
     }
 
+.search-details-button{
+    width: 35px;
+    height: 35px;
+}
+
 .pagination {
     font-size: 30px;
     color: #2B4191;

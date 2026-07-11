@@ -25,6 +25,7 @@ function homepage() {
 
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
+
             credentials: "include"
         })
             .then(async r => {
@@ -140,6 +141,7 @@ function homepage() {
                                 <div className="search-string">
                                     <img src="/images/loop.svg"></img>
                                     <input className="search-input" placeholder="Поиск по почте"></input>
+                                    <button className="search-details-button"><img src="/images/searchDetails.svg"></img></button>  
                                 </div>
                                 {user == null ? (
                                 <div className="pagination"></div>

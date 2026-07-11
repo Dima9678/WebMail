@@ -30,7 +30,8 @@ namespace Server
                 options.Cookie.SameSite = SameSiteMode.None;
                 options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
             });
-
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
             builder.Services.AddAuthorization();
             // Add services to the container.
             builder.Services.AddCors(options =>
@@ -38,6 +39,7 @@ namespace Server
                 options.AddPolicy("react", policy =>
                 {
                     policy
+                    .WithOrigins("http://localhost:49981")
                         .AllowAnyHeader()
                         .AllowAnyMethod()
                         .AllowCredentials();
@@ -54,6 +56,12 @@ namespace Server
             if (app.Environment.IsDevelopment())
             {
                 app.MapOpenApi();
+            }
+
+            if (app.Environment.IsDevelopment())
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
 
             app.UseHttpsRedirection();
