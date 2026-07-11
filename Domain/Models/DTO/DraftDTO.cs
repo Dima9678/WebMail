@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Models
+namespace Domain.Models.DTO
 {
     public class DraftDTO : BaseLetterModel
     {

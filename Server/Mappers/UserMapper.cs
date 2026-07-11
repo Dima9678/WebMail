@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Xml.Linq;
 
 namespace Server.Mappers

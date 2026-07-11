@@ -1,5 +1,6 @@
 ﻿using Domain;
 using Domain.Models;
+using Domain.Models.DTO;
 
 namespace Server.Mappers
 {
@@ -35,6 +36,21 @@ namespace Server.Mappers
                 Starred = l.Starred
             }).ToList();
 
+            return letterDTO;
+        }
+        public static LetterDTO ToDto(Letter letterInDb)
+        {
+            LetterDTO letterDTO = new LetterDTO()
+            {
+                Id = letterInDb.Id,
+                AdresseeName = letterInDb.Addressee.Name,
+                AdresseeEmail = letterInDb.Addressee.Email,
+                IsReaden = letterInDb.IsReaden,
+                Title = letterInDb.Title,
+                Text = letterInDb.Text,
+                SendTime = letterInDb.SendTime,
+                Starred = letterInDb.Starred,
+            };
             return letterDTO;
         }
         public static Letter toEntity(LetterDTO letterDTO)

@@ -19,7 +19,7 @@ namespace Server.Controllers
         {
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            UserDTO user = _userService.Get(userId);
+            UserDTO user = await _userService.Get(userId);
 
             return Ok(user);
         }

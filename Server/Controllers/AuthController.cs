@@ -14,12 +14,13 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     public class AuthController : ControllerBase
     {
-        private ValidationCheck _val = new();
         private PasswordHasher<User> _hasher = new();
+        private readonly ValidationCheck _val;
         private readonly DatabaseContext _db;
-        public AuthController(DatabaseContext db)
+        public AuthController(DatabaseContext db, ValidationCheck vaidation)
         {
             _db = db;
+            _val = vaidation;
         }
         [HttpPost("register")]
 
