@@ -1,11 +1,17 @@
 ﻿using Domain;
 using Domain.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Security.Claims;
 using static Server.Controllers.UserController;
+
+using Server.Mappers;
+using Server.Controllers;
+using Server.Service;
+using Server.Validators;
 
 namespace Server.Controllers
 {
@@ -19,53 +25,19 @@ namespace Server.Controllers
         {
             _db = db;
         }
+
+        private UserMapper _userMapper { get; set; }
+        private UserService _userService { get; set; }
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
             string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
 
-            var user = await _db.Users
-     .Include(u => u.SentLetters)
-         .ThenInclude(l => l.Recipient)
-     .Include(u => u.AcceptLetters)
-         .ThenInclude(l => l.Addressee)
-     .SingleOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+            UserDTO user = _userService.Get(userId);
 
-
-            UserDTO dto = new UserDTO()
-            {
-                Name = user.Name,
-                Email = user.Email,
-                Id = user.Id,
-
-                SentLetters = user.SentLetters.Select(l => new LetterDTO
-                {
-                    Id = l.Id,
-                    Title = l.Title,
-                    Text = l.Text,
-                    SendTime = l.SendTime,
-                    RecipientId = l.RecipientId,
-                    AddresseeId = l.AddresseeId,
-                    IsReaden = l.IsReaden,
-                    Starred = l.Starred
-                }).ToList(),
-
-                AcceptLetters = user.AcceptLetters.Select(l => new LetterDTO
-                {
-                    Id = l.Id,
-                    Title = l.Title,
-                    Text = l.Text,
-                    SendTime = l.SendTime,
-                    RecipientId = l.RecipientId,
-                    AddresseeId = l.AddresseeId,
-                    AdresseeName = l.Addressee.Name,
-                    IsReaden = l.IsReaden,
-                    Starred = l.Starred
-                }).ToList()
-            };
-
-            return Ok(dto);
+            return Ok(user);
         }
     }
 
