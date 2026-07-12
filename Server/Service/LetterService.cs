@@ -17,10 +17,10 @@ namespace Server.Service
             _db = db;
         }
         //Сделай тоже чтобы принимал Guid
-        public async Task Add(NewLetterDTO request, string adresseeId)
+        public async Task Add(NewLetterDTO request, Guid adresseeId)
         {
             var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
-            var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == Guid.Parse(adresseeId));
+            var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
 
             Letter letter = new Letter()
             {
@@ -34,15 +34,11 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-
         public async Task<LetterDTO> GetById(Guid id)
         {
             Letter? letterInDb = await _db.Letters
                 .Include(u => u.Addressee)
                 .SingleOrDefaultAsync(l => l.Id == id);
-
-            if (letterInDb == null)
-                return null;
 
             LetterDTO letterDTO = LetterMapper.ToDto(letterInDb);
 
@@ -51,7 +47,6 @@ namespace Server.Service
 
             return letterDTO;
         }
-
         public async Task<List<LetterDTO>> GetLetters(Guid id)
         {
             List<LetterDTO> userLetters = await _db.Letters
@@ -61,7 +56,6 @@ namespace Server.Service
 
             return userLetters;
         }
-
         public async Task<List<LetterDTO>> GetStarredLetters(Guid id)
         {
             List<LetterDTO> userLetters = await _db.Letters
@@ -90,7 +84,6 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
-
         private async Task ChangeIsReaden(Letter letterInDb)
         {
             letterInDb.IsReaden = true;

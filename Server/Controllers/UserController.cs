@@ -13,11 +13,16 @@ namespace Server.Controllers
     {
         private UserService _userService { get; set; }
 
+        UserController(UserService userService)
+        {
+            _userService = userService;
+        }
+
         [Authorize]
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            string? userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
 
             UserDTO user = await _userService.Get(userId);
 

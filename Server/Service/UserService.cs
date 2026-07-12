@@ -14,14 +14,14 @@ namespace Server.Service
             _db = db;
         }
 
-        public async Task<UserDTO> Get(string userId)
+        public async Task<UserDTO> Get(Guid userId)
         {
             var user = await _db.Users
      .Include(u => u.SentLetters)
          .ThenInclude(l => l.Recipient)
      .Include(u => u.AcceptLetters)
          .ThenInclude(l => l.Addressee)
-     .SingleOrDefaultAsync(u => u.Id == Guid.Parse(userId));
+     .SingleOrDefaultAsync(u => u.Id == userId);
 
             UserDTO dto = UserMapper.ToDto(user);
 

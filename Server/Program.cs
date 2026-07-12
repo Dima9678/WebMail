@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi;
 using Persistence;
+using Server.Factories;
 using Server.Service;
 using Server.Validators;
 
@@ -23,6 +24,8 @@ namespace Server
 
             builder.Services.AddScoped<ValidationCheck>();
             builder.Services.AddScoped<LetterService>();
+            builder.Services.AddScoped<ClaimFactory>();
+            builder.Services.AddScoped<AuthService>();
 
             builder.Services
             .AddAuthentication("Cookies")

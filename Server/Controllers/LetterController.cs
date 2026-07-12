@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Domain.Models.DTO;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Persistence;
-using System.Security.Claims;
-using Domain.Models;
-using Server.Validators;
-using Domain.Models.DTO;
 using Server.Service;
+using Server.Validators;
+using System.Security.Claims;
 
 namespace Server.Controllers
 {
@@ -14,14 +12,13 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     public class LetterController : ControllerBase
     {
-        private readonly DatabaseContext _db;
         private readonly ValidationCheck _validation;
 
         private LetterService _letterService;
         
-        public LetterController(DatabaseContext db, ValidationCheck validation)
+        public LetterController(LetterService letterService, ValidationCheck validation)
         {
-            _db = db;
+            _letterService = letterService;
             _validation = validation;
         }
 
@@ -32,7 +29,7 @@ namespace Server.Controllers
             bool result;
             string message;
             (result, message) = await _validation.ValidateWriteLetterRequest(request);
-            string? adresseeId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             _letterService.Add(request, adresseeId);
             return Ok();
         }

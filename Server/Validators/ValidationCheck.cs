@@ -40,7 +40,6 @@ namespace Server.Validators
             }
             return true;
         }
-
         public async Task<(bool, string)> ValidateWriteLetterRequest(NewLetterDTO request)
         {
             if (string.IsNullOrWhiteSpace(request.Recipient))
@@ -70,6 +69,48 @@ namespace Server.Validators
             }
 
             return (true, string.Empty);
+        }
+        public async Task<(bool, string)> ValidateRegisterRequest(RegisterDTO request)
+        {
+            if (EqualInputPasswords(request.Password, request.RepeatPassword))
+            {
+                return (false, "Пароли не совпадают");
+            }
+
+            if (PasswordLength(request.Password))
+            {
+                return (false, "Длина пароля должна быть больше либо равна 8 символам");
+            }
+
+            if (request.Email.Contains("kal"))
+            {
+                return (false, "Иди нахер со своим калом");
+            }
+
+            //поиск юзера
+            var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
+            if (userInDb != null)
+            {
+                return (false, "Пользователь с таким Email уже существует");
+            }
+
+            return (true, null);
+        }
+        public async Task<(bool, string)> ValidateLoginRequest(LoginDTO request)
+        {
+            if (!CorrectEmai(request.Email))
+            {
+                return (false, "Невалидное значение Email");
+            }
+
+            var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Email);
+
+            if (userInDb == null)
+            {
+                return (false, "Пользователя с таким Email не существует");
+            }
+
+            return (true, null);
         }
     }
 }
