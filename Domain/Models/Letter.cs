@@ -11,7 +11,6 @@ namespace Domain.Models
         public User Recipient { get; set; }
         public Guid RecipientId { get; set; }
         public bool IsReaden { get; set; }
-        public bool Starred { get; set; }
         public DateTime SendTime { get; set; }
     }
 }

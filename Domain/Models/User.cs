@@ -10,6 +10,7 @@ namespace Domain
         public string PasswordHash { get; set; }
         public List<Letter> SentLetters { get; set; } = new List<Letter>();
         public List<Letter> AcceptLetters { get; set; } = new List<Letter>();
+        public List<Draft> Drafts { get; set; } = new List<Draft>();
 
         public User() 
         {

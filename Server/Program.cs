@@ -23,10 +23,12 @@ namespace Server
             });
 
             builder.Services.AddScoped<ValidationCheck>();
-            builder.Services.AddScoped<LetterService>();
             builder.Services.AddScoped<ClaimFactory>();
+
+            builder.Services.AddScoped<LetterService>();
             builder.Services.AddScoped<AuthService>();
             builder.Services.AddScoped<UserService>();
+            builder.Services.AddScoped<DraftService>();
 
             builder.Services
             .AddAuthentication("Cookies")
