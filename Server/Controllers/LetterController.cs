@@ -30,7 +30,7 @@ namespace Server.Controllers
             string message;
             (result, message) = await _validation.ValidateWriteLetterRequest(request);
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            _letterService.Add(request, adresseeId);
+            await _letterService.Add(request, adresseeId);
             return Ok();
         }
 
@@ -47,7 +47,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetUserLetters()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetLetters(userId);
+            List<LetterDTO> userLetters = await _letterService.GetAcceptLetters(userId);
             return Ok(userLetters);
         }
         [Authorize]

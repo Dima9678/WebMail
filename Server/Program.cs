@@ -26,6 +26,7 @@ namespace Server
             builder.Services.AddScoped<LetterService>();
             builder.Services.AddScoped<ClaimFactory>();
             builder.Services.AddScoped<AuthService>();
+            builder.Services.AddScoped<UserService>();
 
             builder.Services
             .AddAuthentication("Cookies")

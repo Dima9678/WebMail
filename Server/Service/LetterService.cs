@@ -11,7 +11,7 @@ namespace Server.Service
 {
     public class LetterService
     {
-        private DatabaseContext _db { get; set; }
+        private readonly DatabaseContext _db;
         public LetterService(DatabaseContext db)
         {
             _db = db;
@@ -47,9 +47,10 @@ namespace Server.Service
 
             return letterDTO;
         }
-        public async Task<List<LetterDTO>> GetLetters(Guid id)
+        public async Task<List<LetterDTO>> GetAcceptLetters(Guid id)
         {
             List<LetterDTO> userLetters = await _db.Letters
+                .Include (l => l.Addressee)
                 .Where(l => l.RecipientId == id)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();

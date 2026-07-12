@@ -11,9 +11,9 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private UserService _userService { get; set; }
+        private UserService _userService;
 
-        UserController(UserService userService)
+        public UserController(UserService userService)
         {
             _userService = userService;
         }
