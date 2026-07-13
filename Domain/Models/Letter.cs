@@ -10,7 +10,12 @@ namespace Domain.Models
         public Guid AddresseeId { get; set; }
         public User Recipient { get; set; }
         public Guid RecipientId { get; set; }
-        public bool IsReaden { get; set; }
         public DateTime SendTime { get; set; }
+        public List<LetterState> LetterStates { get; set; }
+
+        public Letter()
+        {
+            Id = Guid.NewGuid();
+        }
     }
 }

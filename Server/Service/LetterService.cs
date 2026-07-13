@@ -30,64 +30,87 @@ namespace Server.Service
                 Text = request.Text,
                 SendTime = DateTime.UtcNow,
 
+                LetterStates = new List<LetterState>()
+                {
+                    new LetterState()
+                    {
+                        UserId = adressee.Id,
+                    },
+                    new LetterState()
+                    {
+                        UserId = userInDb.Id,
+                    },
+                }
             };
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-        public async Task<LetterDTO> GetById(Guid id)
+        public async Task<LetterDTO> GetById(Guid letterId, Guid userId)
         {
             Letter? letterInDb = await _db.Letters
+                .Where(u  => u.Id == letterId)
+                .Include(u => u.LetterStates)
                 .Include(u => u.Addressee)
-                .SingleOrDefaultAsync(l => l.Id == id);
+                .SingleOrDefaultAsync();
 
             LetterDTO letterDTO = LetterMapper.ToDto(letterInDb);
 
-            ChangeIsReaden(letterInDb);
+            await ChangeIsReaden(userId, letterInDb);
             
 
             return letterDTO;
         }
-        public async Task<List<LetterDTO>> GetAcceptLetters(Guid id)
+        public async Task<List<LetterDTO>> GetAcceptLetters(Guid userId)
         {
             List<LetterDTO> userLetters = await _db.Letters
                 .Include (l => l.Addressee)
-                .Where(l => l.RecipientId == id)
+                .Where(l => l.RecipientId == userId)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 
             return userLetters;
         }
-        public async Task<List<LetterDTO>> GetStarredLetters(Guid id)
+        public async Task<List<LetterDTO>> GetStarredLetters(Guid userId)
         {
             List<LetterDTO> userLetters = await _db.Letters
-                .Where(l => l.RecipientId == id)
-                .Where(l => l.Starred == true)
+                .Where(l => l.RecipientId == userId)
+                .Where(l => l.LetterStates.Any(s => s.IsFavorite))
                 .OrderByDescending(l => l.SendTime)
-                .Select(l => LetterMapper.ToDto(l)).ToListAsync();
+                .Select(l => LetterMapper.ToDto(l))
+                .ToListAsync();
 
             return userLetters;
         }
-        public async Task<List<LetterDTO>> GetSentLetters(Guid id)
+        public async Task<List<LetterDTO>> GetSentLetters(Guid userId)
         {
             List<LetterDTO> userLetters = await _db.Letters
-                .Where(l => l.AddresseeId == id)
+                .Where(l => l.AddresseeId == userId)
+                .Include(l => l.Addressee)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 
             return userLetters;
         }
-        public async Task ChangeStarred(Guid id)
+        public async Task ChangeStarred(Guid letterId, Guid userId)
         {
-            var letter = await _db.Letters
-        .FirstOrDefaultAsync(l => l.Id == id);
+            Letter? letterInDb = await _db.Letters
+                .Include(u => u.Addressee)
+                .SingleOrDefaultAsync(l => l.Id == letterId);
 
-            letter.Starred = !letter.Starred;
+            var state = letterInDb.LetterStates
+        .Single(x => x.UserId == userId);
+
+            state.IsFavorite = true;
 
             await _db.SaveChangesAsync();
         }
-        private async Task ChangeIsReaden(Letter letterInDb)
+        private async Task ChangeIsReaden(Guid userId, Letter letterInDb)
         {
-            letterInDb.IsReaden = true;
+            var state = letterInDb.LetterStates
+        .FirstOrDefault(x => x.UserId == userId);
+
+            state.IsRead = true;
+
             await _db.SaveChangesAsync();
         }
     }

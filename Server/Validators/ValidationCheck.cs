@@ -72,12 +72,12 @@ namespace Server.Validators
         }
         public async Task<(bool, string)> ValidateRegisterRequest(RegisterDTO request)
         {
-            if (EqualInputPasswords(request.Password, request.RepeatPassword))
+            if (!EqualInputPasswords(request.Password, request.RepeatPassword))
             {
                 return (false, "Пароли не совпадают");
             }
 
-            if (PasswordLength(request.Password))
+            if (!PasswordLength(request.Password))
             {
                 return (false, "Длина пароля должна быть больше либо равна 8 символам");
             }

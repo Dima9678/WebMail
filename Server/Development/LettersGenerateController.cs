@@ -25,7 +25,8 @@ namespace Server.Development
                     Title = $"Письмо {i}",
                     Text = $"Здравствуйте Дмитрий, это тестовое письмо под номером {i}",
                     AddresseeId = new Guid("8cf8a5f5-e42b-4a73-b904-2aaf4afa1996"),
-                    Starred = false,
+                    
+
                 };
                 _db.Letters.Add(letter);
                 

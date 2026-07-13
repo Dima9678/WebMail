@@ -16,8 +16,6 @@ namespace Server.Mappers
                 SendTime = l.SendTime,
                 RecipientId = l.RecipientId,
                 AddresseeId = l.AddresseeId,
-                IsReaden = l.IsReaden,
-                Starred = l.Starred
             }).ToList();
 
             return letterDTO;
@@ -32,8 +30,6 @@ namespace Server.Mappers
                 SendTime = l.SendTime,
                 RecipientId = l.RecipientId,
                 AddresseeId = l.AddresseeId,
-                IsReaden = l.IsReaden,
-                Starred = l.Starred
             }).ToList();
 
             return letterDTO;
@@ -45,17 +41,11 @@ namespace Server.Mappers
                 Id = letterInDb.Id,
                 AdresseeName = letterInDb.Addressee.Name,
                 AdresseeEmail = letterInDb.Addressee.Email,
-                IsReaden = letterInDb.IsReaden,
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,
-                Starred = letterInDb.Starred,
             };
             return letterDTO;
-        }
-        public static Letter toEntity(LetterDTO letterDTO)
-        {
-            return new Letter();
         }
     }
 }

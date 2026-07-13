@@ -34,10 +34,11 @@ namespace Server.Controllers
             return Ok();
         }
 
-        [HttpGet("{id:guid}")]
-        public async Task<IActionResult> GetById(Guid id)
+        [HttpGet("{letterId:guid}")]
+        public async Task<IActionResult> GetById(Guid letterId)
         {
-           LetterDTO letterDTO = await _letterService.GetById(id);
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            LetterDTO letterDTO = await _letterService.GetById(letterId, userId);
 
             return Ok(letterDTO);
         }
@@ -68,10 +69,11 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut("changestarred/{id:guid}")]
-        public async Task<IActionResult> ChangeStarred(Guid id)
+        [HttpPut("changestarred/{letterid:guid}")]
+        public async Task<IActionResult> ChangeStarred(Guid letterid)
         {
-            _letterService.ChangeStarred(id);
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _letterService.ChangeStarred(letterid, userId);
             return Ok();
         }
 

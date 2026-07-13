@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain;
-using Domain.Models;
 
 namespace Persistence.Configurations
 {
@@ -20,7 +19,6 @@ namespace Persistence.Configurations
                 //+ у него есть id
                 .HasForeignKey(x => x.AddresseeId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             builder
                 //У каждого юзера есть отправленные письма
                 .HasMany(x => x.SentLetters)
@@ -29,7 +27,6 @@ namespace Persistence.Configurations
                 //+ у него есть id
                 .HasForeignKey(x => x.RecipientId)
                 .OnDelete(DeleteBehavior.Restrict);
-
             builder
                 //У каждого юзера есть много черновиков
                 .HasMany(x => x.Drafts)

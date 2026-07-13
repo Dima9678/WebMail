@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260713140408_AddTwoListLettersToUser")]
+    partial class AddTwoListLettersToUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -145,15 +148,15 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Models.Letter", b =>
                 {
                     b.HasOne("Domain.User", "Addressee")
-                        .WithMany("AcceptLetters")
+                        .WithMany("Letters")
                         .HasForeignKey("AddresseeId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "Recipient")
-                        .WithMany("SentLetters")
+                        .WithMany()
                         .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Addressee");
@@ -187,13 +190,11 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.User", b =>
                 {
-                    b.Navigation("AcceptLetters");
-
                     b.Navigation("Drafts");
 
                     b.Navigation("LetterStates");
 
-                    b.Navigation("SentLetters");
+                    b.Navigation("Letters");
                 });
 #pragma warning restore 612, 618
         }
