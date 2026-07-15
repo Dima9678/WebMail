@@ -18,11 +18,6 @@ function homepage() {
     const [messagesTotal, setMessagesTotal] = useState(0);
 
 
-
-    for (let entry of acceptLetters) {
-        console.log(entry.sendTime);
-    }
-
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
 
@@ -91,19 +86,19 @@ function homepage() {
                 }
 
                 setAcceptLetters(prev =>
-    prev.map((letter, index) =>
-        index === i
-            ? {
-                ...letter,
-                letterStates: letter.letterStates.map(state =>
-                    state.userId === user.id
-                        ? { ...state, starred: !state.starred }
-                        : state
-                )
-            }
-            : letter
-    )
-);
+                    prev.map((letter, index) =>
+                        index === i
+                            ? {
+                                ...letter,
+                                letterStates: letter.letterStates.map(state =>
+                                    state.userId === user?.id
+                                        ? { ...state, starred: !state.starred }
+                                        : state
+                                )
+                            }
+                            : letter
+                    )
+                );
             })
             .catch(console.error);
     }

@@ -72,8 +72,10 @@ namespace Server.Service
         public async Task<List<LetterDTO>> GetStarredLetters(Guid userId)
         {
             List<LetterDTO> userLetters = await _db.Letters
-                .Where(l => l.RecipientId == userId)
+                .Where(l => l.RecipientId == userId || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.Starred))
+                .Include(l => l.LetterStates)
+                .Include(l => l.Addressee)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l))
                 .ToListAsync();
@@ -85,6 +87,7 @@ namespace Server.Service
             List<LetterDTO> userLetters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
                 .Include(l => l.Addressee)
+                .Include(l => l.LetterStates)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 

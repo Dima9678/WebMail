@@ -6,7 +6,7 @@ import type { User } from "../interfaces/User";
 
 function Starred() {
     const [maxOnPage, setMaxOnPage] = useState(20);
-    const [LettersPage, ] = useState(1);
+    const [LettersPage,] = useState(1);
     const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
 
     const [user, setUser] = useState<User | null>(null);
@@ -14,12 +14,6 @@ function Starred() {
     const [startIndex, setStartIndex] = useState(maxOnPage * LettersPage - maxOnPage + 1);
     const [endIndex, setEndIndex] = useState(maxOnPage * LettersPage);
     const [messagesTotal, setMessagesTotal] = useState(0);
-
-
-
-    for (let entry of acceptLetters) {
-        console.log(entry.sendTime);
-    }
 
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
@@ -77,6 +71,7 @@ function Starred() {
             }
         }
     }
+
     function changeStarred(i: number) {
         fetch(`https://localhost:7094/api/letter/changestarred/${acceptLetters[i].id}`, {
             credentials: "include",
@@ -87,18 +82,85 @@ function Starred() {
                     throw new Error(await r.text());
                 }
 
-                setAcceptLetters(prev => {
-                    const copy = [...prev];
-
-                    copy[i] = {
-                        ...copy[i],
-                        starred: !copy[i].starred
-                    };
-
-                    return copy;
-                });
+                setAcceptLetters(prev =>
+                    prev.map((letter, index) =>
+                        index === i
+                            ? {
+                                ...letter,
+                                letterStates: letter.letterStates.map(state =>
+                                    state.userId === user?.id
+                                        ? { ...state, starred: !state.starred }
+                                        : state
+                                )
+                            }
+                            : letter
+                    )
+                );
             })
             .catch(console.error);
+    }
+
+    function ReadStatusLetter({ letter, i, user }) {
+        const state = letter.letterStates.find(s => s.userId === user.id);
+
+        return (
+            state?.isRead ? (
+                <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
+                    <StarredStatusLetter
+                        state={state}
+                        i={i}
+                        changeStarred={changeStarred}
+                    />
+                    <p className="letter-sender-read">{letter.adresseeName}</p>
+                    <div className="letter-content">
+                        <p className="letter-theme-read">{letter.title}</p>
+                        <p className="letter-text-read"> - {letter.text}</p>
+                    </div>
+                    <p className="letter-date-read">
+                        {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
+                    </p>
+                </Link>
+            ) : (
+                <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
+                    <StarredStatusLetter
+                        state={state}
+                        i={i}
+                        changeStarred={changeStarred}
+                    />
+                    <p className="letter-sender-unread">{letter.adresseeName}</p>
+                    <div className="letter-content">
+                        <p className="letter-theme-unread">{letter.title}</p>
+                        <p className="letter-text-unread"> - {letter.text}</p>
+                    </div>
+                    <p className="letter-date-unread">
+                        {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
+                    </p>
+                </Link>
+            )
+        );
+    }
+
+    function StarredStatusLetter({ state, i, changeStarred }) {
+        return (
+            <>
+                {
+                    
+                    state?.starred ? (
+                        <button onClick={(e) => {
+                            e.preventDefault();
+                            changeStarred(i);
+                        }}>
+                            <img src="/images/starred.svg" alt="star" /></button>
+                    ) : (
+                        <button onClick={(e) => {
+                            e.preventDefault();
+                            changeStarred(i);
+                        }}>
+                            <img src="/images/unstarred.svg" alt="star" /></button>
+                    )
+                }
+            </>
+        );
     }
 
     return (
@@ -155,53 +217,14 @@ function Starred() {
                                     <p className="please-sign">Входящих сообщений нет</p>
                                 ) : (
 
-
-                                    acceptLetters.map((letter, i) =>
-                                        letter.isReaden ? (
-                                            <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
-                                                {letter.starred ? (
-                                                    <button onClick={(e) => {
-                                                        e.preventDefault();
-                                                        changeStarred(i);
-                                                    }}><img src="/images/starred.svg" alt="star" /></button>
-                                                ) : (
-                                                    <button onClick={(e) => {
-                                                        e.preventDefault();
-                                                        changeStarred(i);
-                                                    }}><img src="/images/unstarred.svg" alt="star" /></button>
-                                                )}
-                                                <p className="letter-sender-read">{letter.adresseeName}</p>
-                                                <div className="letter-content">
-                                                    <p className="letter-theme-read">{letter.title}</p>
-                                                    <p className="letter-text-read"> - {letter.text}</p>
-                                                </div>
-                                                <p className="letter-date-read">
-                                                    {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
-                                                </p>
-                                            </Link>
-                                        ) : (
-                                            <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
-                                                {letter.starred ? (
-                                                    <button onClick={(e) => {
-                                                        e.preventDefault();
-                                                        changeStarred(i);
-                                                    }}><img src="/images/starred.svg" alt="star" /></button>
-                                                ) : (
-                                                    <button onClick={(e) => {
-                                                        e.preventDefault();
-                                                        changeStarred(i);
-                                                    }}><img src="/images/unstarred.svg" alt="star" /></button>
-                                                )}
-                                                <p className="letter-sender-unread">{letter.adresseeName}</p>
-                                                <div className="letter-content">
-                                                    <p className="letter-theme-unread">{letter.title}</p>
-                                                    <p className="letter-text-unread"> - {letter.text}</p>
-                                                </div>
-                                                <p className="letter-date-unread">
-                                                    {new Date(letter.sendTime).toLocaleDateString("ru-RU")}
-                                                </p>
-                                            </Link>
-                                        )
+                                    acceptLetters.map((letter, i) => (
+                                        <ReadStatusLetter
+                                            key={letter.id}
+                                            letter={letter}
+                                            user={user}
+                                            i={i}
+                                        />
+                                    )
                                     )
                                 ))}
                         </div>
