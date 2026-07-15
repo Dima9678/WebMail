@@ -20,7 +20,6 @@ namespace Domain.Models
             Id = Guid.NewGuid();
             IsDeleted = false;
             Starred = false;
-            IsRead = false;
         }
 
     }

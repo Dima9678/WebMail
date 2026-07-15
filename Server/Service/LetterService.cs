@@ -17,13 +17,13 @@ namespace Server.Service
         //Сделай тоже чтобы принимал Guid
         public async Task Add(NewLetterDTO request, Guid adresseeId)
         {
-            var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
+            var recipient = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
             var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
 
             Letter letter = new Letter()
             {
                 AddresseeId = adressee.Id,
-                RecipientId = userInDb.Id,
+                RecipientId = recipient.Id,
                 Title = request.Title,
                 Text = request.Text,
                 SendTime = DateTime.UtcNow,
@@ -32,11 +32,13 @@ namespace Server.Service
                 {
                     new LetterState()
                     {
+                        IsRead = true,
                         UserId = adressee.Id,
                     },
                     new LetterState()
                     {
-                        UserId = userInDb.Id,
+                        IsRead = false,
+                        UserId = recipient.Id,
                     },
                 }
             };
