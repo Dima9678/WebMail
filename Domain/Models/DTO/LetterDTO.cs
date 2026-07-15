@@ -10,8 +10,7 @@
         public string AdresseeEmail { get; set; }
         public string RecipientName { get; set; }
         public string RecipientEmail { get; set; }
-        public bool IsReaden { get; set; }
-        public bool Starred { get; set; }
         public DateTime SendTime { get; set; }
+        public List<LetterStateDTO> LetterStates { get; set; }
     }
 }

@@ -431,6 +431,7 @@
 .write-letter-recipient,
 .write-letter-title,
 .write-letter-text {
+    color: #1C1C1C;
     outline: none;
     border-bottom: 3px solid #24367D;
     padding: 5px;

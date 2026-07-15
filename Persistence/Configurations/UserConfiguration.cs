@@ -1,6 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Domain;
+/*
+dotnet ef migrations add Test --project Persistence --startup-project Server
+dotnet ef database update --project Persistence --startup-project Server
+ */
 
 namespace Persistence.Configurations
 {
@@ -12,21 +16,14 @@ namespace Persistence.Configurations
             builder.HasKey(x => x.Id);
 
             builder
-                //У каждого юзера есть принятые письма
-                .HasMany(x => x.AcceptLetters)
-                //В свою очередь у которых есть адресат
-                .WithOne(x => x.Addressee)
-                //+ у него есть id
-                .HasForeignKey(x => x.AddresseeId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasMany(u => u.SentLetters)
+                .WithOne(l => l.Addressee)
+                .HasForeignKey(l => l.AddresseeId);
+
             builder
-                //У каждого юзера есть отправленные письма
-                .HasMany(x => x.SentLetters)
-                //В свою очередь у которых есть получатель
-                .WithOne(x => x.Recipient)
-                //+ у него есть id
-                .HasForeignKey(x => x.RecipientId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasMany(u => u.AcceptLetters)
+                .WithOne(l => l.Recipient)
+                .HasForeignKey(l => l.RecipientId);
             builder
                 //У каждого юзера есть много черновиков
                 .HasMany(x => x.Drafts)

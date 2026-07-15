@@ -87,7 +87,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsFavorite")
+                    b.Property<bool>("Starred")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRead")
@@ -145,15 +145,15 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Models.Letter", b =>
                 {
                     b.HasOne("Domain.User", "Addressee")
-                        .WithMany("AcceptLetters")
+                        .WithMany("SentLetters")
                         .HasForeignKey("AddresseeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "Recipient")
-                        .WithMany("SentLetters")
+                        .WithMany("AcceptLetters")
                         .HasForeignKey("RecipientId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Addressee");

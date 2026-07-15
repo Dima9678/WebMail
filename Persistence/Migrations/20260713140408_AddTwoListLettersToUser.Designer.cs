@@ -90,7 +90,7 @@ namespace Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<bool>("IsFavorite")
+                    b.Property<bool>("Starred")
                         .HasColumnType("boolean");
 
                     b.Property<bool>("IsRead")

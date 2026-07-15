@@ -1,11 +1,9 @@
-﻿using Domain;
-using Domain.Models;
+﻿using Domain.Models;
 using Domain.Models.DTO;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Server.Controllers;
 using Server.Mappers;
-using System.Security.Claims;
 
 namespace Server.Service
 {
@@ -63,8 +61,9 @@ namespace Server.Service
         public async Task<List<LetterDTO>> GetAcceptLetters(Guid userId)
         {
             List<LetterDTO> userLetters = await _db.Letters
-                .Include (l => l.Addressee)
                 .Where(l => l.RecipientId == userId)
+                .Include(l => l.Addressee)
+                .Include(l => l.LetterStates)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 
@@ -74,7 +73,7 @@ namespace Server.Service
         {
             List<LetterDTO> userLetters = await _db.Letters
                 .Where(l => l.RecipientId == userId)
-                .Where(l => l.LetterStates.Any(s => s.IsFavorite))
+                .Where(l => l.LetterStates.Any(s => s.Starred))
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l))
                 .ToListAsync();
@@ -94,13 +93,13 @@ namespace Server.Service
         public async Task ChangeStarred(Guid letterId, Guid userId)
         {
             Letter? letterInDb = await _db.Letters
-                .Include(u => u.Addressee)
+                .Include(u => u.LetterStates)
                 .SingleOrDefaultAsync(l => l.Id == letterId);
 
             var state = letterInDb.LetterStates
         .Single(x => x.UserId == userId);
 
-            state.IsFavorite = true;
+            state.Starred = !state.Starred;
 
             await _db.SaveChangesAsync();
         }

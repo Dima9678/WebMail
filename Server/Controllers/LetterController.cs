@@ -45,18 +45,10 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpGet("getuserletters")]
-        public async Task<IActionResult> GetUserLetters()
+        public async Task<IActionResult> GetUserAcceptLetters()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<LetterDTO> userLetters = await _letterService.GetAcceptLetters(userId);
-            return Ok(userLetters);
-        }
-        [Authorize]
-        [HttpGet("getuserstarredletters")]
-        public async Task<IActionResult> GetUserStarredLetters()
-        {
-            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId);
             return Ok(userLetters);
         }
         [Authorize]
@@ -65,6 +57,14 @@ namespace Server.Controllers
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId);
+            return Ok(userLetters);
+        }
+        [Authorize]
+        [HttpGet("getuserstarredletters")]
+        public async Task<IActionResult> GetUserStarredLetters()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId);
             return Ok(userLetters);
         }
 

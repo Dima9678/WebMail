@@ -1,4 +1,5 @@
 import type { User } from './User';
+import type { LetterState } from './LetterState';
 
 export interface Letter {
     id: string;
@@ -17,8 +18,6 @@ export interface Letter {
     recipientName: string;
     recipientEmail: string;
 
-    isReaden: boolean;
-    starred: boolean;
-
     sendTime: Date;
+    letterStates: LetterState[];
 }

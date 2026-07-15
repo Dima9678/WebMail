@@ -6,6 +6,7 @@ namespace Domain.Models.DTO
 {
     public class DraftDTO : BaseLetterModel
     {
-        public bool Starred { get; set; }
+        public UserDTO Author { get; set; }
+        public Guid AuthorId { get; set; }
     }
 }

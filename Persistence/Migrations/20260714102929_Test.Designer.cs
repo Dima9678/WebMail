@@ -12,8 +12,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260712154957_InitialCreate")]
-    partial class InitialCreate
+    [Migration("20260714102929_Test")]
+    partial class Test
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -148,13 +148,13 @@ namespace Persistence.Migrations
             modelBuilder.Entity("Domain.Models.Letter", b =>
                 {
                     b.HasOne("Domain.User", "Addressee")
-                        .WithMany("Letters")
+                        .WithMany("AcceptLetters")
                         .HasForeignKey("AddresseeId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "Recipient")
-                        .WithMany()
+                        .WithMany("SentLetters")
                         .HasForeignKey("RecipientId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -169,13 +169,13 @@ namespace Persistence.Migrations
                     b.HasOne("Domain.Models.Letter", "Letter")
                         .WithMany("LetterStates")
                         .HasForeignKey("LetterId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Domain.User", "User")
                         .WithMany("LetterStates")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Letter");
@@ -190,11 +190,13 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.User", b =>
                 {
+                    b.Navigation("AcceptLetters");
+
                     b.Navigation("Drafts");
 
                     b.Navigation("LetterStates");
 
-                    b.Navigation("Letters");
+                    b.Navigation("SentLetters");
                 });
 #pragma warning restore 612, 618
         }
