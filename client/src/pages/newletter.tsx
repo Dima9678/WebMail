@@ -34,32 +34,64 @@ function newletter() {
             .catch(console.error);
     }, []);
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const response = await fetch("https://localhost:7094/api/letter/write", {
-            
-            method: "POST",
-            credentials: "include",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                recipient,
-                title,
-                text,
-            })
-        });
 
-        if (response.ok) {
-            setRecipient("");
-            setTitle("");
-            setText("");
-            setErrorMessage("Успешно");
-            setSucsess(true);
-        }
-        else {
-            const message = await response.text();
-            setErrorMessage(message);
+        const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
+
+        if (submitter.value === "letter") {
+            console.log("letter");
+            const response = await fetch("https://localhost:7094/api/letter/write", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recipient,
+                    title,
+                    text,
+                })
+            });
+
+            if (response.ok) {
+                setRecipient("");
+                setTitle("");
+                setText("");
+                setErrorMessage("Отправлено");
+                setSucsess(true);
+            }
+            else {
+                const message = await response.text();
+                setErrorMessage(message);
+            }
+
+        } else if (submitter.value === "draft") {
+            console.log("draft");
+            const response = await fetch("https://localhost:7094/api/draft/add", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recipient,
+                    title,
+                    text,
+                })
+            });
+
+            if (response.ok) {
+                setRecipient("");
+                setTitle("");
+                setText("");
+                setErrorMessage("Черновик сохранен");
+                setSucsess(true);
+            }
+            else {
+                const message = await response.text();
+                setErrorMessage(message);
+            }
         }
     }
 
@@ -113,11 +145,12 @@ function newletter() {
                             </textarea>
                             <div className="submit-button-centrer">
                                 {sucsess ? (
-                                    <p className="write-letter-sucsess-message">Сообщение отправлено</p>
+                                    <p className="write-letter-sucsess-message">{errorMessage}</p>
                                 ) : (
                                         <p className="write-letter-error-message">{errorMessage}</p>
                                     )}
-                                <button type="submit" className="write-letter-submit-button">Отправить</button>
+                                <button type="submit" className="write-letter-submit-button" value="letter">Отправить</button>
+                                <button type="submit" className="write-letter-submit-button" value="draft">В черновики</button>
                             </div>
                         </form>
                     </div>

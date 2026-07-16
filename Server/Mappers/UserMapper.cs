@@ -20,6 +20,17 @@ namespace Server.Mappers
             
             return dto;
         }
+        public static UserDTO ToShortDto(User user)
+        {
+            UserDTO dto = new UserDTO()
+            {
+                Name = user.Name,
+                Email = user.Email,
+                Id = user.Id,
+            };
+            
+            return dto;
+        }
         public static User ToEntity()
         {
             return new User();

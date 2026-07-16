@@ -14,7 +14,6 @@ namespace Server.Service
         {
             _db = db;
         }
-        //Сделай тоже чтобы принимал Guid
         public async Task Add(NewLetterDTO request, Guid adresseeId)
         {
             var recipient = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);

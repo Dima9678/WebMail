@@ -29,6 +29,10 @@ namespace Server.Controllers
             bool result;
             string message;
             (result, message) = await _validation.ValidateWriteLetterRequest(request);
+            if (!result) 
+            {
+                return BadRequest(message);
+            }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             await _letterService.Add(request, adresseeId);
             return Ok();

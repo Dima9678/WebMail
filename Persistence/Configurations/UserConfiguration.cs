@@ -16,7 +16,7 @@ namespace Persistence.Configurations
             builder.HasKey(x => x.Id);
 
             builder
-                .HasMany(u => u.SentLetters)
+                .HasMany(u => u.SentLetters)         
                 .WithOne(l => l.Addressee)
                 .HasForeignKey(l => l.AddresseeId);
 
