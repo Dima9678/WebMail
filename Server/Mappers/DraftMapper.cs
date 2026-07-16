@@ -14,6 +14,7 @@ namespace Server.Mappers
                 Id = draft.Id,
                 Title = draft.Title,
                 Text = draft.Text,
+                LastEditDate = draft.LastEditDate,
             };
 
             return dto;

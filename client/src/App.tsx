@@ -6,15 +6,18 @@ import SignUpPage from "./pages/auth/signup";
 import MyProfilePage from "./pages/myprofile";
 
 import HomePage from "./pages/homepage";
-import NewLetter from "./pages/newletter";
+import NewLetter from "./pages/Letters/newletter";
 
-import Letter from "./pages/letter";
+import Letter from "./pages/Letters/letter";
 
-import DraftPage from "./pages/drafts";
+import DraftPage from "./pages/Drafts/DraftsPage";
+import NewDraft from "./pages/Drafts/NewDraft";
+import Draft from "./pages/Drafts/EditDraft";
+
 import SentPage from "./pages/sent";
-import SpamPage from "./pages/spam";
-import StarredMailsPage from "./pages/starred";
-import TrashPage from "./pages/trash";
+import SpamPage from "./pages/Spam";
+import StarredMailsPage from "./pages/Starred";
+import TrashPage from "./pages/Trash";
 
 import './assets/css/App.css';
 import './assets/css/Reset.css';
@@ -40,8 +43,6 @@ function App() {
                 <Route path="/trash" element={<TrashPage />} />
             </Routes>
         </>
-
     );
-
 }
 export default App;

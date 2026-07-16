@@ -534,3 +534,38 @@
     text-indent: 15px;
     font-size: 18px;
 }
+
+.draft {
+    padding-left: 10px;
+    height: 40px;
+    width: 100%;
+    border-bottom: 2px solid #24367D;
+    display: flex;
+    display: grid;
+    align-items: center;
+    grid-template-columns: 30px minmax(0, 1fr) 130px;
+    font-size: 20px;
+}
+
+.draft-content {
+    margin-left: 10px;
+    display: flex;
+    overflow: hidden;
+    white-space: nowrap;
+}
+
+.draft-theme {
+    text-decoration: none;
+    margin-right: 5px;
+    color: #2D3F85;
+}
+
+.draft-text {
+    text-decoration: none;
+    color: #5C6DB0;
+}
+
+.draft-date {
+    text-decoration: none;
+    color: #5C6DB0;
+}

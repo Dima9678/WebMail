@@ -35,6 +35,7 @@ namespace Server.Service
                 AuthorId = user.Id,
                 Title = request.Title,
                 Text = request.Text,
+                LastEditDate = DateTime.UtcNow,
             };
 
             _db.Drafts.Add(draft);

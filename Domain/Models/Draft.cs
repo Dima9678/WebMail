@@ -8,6 +8,7 @@ namespace Domain.Models
     {
         public User Author { get; set; }
         public Guid AuthorId { get; set; }
+        public DateTime LastEditDate { get; set; }
         public Draft()
         {
             Id = Guid.NewGuid();

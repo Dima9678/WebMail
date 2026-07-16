@@ -8,5 +8,6 @@ namespace Domain.Models.DTO
     {
         public UserDTO Author { get; set; }
         public Guid AuthorId { get; set; }
+        public DateTime LastEditDate { get; set; }
     }
 }

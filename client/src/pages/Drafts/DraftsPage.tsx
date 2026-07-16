@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
-import type { Draft } from "../interfaces/Draft";
-import type { User } from "../interfaces/User";
+import type { Draft } from "../../interfaces/Draft";
+import type { User } from "../../interfaces/User";
 
 function Drafts() {
     const [maxOnPage, setMaxOnPage] = useState(20);
@@ -38,17 +38,17 @@ function Drafts() {
 
         if (user != null) {
 
-            refreshLetters();
+            refreshDrafts();
         }
     }, []);
 
     useEffect(() => {
         if (user) {
-            refreshLetters();
+            refreshDrafts();
         }
     }, [user]);
 
-    async function refreshLetters() {
+    async function refreshDrafts() {
         const response = await fetch('https://localhost:7094/api/draft/get',
             {
                 credentials: "include",
@@ -60,6 +60,8 @@ function Drafts() {
         const data = await response.json();
 
         setDrafts(data);
+
+        console.log(data[0].lastEditDate)
 
         if (data.length < maxOnPage) {
             setEndIndex(data.length);
@@ -99,7 +101,7 @@ function Drafts() {
             })
             .catch(console.error);
     }
-
+    
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -133,7 +135,7 @@ function Drafts() {
                     <div className="letters-block">
 
                         <div className="letters-topbar">
-                            <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
+                            <button onClick={refreshDrafts} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
@@ -154,14 +156,13 @@ function Drafts() {
                                     <p className="please-sign">У вас нет черновиков</p>
                                 ) : (
                                     drafts.map((draft, i) => (
-                                        <Link to={`/letter/${draft.id}`} key={i} className="letter-unread">
-                                            <p className="letter-sender-read"></p>
-                                            <div className="letter-content">
-                                                <p className="letter-theme-read">{draft.title}</p>
-                                                <p className="letter-text-read"> - {draft.text}</p>
+                                        <Link to={`/draft/${draft.id}`} key={i} className="draft">
+                                            <button><img src="/images/starred.svg" alt="star" /></button>
+                                            <div className="draft-content">
+                                                <p className="draft-theme">{draft.title}</p>
+                                                <p className="draft-text"> - {draft.text}</p>
                                             </div>
-                                            <p className="letter-date-read">
-                                            </p>
+                                            <p className="draft-date">{ new Date(draft.lastEditDate).toLocaleDateString("ru-RU") }</p>
                                         </Link>
                                     )
                                     )
