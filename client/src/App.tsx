@@ -33,6 +33,9 @@ function App() {
                 <Route path="/auth/logout" element={<LogoutPage />} />
                 <Route path="/myprofile" element={<MyProfilePage />} />
 
+                <Route path="/newdraft" element={<NewDraft />} />
+                <Route path="/draft/:id" element={<Draft />} />
+
                 <Route path="/newletter" element={<NewLetter />} />
                 <Route path="/letter/:id" element={<Letter />} />
 

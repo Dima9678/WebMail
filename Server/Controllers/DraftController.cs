@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc;
 using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace Server.Controllers
 {
@@ -28,6 +27,7 @@ namespace Server.Controllers
             var drafts = await _draftService.Get(userId);
             return Ok(drafts);
         }
+
         [Authorize]
         [HttpPost("add")]
         public async Task<IActionResult> AddDrafts([FromBody] NewDraftDTO request)
@@ -43,10 +43,20 @@ namespace Server.Controllers
             await _draftService.Add(request, adresseeId);
             return Ok();
         }
+
         [Authorize]
-        [HttpGet("{id:guid}")]
+        [HttpGet("getbyid/{id:guid}")]
         public async Task<IActionResult> GetDraftById(Guid id)
         {
+            DraftDTO draft = await _draftService.GetById(id);
+            return Ok(draft);
+        }
+
+        [Authorize]
+        [HttpPatch("save/{id:guid}")]
+        public async Task<IActionResult> Save([FromBody] NewDraftDTO request, Guid id)
+        {
+            await _draftService.Save(request, id);
             return Ok();
         }
     }
