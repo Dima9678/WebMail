@@ -1,6 +1,7 @@
 ﻿using Domain;
 using Domain.Models;
 using Domain.Models.DTO;
+using Server.Controllers;
 
 namespace Server.Mappers
 {
@@ -47,6 +48,18 @@ namespace Server.Mappers
                 SendTime = letterInDb.SendTime,
             };
             return letterDTO;
+        }
+
+        public static NewLetterDTO DraftDTOToLetterDTO(NewDraftDTO draft)
+        {
+            NewLetterDTO letter = new NewLetterDTO()
+            {
+                Recipient = draft.RecipientEmail,
+                Title = draft.Title,
+                Text = draft.Text,
+
+            };
+            return letter;
         }
     }
 }

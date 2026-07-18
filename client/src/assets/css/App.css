@@ -543,8 +543,27 @@
     display: flex;
     display: grid;
     align-items: center;
-    grid-template-columns: 30px minmax(0, 1fr) 130px;
+    grid-template-columns: minmax(0, 1fr) 130px;
     font-size: 20px;
+}
+
+.letters .new-draft-button {
+    position: relative;
+}
+
+.new-draft-button {
+    right: 30px;
+    bottom: 30px;
+    position: absolute;
+    width: 350px;
+    height: 60px;
+    border-radius: 10px;
+    background-color: #2D3F85;
+    color: white;
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .draft-content {
@@ -569,3 +588,4 @@
     text-decoration: none;
     color: #5C6DB0;
 }
+

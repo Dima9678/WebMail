@@ -5,6 +5,7 @@ import type { Draft } from "../../interfaces/Draft";
 import type { User } from "../../interfaces/User";
 
 function Drafts() {
+
     const [maxOnPage, setMaxOnPage] = useState(20);
     const [LettersPage,] = useState(1);
     const [drafts, setDrafts] = useState<Draft[]>([]);
@@ -61,8 +62,6 @@ function Drafts() {
 
         setDrafts(data);
 
-        console.log(data[0].lastEditDate)
-
         if (data.length < maxOnPage) {
             setEndIndex(data.length);
             setMaxOnPage(data.length);
@@ -74,34 +73,6 @@ function Drafts() {
         }
     }
 
-    function changeStarred(i: number) {
-        fetch(`https://localhost:7094/api/letter/changestarred/${acceptLetters[i].id}`, {
-            credentials: "include",
-            method: "PUT"
-        })
-            .then(async r => {
-                if (!r.ok) {
-                    throw new Error(await r.text());
-                }
-
-                setAcceptLetters(prev =>
-                    prev.map((letter, index) =>
-                        index === i
-                            ? {
-                                ...letter,
-                                letterStates: letter.letterStates.map(state =>
-                                    state.userId === user?.id
-                                        ? { ...state, starred: !state.starred }
-                                        : state
-                                )
-                            }
-                            : letter
-                    )
-                );
-            })
-            .catch(console.error);
-    }
-    
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -133,7 +104,7 @@ function Drafts() {
                         <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
                     <div className="letters-block">
-
+                        <Link to="/draft/new" className="new-draft-button">Новый черновик</Link>
                         <div className="letters-topbar">
                             <button onClick={refreshDrafts} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
@@ -157,7 +128,6 @@ function Drafts() {
                                 ) : (
                                     drafts.map((draft, i) => (
                                         <Link to={`/draft/${draft.id}`} key={i} className="draft">
-                                            <button><img src="/images/starred.svg" alt="star" /></button>
                                             <div className="draft-content">
                                                 <p className="draft-theme">{draft.title}</p>
                                                 <p className="draft-text"> - {draft.text}</p>

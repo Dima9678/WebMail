@@ -1,6 +1,6 @@
 export interface Draft {
     id: string;
-    recientEmail: string;
+    recipientEmail: string;
     title: string;
     text: string;
     lastEditDate: Date;

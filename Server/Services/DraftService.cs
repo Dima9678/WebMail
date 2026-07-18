@@ -36,7 +36,7 @@ namespace Server.Service
 
                 Author = user,
                 AuthorId = user.Id,
-                RecipientEmail = request.Recipient,
+                RecipientEmail = request.RecipientEmail,
                 Title = request.Title,
                 Text = request.Text,
                 LastEditDate = DateTime.UtcNow,
@@ -59,7 +59,7 @@ namespace Server.Service
         {
             Draft? draftInDb = await _db.Drafts.SingleOrDefaultAsync(x => x.Id == draftId);
 
-            draftInDb?.RecipientEmail = request.Recipient;
+            draftInDb?.RecipientEmail = request.RecipientEmail;
             draftInDb?.Title = request.Title;
             draftInDb?.Text = request.Text;
 

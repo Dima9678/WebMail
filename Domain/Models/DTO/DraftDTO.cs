@@ -7,6 +7,7 @@ namespace Domain.Models.DTO
     public class DraftDTO : BaseLetterModel
     {
         public UserDTO Author { get; set; }
+        public string RecipientEmail { get; set; }
         public Guid AuthorId { get; set; }
         public DateTime LastEditDate { get; set; }
     }

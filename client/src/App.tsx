@@ -11,7 +11,6 @@ import NewLetter from "./pages/Letters/newletter";
 import Letter from "./pages/Letters/letter";
 
 import DraftPage from "./pages/Drafts/DraftsPage";
-import NewDraft from "./pages/Drafts/NewDraft";
 import Draft from "./pages/Drafts/EditDraft";
 
 import SentPage from "./pages/sent";
@@ -33,8 +32,8 @@ function App() {
                 <Route path="/auth/logout" element={<LogoutPage />} />
                 <Route path="/myprofile" element={<MyProfilePage />} />
 
-                <Route path="/newdraft" element={<NewDraft />} />
-                <Route path="/draft/:id" element={<Draft />} />
+                {/*вопросик обозначает что параметр необязательный*/}
+                <Route path="/draft/:id?" element={<Draft />} />
 
                 <Route path="/newletter" element={<NewLetter />} />
                 <Route path="/letter/:id" element={<Letter />} />

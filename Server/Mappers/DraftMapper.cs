@@ -11,6 +11,7 @@ namespace Server.Mappers
             {
                 Author = UserMapper.ToShortDto(draft.Author),
                 AuthorId = draft.AuthorId,
+                RecipientEmail = draft.RecipientEmail,
                 Id = draft.Id,
                 Title = draft.Title,
                 Text = draft.Text,

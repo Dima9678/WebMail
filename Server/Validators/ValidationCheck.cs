@@ -71,28 +71,14 @@ namespace Server.Validators
 
             return (true, string.Empty);
         }
-        public async Task<(bool, string)> ValidateWriteLetterRequest(NewDraftDTO request)
+        public async Task<(bool, string)> ValidateWriteDraftRequest(NewDraftDTO request)
         {
-            if (string.IsNullOrWhiteSpace(request.Recipient) &&
+            if (string.IsNullOrWhiteSpace(request.RecipientEmail) &&
                 string.IsNullOrWhiteSpace(request.Title) &&
                 string.IsNullOrWhiteSpace(request.Text)
                 )
             {
                 return (false, "Для созранения черновика должно быть хотя-бы одно значение");
-            }
-
-            if (!string.IsNullOrWhiteSpace(request.Recipient))
-            {
-                if (!CorrectEmai(request.Recipient))
-                {
-                    return (false, "Некорректный формат почты получателя");
-                }
-
-                var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
-                if (userInDb == null)
-                {
-                    return (false, "Такого пользователя не существует");
-                }
             }
 
             return (true, string.Empty);
