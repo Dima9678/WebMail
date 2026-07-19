@@ -187,7 +187,7 @@ function homepage() {
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                        <Link to="/newletter" className="new-letter-button"><img className="leftbar-navigation-button-style" src="/images/pencil.svg" alt="написать"></img></Link>
+                         
                         <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
@@ -196,7 +196,7 @@ function homepage() {
                         <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
                     <div className="letters-block">
-
+                        <Link to="/newletter" className="new-letter-button">Новое письмо</Link>
                         <div className="letters-topbar">
                             <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
