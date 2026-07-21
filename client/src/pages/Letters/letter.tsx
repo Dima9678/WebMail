@@ -72,7 +72,7 @@ function letter() {
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                         
+
                         <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
@@ -90,16 +90,32 @@ function letter() {
                             </div>
                         ) : (
                             <div className="one-letter-main-container">
-                                <h1 className="one-letter-title">{letter.title}</h1>
-                                <div className="one-letter-info">
-                                    <p className="one-letter-adressee-name">{letter.adresseeName}</p>
-                                    <p className="one-letter-adressee-email">{letter.adresseeEmail}</p>
-                                    <div className="one-letter-data-block">
-                                        <p className="one-letter-sending-date">{new Date(letter.sendTime).toLocaleDateString("ru-RU")}</p>
-                                        <p className="one-letter-sending-time">{new Date(letter.sendTime).toLocaleTimeString("ru-RU")}</p>
+
+                                <div className="one-letter-header">
+                                    <div className="one-letter-title-block">
+                                        <p className="one-letter-title">{letter.title}</p>
+                                        <p className="one-letter-datetime">
+                                            {new Date(letter.sendTime).toLocaleDateString("ru-RU")} в
+                                            {new Date(letter.sendTime).toLocaleTimeString("ru-RU")}
+                                        </p>
+                                    </div>
+                                    <div className="one-letter-sender-block">
+                                        <div className="one-letter-avatar">
+                                            <p className="one-letter-avatar-letter">Е</p>
+                                        </div>
+                                        <div>
+                                            <p className="one-letter-adressee-name">{letter.adresseeName}</p>
+                                            <p className="one-letter-adressee-email">{letter.adresseeEmail}</p>
+                                        </div>
                                     </div>
                                 </div>
-                                <p className="one-letter-sending-text">{letter.text}</p>
+
+                                <p className="one-letter-text">{letter.text}</p>
+
+                                <div className="one-letter-button-container">
+                                    <div className="one-letter-activity-button">Ответить</div>
+                                    <div className="one-letter-activity-button">Переслать</div>
+                                </div>
                             </div>
                         )}
                     </div>

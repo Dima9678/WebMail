@@ -7,9 +7,6 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\dist</BuildOutputFolder>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="src\assets\fonts\" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include=".vscode\launch.json" />
     <None Include=".vscode\launch.vs.json" />
   </ItemGroup>

@@ -48,13 +48,14 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("getuserletters")]
-        public async Task<IActionResult> GetUserAcceptLetters()
+        [HttpGet("getuserletters/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetUserAcceptLetters(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetAcceptLetters(userId);
+            List<LetterDTO> userLetters = await _letterService.GetAcceptLetters(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
+
         [Authorize]
         [HttpGet("getusersentletters")]
         public async Task<IActionResult> GetUserSentLetters()
@@ -63,6 +64,16 @@ namespace Server.Controllers
             List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId);
             return Ok(userLetters);
         }
+
+        [Authorize]
+        [HttpGet("total")]
+        public async Task<IActionResult> MaxPagesCount()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            double total = await _letterService.GetTotalLettersCount(userId);
+            return Ok(total);
+        }
+
         [Authorize]
         [HttpGet("getuserstarredletters")]
         public async Task<IActionResult> GetUserStarredLetters()

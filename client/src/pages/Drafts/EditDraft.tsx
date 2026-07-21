@@ -68,8 +68,6 @@ function EditDraft() {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(isNew);
-        console.log(id);
         const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
 
         if (submitter.value === "save") {
