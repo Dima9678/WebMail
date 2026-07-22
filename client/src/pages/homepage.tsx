@@ -182,9 +182,11 @@ function homepage() {
     };
 
     const maxLettersPage = Math.ceil(total / maxOnPage);
-    const startIndex = lettersPage * maxOnPage;
+    var startIndex = lettersPage * maxOnPage;
+    
     const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
 
+    console.log(total)
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -224,7 +226,7 @@ function homepage() {
                                 <input className="search-input" placeholder="Поиск по почте"></input>
                                 <button className="search-details-button"><img src="/images/searchDetails.svg"></img></button>
                             </div>
-                            {user == null ? (
+                            {user === null || total === 0 ? (
                                 <div className="pagination"></div>
                             ) : (
                                 <div className="pagination">

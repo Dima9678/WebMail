@@ -193,7 +193,7 @@ function Sent() {
                         <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
                     <div className="letters-block">
-
+                        <Link to="/newletter" className="new-letter-button">Новое письмо</Link>
                         <div className="letters-topbar">
                             <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">

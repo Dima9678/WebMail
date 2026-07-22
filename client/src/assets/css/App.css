@@ -1,5 +1,6 @@
 * {
     font-family: Inter-Bold;
+    outline: none;
 }
 
 @font-face {
@@ -534,9 +535,14 @@
     gap: 10px;
 }
 
-.pages-navigation-button{
-    width: 170px;
+
+.pages-navigation-button,
+.pages-navigation-button-hidden {
+    width: 180px;
     height: 35px;
+}
+
+.pages-navigation-button {
     text-decoration: none;
     color: white;
     font-size: 25px;
@@ -545,12 +551,7 @@
     justify-content: center;
     align-items: center;
     border-radius: 10px;
-    padding: 0 10px;
-}
-
-.pages-navigation-button-hidden {
-    width: 170px;
-    height: 30px;
+    padding: 0 20px;
 }
 
 .pages-navigation-text {

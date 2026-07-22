@@ -105,13 +105,13 @@ function letter() {
                                 {nextId === null ? (
                                     <div className="pages-navigation-button-hidden"></div>
                                 ) : (
-                                    <Link to={`/letter/${nextId}`} className="pages-navigation-button">предыдущее</Link>
+                                    <Link to={`/letter/${nextId}`} className="pages-navigation-button">Предыдущее</Link>
                                 )}
                                 <p className="pages-navigation-text">{letterNumber} из {lettersTotal}</p>
                                 {previousId === null ? (
                                     <div className="pages-navigation-button-hidden"></div>
                                 ) : (
-                                    <Link to={`/letter/${previousId}`} className="pages-navigation-button">следующее</Link>
+                                    <Link to={`/letter/${previousId}`} className="pages-navigation-button">Следующее</Link>
                                 )}
                             </div>
                         </div>

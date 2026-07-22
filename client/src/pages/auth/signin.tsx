@@ -55,6 +55,7 @@ function Signin() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <p className="have-a-account-message">Еще не зарегистрированы? <Link to="/signup" className="links">Регистрация</Link></p>
                     {authResult ? (
                         <div className="sign-error-container">
                             <p className="sign-error-message">{resultMessage}</p>
