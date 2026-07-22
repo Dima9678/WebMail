@@ -49,6 +49,21 @@ namespace Server.Mappers
             };
             return letterDTO;
         }
+        public static FullLetterDTO ToFullDto(Letter letterInDb)
+        {
+            FullLetterDTO letterDTO = new FullLetterDTO()
+            {
+                Id = letterInDb.Id,
+                AdresseeName = letterInDb.Addressee.Name,
+                AdresseeEmail = letterInDb.Addressee.Email,
+                LetterStates = LetterStateMapper.StateListToDTO(letterInDb.LetterStates),
+                Title = letterInDb.Title,
+                Text = letterInDb.Text,
+                SendTime = letterInDb.SendTime,
+                RecipientId = letterInDb.RecipientId,
+            };
+            return letterDTO;
+        }
 
         public static NewLetterDTO DraftDTOToLetterDTO(NewDraftDTO draft)
         {

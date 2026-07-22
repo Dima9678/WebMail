@@ -3,10 +3,16 @@ import { Link, useParams } from "react-router-dom";
 
 import type { User } from "../interfaces/User";
 import type { Letter } from "../interfaces/Letter";
+import type { FullLetter } from '../../interfaces/FullLetter';
 
 
 function letter() {
-    const [letter, setLetter] = useState<Letter>();
+    const [letter, setLetter] = useState<FullLetter>();
+    const [previousId, setPreviousId] = useState("");
+    const [nextId, setNextId] = useState("");
+    const [lettersTotal, setLettersTotal] = useState("");
+    const [letterNumber, setLetterNumber] = useState(0);
+
     const [, setUser] = useState<User | null>(null);
     const { id } = useParams();
 
@@ -39,15 +45,14 @@ function letter() {
                     throw new Error(await letterResponse.text());
                 }
 
-                const letterData: Letter = await letterResponse.json();
-
-                // если письмо не от текущего пользователя,
-                // здесь можно отправлять запрос на прочтение
-                if (currentUser?.email !== letterData.adresseeEmail) {
-                    // запрос на установку IsReaden
-                }
+                const letterData: FullLetter = await letterResponse.json();
 
                 setLetter(letterData);
+                setPreviousId(letterData.previousLetterId);
+                setNextId(letterData.nextLetterId);
+                setLetterNumber(letterData.letterNumber)
+
+                console.log("пред: ");
 
             } catch (error) {
                 console.error(error);
@@ -55,8 +60,21 @@ function letter() {
         }
 
         loadData();
-
+        GetTotal();
     }, [id]);
+
+    async function GetTotal() {
+        const response = await fetch(`https://localhost:7094/api/letter/total`, {
+            credentials: "include",
+            method: "GET"
+        });
+
+        if (!response.ok)
+            throw new Error(await response.text());
+
+        const data = await response.json();
+        setLettersTotal(data)
+    }
 
 
     return (
@@ -83,6 +101,19 @@ function letter() {
                     <div className="letters-block">
                         <div className="one-letter-topbar">
                             <Link to="/"><img className="arrow" src="/images/arrow.svg" alt="назад"></img></Link>
+                            <div className="one-letter-pages-navigation-container">
+                                {nextId === null ? (
+                                    <div className="pages-navigation-button-hidden"></div>
+                                ) : (
+                                    <Link to={`/letter/${nextId}`} className="pages-navigation-button">предыдущее</Link>
+                                )}
+                                <p className="pages-navigation-text">{letterNumber} из {lettersTotal}</p>
+                                {previousId === null ? (
+                                    <div className="pages-navigation-button-hidden"></div>
+                                ) : (
+                                    <Link to={`/letter/${previousId}`} className="pages-navigation-button">следующее</Link>
+                                )}
+                            </div>
                         </div>
                         {letter === undefined ? (
                             <div className="one-letter-main-container">

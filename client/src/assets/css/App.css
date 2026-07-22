@@ -527,6 +527,37 @@
     padding: 0 30px;
 }
 
+.one-letter-pages-navigation-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+}
+
+.pages-navigation-button{
+    width: 170px;
+    height: 35px;
+    text-decoration: none;
+    color: white;
+    font-size: 25px;
+    background-color: #24367D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px;
+    padding: 0 10px;
+}
+
+.pages-navigation-button-hidden {
+    width: 170px;
+    height: 30px;
+}
+
+.pages-navigation-text {
+    font-size: 20px;
+    color: #24367D
+}
+
 .one-letter-main-container {
     padding: 30px 80px;
     width: 100%;
@@ -557,7 +588,7 @@
     width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-bottom: 15px;
+    margin-bottom: 20px;
 }
 
 .one-letter-title-block {

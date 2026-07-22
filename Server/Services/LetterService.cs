@@ -1,6 +1,7 @@
 ﻿using Domain.Models;
 using Domain.Models.DTO;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Persistence;
 using Server.Controllers;
 using Server.Mappers;
@@ -44,20 +45,18 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-        public async Task<LetterDTO> GetById(Guid letterId, Guid userId)
+        public async Task<FullLetterDTO> GetById(Guid letterId, Guid userId)
         {
             Letter? letterInDb = await _db.Letters
                 .Where(u  => u.Id == letterId)
                 .Include(u => u.LetterStates)
                 .Include(u => u.Addressee)
                 .SingleOrDefaultAsync();
-
-            LetterDTO letterDTO = LetterMapper.ToDto(letterInDb);
-
             await ChangeIsReaden(userId, letterInDb);
-            
 
-            return letterDTO;
+            FullLetterDTO fullLetterDTO = LetterMapper.ToFullDto(letterInDb);
+            fullLetterDTO = await AppendNavigationInfo(fullLetterDTO);
+            return fullLetterDTO;
         }
         public async Task<List<LetterDTO>> GetAcceptLetters(Guid userId, int startIndex, int endIndex)
         {
@@ -138,6 +137,27 @@ namespace Server.Service
                 .CountAsync();
 
             return count;
+        }
+
+        public async Task<FullLetterDTO> AppendNavigationInfo(FullLetterDTO fullLetter)
+        {
+            var letters = await _db.Letters
+                .Where(l => l.RecipientId == fullLetter.RecipientId)
+                .OrderByDescending(l => l.SendTime)
+                .Select(l => l.Id)
+                .ToListAsync();
+
+            int letterIndex = letters.IndexOf(fullLetter.Id);
+
+            Guid? nextId = letterIndex > 0 ? letters[letterIndex - 1] : null;
+            Guid? previousId = letterIndex < letters.Count - 1 ? letters[letterIndex + 1] : null;
+            int letterNumber = letterIndex + 1;
+
+            fullLetter.PreviousLetterId = previousId;
+            fullLetter.NextLetterId = nextId;
+            fullLetter.LetterNumber = letterNumber;
+
+            return fullLetter;
         }
     }
 }

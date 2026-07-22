@@ -42,9 +42,9 @@ namespace Server.Controllers
         public async Task<IActionResult> GetById(Guid letterId)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            LetterDTO letterDTO = await _letterService.GetById(letterId, userId);
+            FullLetterDTO fullLetterDto = await _letterService.GetById(letterId, userId);
 
-            return Ok(letterDTO);
+            return Ok(fullLetterDto);
         }
 
         [Authorize]
@@ -91,6 +91,7 @@ namespace Server.Controllers
             await _letterService.ChangeStarred(letterid, userId);
             return Ok();
         }
+
 
     }
 }
