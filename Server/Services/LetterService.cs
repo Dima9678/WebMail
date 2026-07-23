@@ -8,6 +8,14 @@ using Server.Mappers;
 
 namespace Server.Service
 {
+    /*
+     * Отправленные
+     * Избранные
+     * Черновики
+     * Спам
+     * Корзина
+     */
+    
     public class LetterService
     {
         private readonly DatabaseContext _db;
@@ -130,7 +138,7 @@ namespace Server.Service
             await _db.SaveChangesAsync();
         }
 
-        public async Task<int> GetTotalLettersCount(Guid userId)
+        public async Task<int> GetTotalAcceptCount(Guid userId)
         {
             int count = await _db.Letters
                 .Where(l => l.RecipientId == userId)
