@@ -12,6 +12,7 @@ namespace Server.Mappers
             UserDTO dto = new UserDTO()
             {
                 Name = user.Name,
+                Surname = user.Surname,
                 Email = user.Email,
                 Id = user.Id,
                 SentLetters = LetterMapper.SentToDto(user),
@@ -25,15 +26,12 @@ namespace Server.Mappers
             UserDTO dto = new UserDTO()
             {
                 Name = user.Name,
+                Surname = user.Surname,
                 Email = user.Email,
                 Id = user.Id,
             };
             
             return dto;
-        }
-        public static User ToEntity()
-        {
-            return new User();
         }
     }
 }

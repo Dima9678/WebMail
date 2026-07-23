@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 
 function Signup() {
     const [name, setName] = useState("");
+    const [surname, setSurame] = useState("");
     const [, setLogin] = useState("");
     const [password, setPassword] = useState("");
     const [repeatPassword, setRepeatPassword] = useState("");
@@ -25,6 +26,7 @@ function Signup() {
             },
             body: JSON.stringify({
                 name,
+                surname,
                 email,
                 password,
                 repeatPassword,
@@ -35,6 +37,7 @@ function Signup() {
             setAuthResult(true);
             setResultMessage("Успешно");
             setName("");
+            setSurame("");
             setLogin("");
             setPassword("");
             setRepeatPassword("");
@@ -57,6 +60,12 @@ function Signup() {
                         placeholder="Имя"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
+                    />
+                    <input
+                        className="sign-input-box"
+                        placeholder="Фамилия"
+                        value={surname}
+                        onChange={(e) => setSurame(e.target.value)}
                     />
                     <div className="email-create-main">
                         <input

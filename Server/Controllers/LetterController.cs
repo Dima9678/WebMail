@@ -70,7 +70,7 @@ namespace Server.Controllers
         public async Task<IActionResult> MaxPagesCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            double total = await _letterService.GetTotalLettersCount(userId);
+            double total = await _letterService.GetTotalAcceptCount(userId);
             return Ok(total);
         }
 

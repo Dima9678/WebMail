@@ -20,11 +20,10 @@ namespace Server.Service
             User user = new User()
             {
                 Name = dto.Name,
+                Surname = dto.Surname,
                 Email = dto.Email,
+                PasswordHash = _hasher.HashPassword(new User(), dto.Password),
             };
-            string hashedPassword = _hasher.HashPassword(new User(), dto.Password);
-
-            user.PasswordHash = hashedPassword;
 
             _db.Users.Add(user);
             _db.SaveChanges();
