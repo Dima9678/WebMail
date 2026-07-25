@@ -137,7 +137,16 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
+        public async Task ChangeIsReaden(Guid letterId, Guid userId)
+        {
+            LetterState? state = _db.LetterStates
+                .Where(x => x.LetterId == letterId)
+                .FirstOrDefault(x => x.UserId == userId);
 
+            state.IsRead = !state.IsRead;
+
+            await _db.SaveChangesAsync();
+        }
         public async Task<int> GetTotalAcceptCount(Guid userId)
         {
             int count = await _db.Letters
@@ -146,7 +155,6 @@ namespace Server.Service
 
             return count;
         }
-
         public async Task<FullLetterDTO> AppendNavigationInfo(FullLetterDTO fullLetter)
         {
             var letters = await _db.Letters
