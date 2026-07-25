@@ -101,7 +101,7 @@ function homepage() {
                         i={i}
                         changeStarred={changeStarred}
                     />
-                    <p className="letter-sender-read">{letter.adresseeName}</p>
+                    <p className="letter-sender-read">{letter.adresseeName} {letter.adresseeSurname}</p>
                     <div className="letter-content">
                         <p className="letter-theme-read">{letter.title}</p>
                         <p className="letter-text-read"> - {letter.text}</p>
@@ -117,7 +117,7 @@ function homepage() {
                         i={i}
                         changeStarred={changeStarred}
                     />
-                    <p className="letter-sender-unread">{letter.adresseeName}</p>
+                        <p className="letter-sender-unread">{letter.adresseeName} {letter.adresseeSurname}</p>
                     <div className="letter-content">
                         <p className="letter-theme-unread">{letter.title}</p>
                         <p className="letter-text-unread"> - {letter.text}</p>
@@ -202,7 +202,7 @@ function homepage() {
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                            <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                                <Link to="/myprofile" className="auth-button">{user.name}</Link>
                         </div>
                     )}
 

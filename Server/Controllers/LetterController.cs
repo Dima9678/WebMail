@@ -92,7 +92,14 @@ namespace Server.Controllers
             return Ok();
         }
 
-
+        [Authorize]
+        [HttpPut("changeread/{letterid:guid}")]
+        public async Task<IActionResult> ChangeRead(Guid letterid)
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _letterService.ChangeIsReaden(letterid, userId);
+            return Ok();
+        }
     }
 }
 

@@ -13,6 +13,7 @@ export interface Letter {
     recipientId: string;
 
     adresseeName: string;
+    adresseeSurname: string;
     adresseeEmail: string;
 
     recipientName: string;

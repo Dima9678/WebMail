@@ -12,8 +12,10 @@ function letter() {
     const [nextId, setNextId] = useState("");
     const [lettersTotal, setLettersTotal] = useState("");
     const [letterNumber, setLetterNumber] = useState(0);
+    const [starred, setStarred] = useState(false);
+    const [isRead, setIsRead] = useState(false);
 
-    const [, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const { id } = useParams();
 
     useEffect(() => {
@@ -52,7 +54,10 @@ function letter() {
                 setNextId(letterData.nextLetterId);
                 setLetterNumber(letterData.letterNumber)
 
-                console.log("пред: ");
+                const state = letterData.letterStates.find(s => s.userId === currentUser.id);
+
+                setStarred(state.starred)
+                setIsRead(state.isRead)
 
             } catch (error) {
                 console.error(error);
@@ -76,6 +81,32 @@ function letter() {
         setLettersTotal(data)
     }
 
+    function changeStarred() {
+        fetch(`https://localhost:7094/api/letter/changestarred/${letter?.id}`, {
+            credentials: "include",
+            method: "PUT"
+        })
+            .then(async r => {
+                if (!r.ok) {
+                    throw new Error(await r.text());
+                }
+                setStarred(!starred);
+            })
+            .catch(console.error);
+    }
+    function changeReadState() {
+        fetch(`https://localhost:7094/api/letter/changeread/${letter?.id}`, {
+            credentials: "include",
+            method: "PUT"
+        })
+            .then(async r => {
+                if (!r.ok) {
+                    throw new Error(await r.text());
+                }
+                setIsRead(!isRead);
+            })
+            .catch(console.error);
+    }
 
     return (
         <div className="parent-container">
@@ -101,6 +132,23 @@ function letter() {
                     <div className="letters-block">
                         <div className="one-letter-topbar">
                             <Link to="/"><img className="arrow" src="/images/arrow.svg" alt="назад"></img></Link>
+
+                            <div className="one-letter-topbar-buttons">
+                                {starred ? (
+                                    <button onClick={changeStarred}><img src="/images/letterPage/starred.svg" className="one-letter-topbar-button" alt="star" /></button>
+                                ) : (
+                                    <button onClick={changeStarred}><img src="/images/letterPage/unstarred.svg" className="one-letter-topbar-button" alt="star" /></button>
+                                )}
+
+                                {isRead ? (
+                                    <button onClick={changeReadState}><img src="/images/letterPage/mark_unread.svg" className="one-letter-topbar-button" alt="unread" /></button>
+                                ) : (
+                                        <button onClick={changeReadState}><img src="/images/letterPage/mark_read.svg" className="one-letter-topbar-button" alt="read" /></button>
+                                )}
+
+                                <button><img src="/images/letterPage/spam.svg" className="one-letter-topbar-button" alt="spam" /></button>
+                                <button><img src="/images/letterPage/trash.svg" className="one-letter-topbar-button" alt="trash" /></button>
+                            </div>
                             <div className="one-letter-pages-navigation-container">
                                 {nextId === null ? (
                                     <div className="pages-navigation-button-hidden"></div>
@@ -132,10 +180,10 @@ function letter() {
                                     </div>
                                     <div className="one-letter-sender-block">
                                         <div className="one-letter-avatar">
-                                            <p className="one-letter-avatar-letter">Е</p>
+                                            <p className="one-letter-avatar-letter">{letter.adresseeName[0]}</p>
                                         </div>
                                         <div>
-                                            <p className="one-letter-adressee-name">{letter.adresseeName}</p>
+                                            <p className="one-letter-adressee-name">{letter.adresseeName} {letter.adresseeSurname}</p>
                                             <p className="one-letter-adressee-email">{letter.adresseeEmail}</p>
                                         </div>
                                     </div>
