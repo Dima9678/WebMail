@@ -5,15 +5,15 @@ import type { Letter } from "../interfaces/Letter";
 import type { User } from "../interfaces/User";
 
 function Sent() {
-    const [maxOnPage, setMaxOnPage] = useState(20);
-    const [LettersPage,] = useState(1);
-    const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
-
+    const [sentLetters, setSentLetters] = useState<Letter[]>([]);
     const [user, setUser] = useState<User | null>(null);
 
-    const [startIndex, setStartIndex] = useState(maxOnPage * LettersPage - maxOnPage + 1);
-    const [endIndex, setEndIndex] = useState(maxOnPage * LettersPage);
-    const [messagesTotal, setMessagesTotal] = useState(0);
+    const [maxOnPage, setMaxOnPage] = useState(20);
+
+    const [minLettersPage] = useState(0);
+    const [lettersPage, setlettersPage] = useState(0);
+
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
@@ -35,23 +35,20 @@ function Sent() {
                 }
             })
             .catch(console.error);
-
-        if (user != null) {
-
-            refreshLetters();
-        }
     }, []);
 
     useEffect(() => {
         if (user) {
-            refreshLetters();
+            TotalSentLettersGet();
+            refreshLetters(0, maxOnPage - 1);
         }
     }, [user]);
 
-    async function refreshLetters() {
-        const response = await fetch('https://localhost:7094/api/letter/getusersentletters',
+    async function refreshLetters(startIndex: number, endIndex: number) {
+        const response = await fetch(`https://localhost:7094/api/letter/get/send/${startIndex}/${endIndex}`,
             {
                 credentials: "include",
+                method: "GET",
             });
 
         if (!response.ok)
@@ -59,21 +56,11 @@ function Sent() {
 
         const data = await response.json();
 
-        setAcceptLetters(data);
-
-        if (data.length < maxOnPage) {
-            setEndIndex(data.length);
-            setMaxOnPage(data.length);
-            setMessagesTotal(data.length)
-
-            if (data.length === 0) {
-                setStartIndex(0);
-            }
-        }
+        setSentLetters(data);
     }
 
     function changeStarred(i: number) {
-        fetch(`https://localhost:7094/api/letter/changestarred/${acceptLetters[i].id}`, {
+        fetch(`https://localhost:7094/api/letter/changestarred/${sentLetters[i].id}`, {
             credentials: "include",
             method: "PUT"
         })
@@ -82,7 +69,7 @@ function Sent() {
                     throw new Error(await r.text());
                 }
 
-                setAcceptLetters(prev =>
+                setSentLetters(prev =>
                     prev.map((letter, index) =>
                         index === i
                             ? {
@@ -162,6 +149,39 @@ function Sent() {
         );
     }
 
+    async function TotalSentLettersGet() {
+        const response = await fetch(`https://localhost:7094/api/letter/get/send/total  `, {
+            credentials: "include",
+            method: "GET"
+        })
+
+        if (!response.ok)
+            throw new Error(await response.text());
+
+        const data = await response.json();
+        setTotal(data);
+    }
+
+    const ClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const value = event.currentTarget.value;
+
+        const newPage = value === "prev"
+            ? lettersPage - 1
+            : lettersPage + 1;
+
+        const newStart = newPage * maxOnPage;
+        const newEnd = Math.min(newStart + maxOnPage - 1, total - 1);
+
+        setlettersPage(newPage);
+
+        refreshLetters(newStart, newEnd);
+    };
+
+    const maxLettersPage = Math.ceil(total / maxOnPage);
+    var startIndex = lettersPage * maxOnPage;
+
+    const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
+
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -200,10 +220,25 @@ function Sent() {
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
                             </div>
-                            {user == null ? (
+                            {user === null || total === 0 ? (
                                 <div className="pagination"></div>
                             ) : (
-                                <div className="pagination">{startIndex}-{endIndex} из {maxOnPage}</div>
+                                <div className="pagination">
+                                    {lettersPage > minLettersPage ? (
+                                        <button value="prev" onClick={ClickHandler} className="pagination-button">назад</button>
+                                    ) : (
+                                        <></>
+                                    )}
+                                    <p>
+                                        {startIndex + 1}-{endIndex + 1} из {total}
+                                    </p>
+                                    {lettersPage < maxLettersPage - 1 ? (
+                                        <button value="next" onClick={ClickHandler} className="pagination-button">вперед</button>
+                                    ) : (
+                                        <></>
+                                    )}
+
+                                </div>
                             )}
                         </div>
 
@@ -212,11 +247,11 @@ function Sent() {
                                 <p className="please-sign">Войдите в свой аккаунт или зарегиструйтесь</p>
                             ) : (
 
-                                messagesTotal === 0 ? (
+                                total === 0 ? (
                                     <p className="please-sign">Входящих сообщений нет</p>
                                 ) : (
 
-                                    acceptLetters.map((letter, i) => (
+                                    sentLetters.map((letter, i) => (
                                         <ReadStatusLetter
                                             key={letter.id}
                                             letter={letter}

@@ -57,20 +57,28 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("getusersentletters")]
-        public async Task<IActionResult> GetUserSentLetters()
+        [HttpGet("get/send/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetUserSentLetters(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId);
+            List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId, startIndex, endIndex);
             return Ok(userLetters);
+        }
+        [Authorize]
+        [HttpGet("get/send/total")]
+        public async Task<IActionResult> GetTotalUserSentLetters()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int total = await _letterService.GetTotalSendCount(userId);
+            return Ok(total);
         }
 
         [Authorize]
         [HttpGet("total")]
-        public async Task<IActionResult> MaxPagesCount()
+        public async Task<IActionResult> GetTotal()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            double total = await _letterService.GetTotalAcceptCount(userId);
+            int total = await _letterService.GetTotalAcceptCount(userId);
             return Ok(total);
         }
 

@@ -104,7 +104,7 @@ namespace Server.Service
 
             return userLetters;
         }
-        public async Task<List<LetterDTO>> GetSentLetters(Guid userId)
+        public async Task<List<LetterDTO>> GetSentLetters(Guid userId, int startIndex, int endIndex)
         {
             List<LetterDTO> userLetters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
@@ -113,7 +113,21 @@ namespace Server.Service
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 
-            return userLetters;
+            List<LetterDTO> filtredetters = new List<LetterDTO>();
+
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                if (i < userLetters.Count)
+                {
+                    filtredetters.Add(userLetters[i]);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return filtredetters;
         }
         public async Task ChangeStarred(Guid letterId, Guid userId)
         {
@@ -151,6 +165,14 @@ namespace Server.Service
         {
             int count = await _db.Letters
                 .Where(l => l.RecipientId == userId)
+                .CountAsync();
+
+            return count;
+        }
+        public async Task<int> GetTotalSendCount(Guid userId)
+        {
+            int count = await _db.Letters
+                .Where(l => l.AddresseeId == userId)
                 .CountAsync();
 
             return count;

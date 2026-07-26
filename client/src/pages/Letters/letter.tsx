@@ -14,6 +14,7 @@ function letter() {
     const [letterNumber, setLetterNumber] = useState(0);
     const [starred, setStarred] = useState(false);
     const [isRead, setIsRead] = useState(false);
+    
 
     const [user, setUser] = useState<User | null>(null);
     const { id } = useParams();
@@ -59,26 +60,44 @@ function letter() {
                 setStarred(state.starred)
                 setIsRead(state.isRead)
 
+                if (letter?.adresseeId === user?.id) {
+                    GetTotal("sent");
+                }
+                GetTotal("accept");
+
             } catch (error) {
                 console.error(error);
             }
         }
 
         loadData();
-        GetTotal();
     }, [id]);
 
-    async function GetTotal() {
-        const response = await fetch(`https://localhost:7094/api/letter/total`, {
-            credentials: "include",
-            method: "GET"
-        });
+    async function GetTotal(type: string) {
+        if (type === "sent") {
+            const response = await fetch(`https://localhost:7094/api/letter/total`, {
+                credentials: "include",
+                method: "GET"
+            });
 
-        if (!response.ok)
-            throw new Error(await response.text());
+            if (!response.ok)
+                throw new Error(await response.text());
 
-        const data = await response.json();
-        setLettersTotal(data)
+            const data = await response.json();
+            setLettersTotal(data)
+        }
+        else {
+            const response = await fetch(`https://localhost:7094/api/letter/get/send/total`, {
+                credentials: "include",
+                method: "GET"
+            });
+
+            if (!response.ok)
+                throw new Error(await response.text());
+
+            const data = await response.json();
+            setLettersTotal(data)
+        }
     }
 
     function changeStarred() {

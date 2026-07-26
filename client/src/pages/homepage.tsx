@@ -141,7 +141,6 @@ function homepage() {
 
         const data = await response.json();
         setTotal(data);
-
     }
 
     function StarredStatusLetter({ state, i, changeStarred }) {
@@ -186,7 +185,6 @@ function homepage() {
     
     const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
 
-    console.log(total)
     return (
         <div className="parent-container">
             <div className="main-container">

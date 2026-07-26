@@ -17,14 +17,28 @@ namespace Server.Service
         }
 
 
-        public async Task<List<DraftDTO>> Get(Guid  UserId)
+        public async Task<List<DraftDTO>> GetUserDrafts(Guid  UserId, int startIndex, int endIndex)
         {
             List<DraftDTO> draftsList = await _db.Drafts
                 .Where(l => l.AuthorId == UserId)
                 .Include(l => l.Author)
                 .Select(l => DraftMapper.ToDTO(l)).ToListAsync();
 
-            return draftsList;
+            List<DraftDTO> drafts = new List<DraftDTO>();
+
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                if (i < draftsList.Count)
+                {
+                    drafts.Add(draftsList[i]);
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return drafts;
         }
 
         public async Task Add(NewDraftDTO request, Guid authorId)
@@ -45,7 +59,6 @@ namespace Server.Service
             _db.Drafts.Add(draft);
             _db.SaveChanges();
         }
-
         public async Task<DraftDTO> GetById(Guid draftId)
         {
             Draft draft = await _db.Drafts
@@ -54,7 +67,6 @@ namespace Server.Service
             DraftDTO draftDTO = DraftMapper.ToDTO(draft);
             return draftDTO;
         }
-
         public async Task Save(NewDraftDTO request, Guid draftId)
         {
             Draft? draftInDb = await _db.Drafts.SingleOrDefaultAsync(x => x.Id == draftId);
@@ -66,6 +78,14 @@ namespace Server.Service
             draftInDb?.LastEditDate = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
+        }
+        public async Task<int> GetTotalAcceptCount(Guid userId)
+        {
+            int count = await _db.Drafts
+                .Where(l => l.AuthorId == userId)
+                .CountAsync();
+
+            return count;
         }
     }
 }
