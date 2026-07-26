@@ -137,7 +137,7 @@ function EditDraft() {
                 const message = await response.text();
                 setErrorMessage(message);
             }
-        }else if (submitter.value === "sendnew") {
+        } else if (submitter.value === "sendnew") {
             const response = await fetch(`https://localhost:7094/api/draft/sendnew`, {
                 method: "POST",
                 credentials: "include",
@@ -217,15 +217,15 @@ function EditDraft() {
                                 )}
 
                                 {isNew === true ? (
-                                    <>
+                                    <div className="write-letter-activity-buttons">
                                         <button type="submit" className="write-letter-submit-button" value="new">Создать</button>
                                         <button type="submit" className="write-letter-submit-button" value="sendnew">Отправить</button>
-                                    </>
+                                    </div>
                                 ) : (
-                                    <>
+                                    <div className="write-letter-activity-buttons">
                                         <button type="submit" className="write-letter-submit-button" value="save">Сохранить</button>
                                         <button type="submit" className="write-letter-submit-button" value="send">Отправить</button>
-                                    </>
+                                    </div>
                                 )}
 
 

@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain;
+using Domain.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
@@ -15,7 +16,8 @@ namespace Server.Development
             _db = db;
         }
 
-        [HttpGet("generate")]
+        //https://localhost:7094/api/dev/dev/generateletters
+        [HttpGet("generateletters")]
         public async Task<IActionResult> AddLetters()
         {
             Guid adresseeId = Guid.Parse("dedba6a8-2bd7-42c9-b5c8-ee3099c04dca");
@@ -49,6 +51,32 @@ namespace Server.Development
                 }
                 };
                 _db.Letters.Add(letter);
+                _db.SaveChanges();
+            }
+
+            return Ok();
+        }
+
+        //https://localhost:7094/api/dev/dev/generatedrafts
+        [HttpGet("generatedrafts")]
+        public async Task<IActionResult> AddDrafts()
+        {
+            Guid userId = Guid.Parse("cb3f8751-8aea-44d0-a1ff-32dbda067eca");
+
+            User user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+
+            for (int i = 0; i < 45 ; i++)
+            {
+                Draft draft = new Draft()
+                {
+                    Author = user,
+                    AuthorId = userId,
+                    Title = "Здравствуйте Дмитрий, это чернровик " + i,
+                    RecipientEmail = "egor@mymail.com",
+                    Text = ""
+                };
+                
+                _db.Drafts.Add(draft);
                 _db.SaveChanges();
             }
 

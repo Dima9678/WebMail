@@ -23,11 +23,11 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("get")]
-        public async Task<IActionResult> GetDrafts()
+        [HttpGet("getdrafts/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetDrafts(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var drafts = await _draftService.Get(userId);
+            var drafts = await _draftService.GetUserDrafts(userId, startIndex, endIndex);
             return Ok(drafts);
         }
 
@@ -45,6 +45,15 @@ namespace Server.Controllers
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             await _draftService.Add(request, adresseeId);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpGet("gettotal")]
+        public async Task<IActionResult> GetTotal()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int total = await _draftService.GetTotalAcceptCount(userId);
+            return Ok(total);
         }
 
         [Authorize]

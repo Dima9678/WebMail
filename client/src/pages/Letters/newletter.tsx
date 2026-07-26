@@ -110,11 +110,11 @@ function newletter() {
                 <div className="main-content">
                     <nav className="sidebar">
                         <Link to="/allmails" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
-                        <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style"  src="/images/plane.svg" alt="самолет"></img></Link>
-                        <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style"  src="/images/star.svg" alt="звезда"></img></Link>
-                        <Link to="/drafts" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style"  src="/images/draft.svg" alt="черновики"></img></Link>
-                        <Link to="/spam" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style"  src="/images/spam.svg" alt="спам"></img></Link>
-                        <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style"  src="/images/trash.svg" alt="корзина"></img></Link>
+                        <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
+                        <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
+                        <Link to="/drafts" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/draft.svg" alt="черновики"></img></Link>
+                        <Link to="/spam" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/spam.svg" alt="спам"></img></Link>
+                        <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
 
                     <div className="write-letter">
@@ -147,10 +147,12 @@ function newletter() {
                                 {sucsess ? (
                                     <p className="write-letter-sucsess-message">{errorMessage}</p>
                                 ) : (
-                                        <p className="write-letter-error-message">{errorMessage}</p>
-                                    )}
-                                <button type="submit" className="write-letter-submit-button" value="letter">Отправить</button>
-                                <button type="submit" className="write-letter-submit-button" value="draft">В черновики</button>
+                                    <p className="write-letter-error-message">{errorMessage}</p>
+                                )}
+                                <div className="write-letter-activity-buttons">
+                                    <button type="submit" className="write-letter-submit-button" value="letter">Отправить</button>
+                                    <button type="submit" className="write-letter-submit-button" value="draft">В черновики</button>
+                                </div>
                             </div>
                         </form>
                     </div>
