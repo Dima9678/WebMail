@@ -16,14 +16,18 @@ namespace Domain.Models
         public DateTime SendTime { get; set; }
         public List<LetterState> LetterStates { get; set; }
 
-        public List<Letter>? ChidLetters { get; set; }
-        public List<Guid>? ChildrenLettersGuids { get; set; }
+        public List<Letter> ChidrenLetters { get; set; } = [];
         public Letter? ParentLetter { get; set; }
-        public Guid? ParentLetterGuid { get; set; }
+        public Guid? ParentLetterId { get; set; }
 
         public Letter()
         {
             Id = Guid.NewGuid();
+        }
+
+        public void AddChild(Letter childLetter)
+        {
+            ChidrenLetters.Add(childLetter);
         }
     }
 }

@@ -33,13 +33,13 @@ namespace Persistence.Migrations
                 oldType: "uuid");
 
             migrationBuilder.AddColumn<List<Guid>>(
-                name: "ChildrenLettersGuids",
+                name: "ChildrenLettersId",
                 table: "Letters",
                 type: "uuid[]",
                 nullable: true);
 
             migrationBuilder.AddColumn<Guid>(
-                name: "ParentLetterGuid",
+                name: "ParentLetterId",
                 table: "Letters",
                 type: "uuid",
                 nullable: true);
@@ -69,11 +69,11 @@ namespace Persistence.Migrations
                 table: "Letters");
 
             migrationBuilder.DropColumn(
-                name: "ChildrenLettersGuids",
+                name: "ChildrenLettersId",
                 table: "Letters");
 
             migrationBuilder.DropColumn(
-                name: "ParentLetterGuid",
+                name: "ParentLetterId",
                 table: "Letters");
 
             migrationBuilder.AlterColumn<Guid>(
