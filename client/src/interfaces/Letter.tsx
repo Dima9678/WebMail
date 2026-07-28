@@ -23,7 +23,6 @@ export interface Letter {
     letterStates: LetterState[];
 
     chidLetters: Letter[];
-    childLetterId: string[];
     parentLetter: Letter;
     parentLetterId: string;
 }
