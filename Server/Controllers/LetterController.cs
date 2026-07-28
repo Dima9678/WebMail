@@ -38,6 +38,22 @@ namespace Server.Controllers
             return Ok();
         }
 
+        [Authorize]
+        [HttpPost("write/reply/{parentLetterId:guid}")]
+        public async Task<IActionResult> Reply([FromBody] NewLetterDTO request, Guid parentLetterId)
+        {
+            bool result;
+            string message;
+            (result, message) = await _validation.ValidateWriteLetterRequest(request);
+            if (!result) 
+            {
+                return BadRequest(message);
+            }
+            Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            await _letterService.AddReply(request, adresseeId, parentLetterId);
+            return Ok();
+        }
+
         [HttpGet("{letterId:guid}")]
         public async Task<IActionResult> GetById(Guid letterId)
         {

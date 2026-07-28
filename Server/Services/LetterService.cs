@@ -53,6 +53,43 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
+
+        public async Task AddReply(NewLetterDTO request, Guid adresseeId, Guid parentLetterId)
+        {
+            var recipient = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
+            var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
+            var parentLetter = await _db.Letters.SingleOrDefaultAsync(u => u.Id == parentLetterId);
+
+            Letter letter = new Letter()
+            {
+                AddresseeId = adressee.Id,
+                RecipientId = recipient.Id,
+                Title = request.Title,
+                Text = request.Text,
+                SendTime = DateTime.UtcNow,
+                ParentLetter = parentLetter,
+                ParentLetterId = parentLetterId,
+
+                LetterStates = new List<LetterState>()
+                {
+                    new LetterState()
+                    {
+                        IsRead = true,
+                        UserId = adressee.Id,
+                    },
+                    new LetterState()
+                    {
+                        IsRead = false,
+                        UserId = recipient.Id,
+                    },
+                }
+            };
+
+            parentLetter.AddChild(letter);
+
+            _db.Letters.Add(letter);
+            _db.SaveChanges();
+        }
         public async Task<FullLetterDTO> GetById(Guid letterId, Guid userId)
         {
             Letter? letterInDb = await _db.Letters

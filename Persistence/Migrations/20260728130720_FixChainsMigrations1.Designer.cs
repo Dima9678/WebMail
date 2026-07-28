@@ -13,8 +13,8 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20260728112108_ConfigureLetter")]
-    partial class ConfigureLetter
+    [Migration("20260728130720_FixChainsMigrations1")]
+    partial class FixChainsMigrations1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -68,9 +68,6 @@ namespace Persistence.Migrations
 
                     b.PrimitiveCollection<List<Guid>>("ChildrenLettersId")
                         .HasColumnType("uuid[]");
-
-                    b.Property<Guid?>("ParentLetterId")
-                        .HasColumnType("uuid");
 
                     b.Property<Guid?>("ParentLetterId")
                         .HasColumnType("uuid");

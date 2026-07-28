@@ -14,7 +14,7 @@ function letter() {
     const [letterNumber, setLetterNumber] = useState(0);
     const [starred, setStarred] = useState(false);
     const [isRead, setIsRead] = useState(false);
-    
+
 
     const [user, setUser] = useState<User | null>(null);
     const { id } = useParams();
@@ -162,7 +162,7 @@ function letter() {
                                 {isRead ? (
                                     <button onClick={changeReadState}><img src="/images/letterPage/mark_unread.svg" className="one-letter-topbar-button" alt="unread" /></button>
                                 ) : (
-                                        <button onClick={changeReadState}><img src="/images/letterPage/mark_read.svg" className="one-letter-topbar-button" alt="read" /></button>
+                                    <button onClick={changeReadState}><img src="/images/letterPage/mark_read.svg" className="one-letter-topbar-button" alt="read" /></button>
                                 )}
 
                                 <button><img src="/images/letterPage/spam.svg" className="one-letter-topbar-button" alt="spam" /></button>
@@ -211,7 +211,7 @@ function letter() {
                                 <p className="one-letter-text">{letter.text}</p>
 
                                 <div className="one-letter-button-container">
-                                    <div className="one-letter-activity-button">Ответить</div>
+                                    <Link to={`/newletter/${letter.id}`} className="one-letter-activity-button">Ответить</Link>
                                     <div className="one-letter-activity-button">Переслать</div>
                                 </div>
                             </div>
