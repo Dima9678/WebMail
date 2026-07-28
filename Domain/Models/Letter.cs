@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Domain.Models.DTO;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -8,10 +9,17 @@ namespace Domain.Models
     {
         public User Addressee { get; set; }
         public Guid AddresseeId { get; set; }
+
         public User Recipient { get; set; }
         public Guid RecipientId { get; set; }
+
         public DateTime SendTime { get; set; }
         public List<LetterState> LetterStates { get; set; }
+
+        public List<Letter>? ChidLetters { get; set; }
+        public List<Guid>? ChildrenLettersGuids { get; set; }
+        public Letter? ParentLetter { get; set; }
+        public Guid? ParentLetterGuid { get; set; }
 
         public Letter()
         {

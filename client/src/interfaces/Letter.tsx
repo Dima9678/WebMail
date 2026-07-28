@@ -21,4 +21,9 @@ export interface Letter {
 
     sendTime: Date;
     letterStates: LetterState[];
+
+    chidLetters: Letter[];
+    childLetterId: string[];
+    parentLetter: Letter;
+    parentLetterId: string;
 }
