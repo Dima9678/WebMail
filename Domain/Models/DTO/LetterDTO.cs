@@ -18,10 +18,8 @@
         public DateTime SendTime { get; set; }
         public List<LetterStateDTO> LetterStates { get; set; }
 
-        public List<LetterDTO>? ChidLetters { get; set; }
-        public List<Guid>? ChildrenLettersGuids { get; set; }
-
+        public List<LetterDTO> ChidrenLetters { get; set; } = [];
         public LetterDTO? ParentLetter { get; set; }
-        public Guid? ParentLetterGuid { get; set; }
+        public Guid? ParentLetterId { get; set; }
     }
 }

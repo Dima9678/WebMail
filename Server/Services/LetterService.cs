@@ -96,6 +96,9 @@ namespace Server.Service
                 .Where(u  => u.Id == letterId)
                 .Include(u => u.LetterStates)
                 .Include(u => u.Addressee)
+                .Include(u => u.ParentLetter)
+                .Include(u => u.ParentLetter.Addressee)
+                .Include(u => u.ParentLetter.LetterStates)
                 .SingleOrDefaultAsync();
             await ChangeIsReaden(userId, letterInDb);
 

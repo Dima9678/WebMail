@@ -63,7 +63,18 @@ namespace Server.Mappers
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,
                 RecipientId = letterInDb.RecipientId,
+                ParentLetterId = letterInDb.ParentLetterId,
             };
+            //на случай, если нет родительского письма
+            if (letterInDb.ParentLetter == null)
+            {
+                letterDTO.ParentLetter = null;
+            }
+            else
+            {
+                letterDTO.ParentLetter = LetterMapper.ToDto(letterInDb.ParentLetter);
+            }
+
             return letterDTO;
         }
 

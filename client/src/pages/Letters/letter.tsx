@@ -7,17 +7,19 @@ import type { FullLetter } from '../../interfaces/FullLetter';
 
 
 function letter() {
+    const [user, setUser] = useState<User | null>(null);
+
+    const { id } = useParams();
     const [letter, setLetter] = useState<FullLetter>();
+
+    const [starred, setStarred] = useState(false);
+    const [isRead, setIsRead] = useState(false);
+
     const [previousId, setPreviousId] = useState("");
     const [nextId, setNextId] = useState("");
     const [lettersTotal, setLettersTotal] = useState("");
     const [letterNumber, setLetterNumber] = useState(0);
-    const [starred, setStarred] = useState(false);
-    const [isRead, setIsRead] = useState(false);
 
-
-    const [user, setUser] = useState<User | null>(null);
-    const { id } = useParams();
 
     useEffect(() => {
         async function loadData() {
@@ -188,6 +190,16 @@ function letter() {
                             </div>
                         ) : (
                             <div className="one-letter-main-container">
+
+                                    {letter.parentLetter != undefined ? (
+                                        <>
+                                            <p>{letter.parentLetter.adresseeName} {letter.parentLetter.adresseeSurname}</p>
+                                            <p>{letter.parentLetter.title}</p>
+                                            <br></br>
+                                        </>
+                                    ): (
+                                        <></>
+                                        )}
 
                                 <div className="one-letter-header">
                                     <div className="one-letter-title-block">
