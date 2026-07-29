@@ -54,18 +54,17 @@ namespace Server.Service
             _db.SaveChanges();
         }
 
-        public async Task AddReply(NewLetterDTO request, Guid adresseeId, Guid parentLetterId)
+        public async Task AddReply(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
         {
-            var recipient = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
-            var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
             var parentLetter = await _db.Letters.SingleOrDefaultAsync(u => u.Id == parentLetterId);
+            var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
 
             Letter letter = new Letter()
             {
                 AddresseeId = adressee.Id,
-                RecipientId = recipient.Id,
-                Title = request.Title,
-                Text = request.Text,
+                RecipientId = parentLetter.AddresseeId,
+                Title = $"Ответ на письмо: {parentLetter.Title.ToLower()}",
+                Text = replyText.ReplyText,
                 SendTime = DateTime.UtcNow,
                 ParentLetter = parentLetter,
                 ParentLetterId = parentLetterId,
@@ -80,7 +79,7 @@ namespace Server.Service
                     new LetterState()
                     {
                         IsRead = false,
-                        UserId = recipient.Id,
+                        UserId = parentLetter.AddresseeId,
                     },
                 }
             };

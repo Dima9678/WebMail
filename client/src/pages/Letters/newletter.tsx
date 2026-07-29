@@ -1,47 +1,18 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import type { User } from "../interfaces/User";
-import type { Letter } from "../interfaces/Letter";
-import letter from './letter';
 
 
 function newletter() {
-
-    const [, setUser] = useState<User | null>(null);
-
-    const { id } = useParams();
-    const [parentLetter, setParentLetter] = useState<Letter>()
-
     const [recipient, setRecipient] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
-
+    const [, setUser] = useState<User | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
 
-
     useEffect(() => {
-        //Если пришел id письма, то мы пишем ответ на него
-        const isReply = async () => {
-            if (id != undefined) {
-                const letterResponse = await fetch(
-                    `https://localhost:7094/api/letter/${id}`,
-                    {
-                        credentials: "include"
-                    }
-                );
-                if (!letterResponse.ok) {
-                    throw new Error(await letterResponse.text());
-                }
-                const letterData: Letter = await letterResponse.json();
-                setParentLetter(letterData);
-                setRecipient(letterData.adresseeEmail);
-            }
-        }
-
-        isReply();
-
         fetch("https://localhost:7094/api/User", {
             credentials: "include"
         })
@@ -64,43 +35,24 @@ function newletter() {
     }, []);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault()
+        e.preventDefault();
 
         const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
 
         if (submitter.value === "letter") {
-            let response;
-            
-            if (id === undefined) {
-                response = await fetch("https://localhost:7094/api/letter/write", {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        recipient,
-                        title,
-                        text,
-                    })
-                });
-            }
-            else {
-                const replyId = id;
-                response = await fetch(`https://localhost:7094/api/letter/write/reply/${id}`, {
-                    method: "POST",
-                    credentials: "include",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        recipient,
-                        title,
-                        text,
-                        replyId,
-                    })
-                });
-            }
+            console.log("letter");
+            const response = await fetch("https://localhost:7094/api/letter/write", {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recipient,
+                    title,
+                    text,
+                })
+            });
 
             if (response.ok) {
                 setRecipient("");
@@ -143,6 +95,7 @@ function newletter() {
         }
     }
 
+
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -168,16 +121,6 @@ function newletter() {
                         <div className="write-letter-topbar">
                             Написать письмо
                         </div>
-                        {parentLetter != undefined ? (
-                            <div>
-                                <p>В ответ на: </p>
-                                <p>Тема: {parentLetter.title}</p>
-                                <p>Адресат: {parentLetter.adresseeEmail}</p>
-                            </div>
-                        ) : (
-                            <></>
-                        )}
-
                         <form onSubmit={handleSubmit} className="write-letter-form">
                             <input
                                 className="write-letter-recipient"
