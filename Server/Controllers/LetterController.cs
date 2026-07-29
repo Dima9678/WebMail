@@ -40,17 +40,18 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("write/reply/{parentLetterId:guid}")]
-        public async Task<IActionResult> Reply([FromBody] NewLetterDTO request, Guid parentLetterId)
+        public async Task<IActionResult> Reply([FromBody] ReplyDTO reply, Guid parentLetterId)
         {
             bool result;
             string message;
-            (result, message) = await _validation.ValidateWriteLetterRequest(request);
-            if (!result) 
+            (result, message) = await _validation.ValidateReplyRequest(reply);
+            if (!result)
             {
                 return BadRequest(message);
             }
+
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.AddReply(request, adresseeId, parentLetterId);
+            await _letterService.AddReply(reply, adresseeId, parentLetterId);
             return Ok();
         }
 

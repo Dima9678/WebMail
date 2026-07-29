@@ -71,6 +71,16 @@ namespace Server.Validators
 
             return (true, string.Empty);
         }
+
+        public async Task<(bool, string)> ValidateReplyRequest(ReplyDTO reply)
+        {
+            if (string.IsNullOrWhiteSpace(reply.ReplyText))
+            {
+                return (false, "Текст письма не может быть пустым");
+            }
+
+            return (true, string.Empty);
+        }
         public async Task<(bool, string)> ValidateWriteDraftRequest(NewDraftDTO request)
         {
             if (string.IsNullOrWhiteSpace(request.RecipientEmail) &&

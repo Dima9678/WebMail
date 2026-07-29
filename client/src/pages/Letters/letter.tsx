@@ -20,6 +20,25 @@ function letter() {
     const [lettersTotal, setLettersTotal] = useState("");
     const [letterNumber, setLetterNumber] = useState(0);
 
+    const [replyMode, setReplyMode] = useState(false);
+    const [replyText, setReplyText] = useState("");
+
+    const [errorMessage, setErrorMessage] = useState("");
+    const [sucsess, setSucsess] = useState(false);
+
+    /*
+    {
+        letter.parentLetter != undefined ? (
+            <>
+                <p>{letter.parentLetter.adresseeName} {letter.parentLetter.adresseeSurname}</p>
+                <p>{letter.parentLetter.title}</p>
+                <br></br>
+            </>
+        ) : (
+        <></>
+    )
+    }
+    */
 
     useEffect(() => {
         async function loadData() {
@@ -101,7 +120,6 @@ function letter() {
             setLettersTotal(data)
         }
     }
-
     function changeStarred() {
         fetch(`https://localhost:7094/api/letter/changestarred/${letter?.id}`, {
             credentials: "include",
@@ -127,6 +145,40 @@ function letter() {
                 setIsRead(!isRead);
             })
             .catch(console.error);
+    }
+
+    function ChangeReplyMode() {
+        setReplyMode(!replyMode);
+        if (replyMode) {
+            console.log("Режим включен");
+        }
+        else {
+            console.log("Режим выключен");
+        }
+    }
+    async function Reply() {
+        const replyId = id;
+        const response = await fetch(`https://localhost:7094/api/letter/write/reply/${id}`, {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                replyText
+            })
+        });
+
+        if (response.ok) {
+            setReplyText("");
+            setReplyMode(false);
+            setSucsess(true);
+        }
+        else {
+            setSucsess(false);
+            const message = await response.text();
+            setErrorMessage(message);
+        }
     }
 
     return (
@@ -191,16 +243,6 @@ function letter() {
                         ) : (
                             <div className="one-letter-main-container">
 
-                                    {letter.parentLetter != undefined ? (
-                                        <>
-                                            <p>{letter.parentLetter.adresseeName} {letter.parentLetter.adresseeSurname}</p>
-                                            <p>{letter.parentLetter.title}</p>
-                                            <br></br>
-                                        </>
-                                    ): (
-                                        <></>
-                                        )}
-
                                 <div className="one-letter-header">
                                     <div className="one-letter-title-block">
                                         <p className="one-letter-title">{letter.title}</p>
@@ -222,10 +264,28 @@ function letter() {
 
                                 <p className="one-letter-text">{letter.text}</p>
 
-                                <div className="one-letter-button-container">
-                                    <Link to={`/newletter/${letter.id}`} className="one-letter-activity-button">Ответить</Link>
-                                    <div className="one-letter-activity-button">Переслать</div>
-                                </div>
+                                {replyMode ? (
+                                    <div className="main-reply-container">
+                                        <textarea
+                                            className="reply-textarea"
+                                            placeholder="Текст письма"
+                                            value={replyText}
+                                            onChange={(e) => setReplyText(e.target.value)}>
+                                        </textarea>
+                                        <div className="reply-form-footer">
+                                            <p className="reply-error-message">{errorMessage}</p>
+                                            <div className="reply-action-buttons">
+                                                <button onClick={Reply} className="reply-action-button">Ответить</button>
+                                                <button className="reply-action-button">Отменить</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <div className="one-letter-button-container">
+                                        <button onClick={ChangeReplyMode} className="one-letter-activity-button">Ответить</button>
+                                        <button className="one-letter-activity-button">Переслать</button>
+                                    </div>
+                                )}
                             </div>
                         )}
                     </div>
