@@ -63,7 +63,7 @@ namespace Server.Service
             {
                 AddresseeId = adressee.Id,
                 RecipientId = parentLetter.AddresseeId,
-                Title = $"Ответ на письмо: {parentLetter.Title.ToLower()}",
+                Title = $"Ответ на письмо: \"{parentLetter.Title}\"",
                 Text = replyText.ReplyText,
                 SendTime = DateTime.UtcNow,
                 ParentLetter = parentLetter,
@@ -102,6 +102,12 @@ namespace Server.Service
                     .Where(l => l.RecipientId == userId || l.AddresseeId == userId))
                     .ThenInclude(l => l.Addressee)
                 .SingleOrDefaultAsync();
+
+            if (letterInDb == null)
+            {
+                return null;
+            }
+
             await ChangeIsReaden(userId, letterInDb);
 
             FullLetterDTO fullLetterDTO = LetterMapper.ToFullDto(letterInDb);

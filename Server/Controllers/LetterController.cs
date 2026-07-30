@@ -15,7 +15,7 @@ namespace Server.Controllers
         private readonly ValidationCheck _validation;
 
         private LetterService _letterService;
-        
+
         public LetterController(LetterService letterService, ValidationCheck validation)
         {
             _letterService = letterService;
@@ -29,7 +29,7 @@ namespace Server.Controllers
             bool result;
             string message;
             (result, message) = await _validation.ValidateWriteLetterRequest(request);
-            if (!result) 
+            if (!result)
             {
                 return BadRequest(message);
             }
@@ -62,7 +62,14 @@ namespace Server.Controllers
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             FullLetterDTO fullLetterDto = await _letterService.GetById(letterId, userId);
 
-            return Ok(fullLetterDto);
+            if (fullLetterDto == null)
+            {
+                return BadRequest("Письмо не найдено");
+            }
+            else
+            {
+                return Ok(fullLetterDto);
+            }
         }
 
         [Authorize]
@@ -129,4 +136,3 @@ namespace Server.Controllers
     }
 }
 
-    
