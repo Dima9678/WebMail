@@ -55,6 +55,7 @@ namespace Server.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpGet("{letterId:guid}")]
         public async Task<IActionResult> GetById(Guid letterId)
         {

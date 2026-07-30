@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Persistence;
@@ -11,9 +12,11 @@ using Persistence;
 namespace Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20260729115609_FixChainsMigrations8")]
+    partial class FixChainsMigrations8
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -167,7 +170,7 @@ namespace Persistence.Migrations
                         .IsRequired();
 
                     b.HasOne("Domain.Models.Letter", "ParentLetter")
-                        .WithMany("ChildrenLetters")
+                        .WithMany("ChidrenLetters")
                         .HasForeignKey("ParentLetterId");
 
                     b.HasOne("Domain.User", "Recipient")
@@ -204,7 +207,7 @@ namespace Persistence.Migrations
 
             modelBuilder.Entity("Domain.Models.Letter", b =>
                 {
-                    b.Navigation("ChildrenLetters");
+                    b.Navigation("ChidrenLetters");
 
                     b.Navigation("LetterStates");
                 });

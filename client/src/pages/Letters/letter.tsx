@@ -181,6 +181,60 @@ function letter() {
         }
     }
 
+    function RenderLetter({ letter }: { letter: Letter }) {
+        return (
+            <div className="one-letter-reply-container">
+                <div className="one-letter-header">
+                    <div className="one-letter-title-block">
+                        <p className="one-letter-title">{letter.title}</p>
+                        <p className="one-letter-datetime">
+                            {new Date(letter.sendTime).toLocaleDateString("ru-RU")} в
+                            {new Date(letter.sendTime).toLocaleTimeString("ru-RU")}
+                        </p>
+                    </div>
+                    <div className="one-letter-sender-block">
+                        <div className="one-letter-avatar">
+                            <p className="one-letter-avatar-letter">{letter.adresseeName[0]}</p>
+                        </div>
+                        <div>
+                            <p className="one-letter-adressee-name">{letter.adresseeName} {letter.adresseeSurname}</p>
+                            <p className="one-letter-adressee-email">{letter.adresseeEmail}</p>
+                        </div>
+                    </div>
+                </div>
+                <p className="one-letter-text">{letter.text}</p>
+                {replyMode ? (
+                    <div className="main-reply-container">
+                        <textarea
+                            className="reply-textarea"
+                            placeholder="Текст письма"
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}>
+                        </textarea>
+                        <div className="reply-form-footer">
+                            <p className="reply-error-message">{errorMessage}</p>
+                            <div className="reply-action-buttons">
+                                <button onClick={Reply} className="reply-action-button">Ответить</button>
+                                <button className="reply-action-button">Отменить</button>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="one-letter-button-container">
+                        <button onClick={ChangeReplyMode} className="one-letter-activity-button">Ответить</button>
+                        <button className="one-letter-activity-button">Переслать</button>
+                    </div>
+                )}
+            </div>
+        )
+    }
+
+    if (letter != null || letter != undefined) {
+        console.log("Письмо загружено")
+        console.log(letter.childrenLetters)
+
+    }
+
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -236,13 +290,42 @@ function letter() {
                                 )}
                             </div>
                         </div>
+
+
+                        {letter?.parentLetter != undefined ? (
+                            <div className="one-letter-main-container">
+                                <div className="one-letter-header">
+                                    <div className="one-letter-title-block">
+                                        <p className="one-letter-title">{letter?.parentLetter?.title}</p>
+                                        <p className="one-letter-datetime">
+                                            {new Date(letter?.parentLetter?.sendTime).toLocaleDateString("ru-RU")} в
+                                            {new Date(letter?.parentLetter?.sendTime).toLocaleTimeString("ru-RU")}
+                                        </p>
+                                    </div>
+                                    <div className="one-letter-sender-block">
+                                        <div className="one-letter-avatar">
+                                            <p className="one-letter-avatar-letter">{letter?.parentLetter?.adresseeName[0]}</p>
+                                        </div>
+                                        <div>
+                                            <p className="one-letter-adressee-name">{letter?.parentLetter?.adresseeName} {letter?.parentLetter?.adresseeSurname}</p>
+                                            <p className="one-letter-adressee-email">{letter?.parentLetter?.adresseeEmail}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <p className="one-letter-text">{letter?.parentLetter?.text}</p>
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+
+
+
                         {letter === undefined ? (
                             <div className="one-letter-main-container">
                                 <p>Данные загружаются</p>
                             </div>
                         ) : (
                             <div className="one-letter-main-container">
-
                                 <div className="one-letter-header">
                                     <div className="one-letter-title-block">
                                         <p className="one-letter-title">{letter.title}</p>
@@ -261,9 +344,7 @@ function letter() {
                                         </div>
                                     </div>
                                 </div>
-
                                 <p className="one-letter-text">{letter.text}</p>
-
                                 {replyMode ? (
                                     <div className="main-reply-container">
                                         <textarea
@@ -288,6 +369,12 @@ function letter() {
                                 )}
                             </div>
                         )}
+
+                        {letter?.childrenLetters?.map((childLetter) =>
+                        (
+                            <RenderLetter letter={childLetter} key={childLetter.id} />
+                        ))
+                        }
                     </div>
                 </div>
             </div>

@@ -1,5 +1,6 @@
 import type { User } from './User';
 import type { LetterState } from './LetterState';
+import type { FullLetter } from './FullLetter';
 
 export interface Letter {
     id: string;
@@ -22,7 +23,7 @@ export interface Letter {
     sendTime: Date;
     letterStates: LetterState[];
 
-    chidLetters: Letter[];
-    parentLetter: Letter;
+    childrenLetters: FullLetter[];
+    parentLetter: FullLetter;
     parentLetterId: string;
 }

@@ -92,12 +92,15 @@ namespace Server.Service
         public async Task<FullLetterDTO> GetById(Guid letterId, Guid userId)
         {
             Letter? letterInDb = await _db.Letters
-                .Where(u  => u.Id == letterId)
+                .Where(u => u.Id == letterId)
                 .Include(u => u.LetterStates)
                 .Include(u => u.Addressee)
                 .Include(u => u.ParentLetter)
                 .Include(u => u.ParentLetter.Addressee)
                 .Include(u => u.ParentLetter.LetterStates)
+                .Include(u => u.ChildrenLetters
+                    .Where(l => l.RecipientId == userId || l.AddresseeId == userId))
+                    .ThenInclude(l => l.Addressee)
                 .SingleOrDefaultAsync();
             await ChangeIsReaden(userId, letterInDb);
 
