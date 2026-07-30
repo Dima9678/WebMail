@@ -74,6 +74,7 @@ function newletter() {
                 headers: {
                     "Content-Type": "application/json"
                 },
+
                 body: JSON.stringify({
                     recipient,
                     title,

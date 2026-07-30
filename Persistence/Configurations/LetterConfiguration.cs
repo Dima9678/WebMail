@@ -13,7 +13,7 @@ namespace Persistence.Configurations
         public void Configure(EntityTypeBuilder<Letter> builder)
         {
             builder
-                .HasMany(x => x.ChidrenLetters)
+                .HasMany(x => x.ChildrenLetters)
                 .WithOne(x => x.ParentLetter)
                 .HasForeignKey(x => x.ParentLetterId)
                 .OnDelete(DeleteBehavior.Restrict);

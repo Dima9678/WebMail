@@ -35,7 +35,7 @@ function App() {
                 {/*вопросик обозначает что параметр необязательный*/}
                 <Route path="/draft/:id?" element={<Draft />} />
 
-                <Route path="/newletter/:id?" element={<NewLetter />} />
+                <Route path="/newletter" element={<NewLetter />} />
                 <Route path="/letter/:id" element={<Letter />} />
 
                 <Route path="/sent" element={<SentPage />} />

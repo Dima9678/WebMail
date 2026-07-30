@@ -16,7 +16,7 @@ namespace Domain.Models
         public DateTime SendTime { get; set; }
         public List<LetterState> LetterStates { get; set; }
 
-        public List<Letter> ChidrenLetters { get; set; } = [];
+        public List<Letter> ChildrenLetters { get; set; } = [];
         public Letter? ParentLetter { get; set; }
         public Guid? ParentLetterId { get; set; }
 
@@ -27,7 +27,7 @@ namespace Domain.Models
 
         public void AddChild(Letter childLetter)
         {
-            ChidrenLetters.Add(childLetter);
+            ChildrenLetters.Add(childLetter);
         }
     }
 }

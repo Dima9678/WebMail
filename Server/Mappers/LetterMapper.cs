@@ -64,6 +64,7 @@ namespace Server.Mappers
                 SendTime = letterInDb.SendTime,
                 RecipientId = letterInDb.RecipientId,
                 ParentLetterId = letterInDb.ParentLetterId,
+                ChildrenLetters = LetterMapper.ListToDTO(letterInDb.ChildrenLetters)
             };
             //на случай, если нет родительского письма
             if (letterInDb.ParentLetter == null)
@@ -85,9 +86,28 @@ namespace Server.Mappers
                 Recipient = draft.RecipientEmail,
                 Title = draft.Title,
                 Text = draft.Text,
-
             };
             return letter;
+        }
+
+        public static List<LetterDTO> ListToDTO(List<Letter> letterInDb)
+        {
+            List<LetterDTO> list = new List<LetterDTO>(); 
+            foreach (Letter letter in letterInDb)
+            {
+                LetterDTO letterDTO = new LetterDTO()
+                {
+                    Id = letter.Id,
+                    AdresseeName = letter.Addressee.Name,
+                    AdresseeSurname = letter.Addressee.Surname,
+                    AdresseeEmail = letter.Addressee.Email,
+                    Title = letter.Title,
+                    Text = letter.Text,
+                    SendTime = letter.SendTime,
+                };
+                list.Add(letterDTO);
+            }
+            return list;
         }
     }
 }
