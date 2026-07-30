@@ -43,48 +43,7 @@ function letter() {
     useEffect(() => {
         async function loadData() {
             try {
-                const userResponse = await fetch("https://localhost:7094/api/User", {
-                    credentials: "include"
-                });
-
-                let currentUser: User | null = null;
-
-                if (userResponse.status !== 401) {
-                    if (!userResponse.ok) {
-                        throw new Error(await userResponse.text());
-                    }
-
-                    currentUser = await userResponse.json();
-                    setUser(currentUser);
-                }
-
-                const letterResponse = await fetch(
-                    `https://localhost:7094/api/letter/${id}`,
-                    {
-                        credentials: "include"
-                    }
-                );
-
-                if (!letterResponse.ok) {
-                    throw new Error(await letterResponse.text());
-                }
-
-                const letterData: FullLetter = await letterResponse.json();
-
-                setLetter(letterData);
-                setPreviousId(letterData.previousLetterId);
-                setNextId(letterData.nextLetterId);
-                setLetterNumber(letterData.letterNumber)
-
-                const state = letterData.letterStates.find(s => s.userId === currentUser.id);
-
-                setStarred(state.starred)
-                setIsRead(state.isRead)
-
-                if (letter?.adresseeId === user?.id) {
-                    GetTotal("sent");
-                }
-                GetTotal("accept");
+                await LoadUser();
 
             } catch (error) {
                 console.error(error);
@@ -93,6 +52,54 @@ function letter() {
 
         loadData();
     }, [id]);
+
+    async function LoadUser() {
+        const userResponse = await fetch("https://localhost:7094/api/User", {
+            credentials: "include"
+        });
+
+        let currentUser: User | null = null;
+
+        if (userResponse.status !== 401) {
+            if (!userResponse.ok) {
+                throw new Error(await userResponse.text());
+            }
+
+            currentUser = await userResponse.json();
+            setUser(currentUser);
+            LoadLetter(currentUser.id)
+        }
+    }
+
+    async function LoadLetter(currentUserId: string) {
+        const letterResponse = await fetch(
+            `https://localhost:7094/api/letter/${id}`,
+            {
+                credentials: "include"
+            }
+        );
+
+        if (!letterResponse.ok) {
+            throw new Error(await letterResponse.text());
+        }
+
+        const letterData: FullLetter = await letterResponse.json();
+
+        setLetter(letterData);
+        setPreviousId(letterData.previousLetterId);
+        setNextId(letterData.nextLetterId);
+        setLetterNumber(letterData.letterNumber)
+
+        const state = letterData.letterStates.find(s => s.userId === currentUserId);
+
+        setStarred(state.starred)
+        setIsRead(state.isRead)
+
+        if (letter?.adresseeId === user?.id) {
+            GetTotal("sent");
+        }
+        GetTotal("accept");
+    }
 
     async function GetTotal(type: string) {
         if (type === "sent") {
@@ -146,15 +153,8 @@ function letter() {
             })
             .catch(console.error);
     }
-
     function ChangeReplyMode() {
         setReplyMode(!replyMode);
-        if (replyMode) {
-            console.log("Режим включен");
-        }
-        else {
-            console.log("Режим выключен");
-        }
     }
     async function Reply() {
         const replyId = id;
@@ -173,6 +173,8 @@ function letter() {
             setReplyText("");
             setReplyMode(false);
             setSucsess(true);
+
+            LoadLetter(user.id);
         }
         else {
             setSucsess(false);
@@ -181,7 +183,8 @@ function letter() {
         }
     }
 
-    function RenderLetter({ letter }: { letter: Letter }) {
+    function RenderReply({ letter }: { letter: Letter }) {
+        console.log("ответ " + letter)
         return (
             <div className="one-letter-reply-container">
                 <div className="one-letter-header">
@@ -229,11 +232,57 @@ function letter() {
         )
     }
 
-    if (letter != null || letter != undefined) {
-        console.log("Письмо загружено")
-        console.log(letter.childrenLetters)
-
+    function RenderLetter({ currentLetter }: { currentLetter: Letter }) {
+        console.log("текущее письмо " + currentLetter)
+        return (
+            <div className="one-letter-main-container">
+                <div className="one-letter-header">
+                    <div className="one-letter-title-block">
+                        <p className="one-letter-title">{currentLetter.title}</p>
+                        <p className="one-letter-datetime">
+                            {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU")} в
+                            {new Date(currentLetter.sendTime).toLocaleTimeString("ru-RU")}
+                        </p>
+                    </div>
+                    <div className="one-letter-sender-block">
+                        <div className="one-letter-avatar">
+                            <p className="one-letter-avatar-letter">{currentLetter.adresseeName[0]}</p>
+                        </div>
+                        <div>
+                            <p className="one-letter-adressee-name">{currentLetter.adresseeName} {currentLetter.adresseeSurname}</p>
+                            <p className="one-letter-adressee-email">{currentLetter.adresseeEmail}</p>
+                        </div>
+                    </div>
+                </div>
+                <p className="one-letter-text">{currentLetter.text}</p>
+                {replyMode ? (
+                    <div className="main-reply-container">
+                        <textarea
+                            className="reply-textarea"
+                            placeholder="Текст письма"
+                            value={replyText}
+                            onChange={(e) => setReplyText(e.target.value)}>
+                        </textarea>
+                        <div className="reply-form-footer">
+                            <p className="reply-error-message">{errorMessage}</p>
+                            <div className="reply-action-buttons">
+                                <button onClick={Reply} className="reply-action-button">Ответить</button>
+                                <button onClick={ChangeReplyMode} className="reply-action-button">Отменить</button>
+                            </div>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="one-letter-button-container">
+                        <button onClick={ChangeReplyMode} className="one-letter-activity-button">Ответить</button>
+                        <button className="one-letter-activity-button">Переслать</button>
+                    </div>
+                )}
+            </div>
+        );
     }
+
+    console.log("проверка основного письма: " + letter)
+    console.log("проверка родительского: " + letter?.parentLetter)
 
     return (
         <div className="parent-container">
@@ -291,90 +340,32 @@ function letter() {
                             </div>
                         </div>
 
+                        {letter ? (
+                            <>
+                                {letter?.parentLetter ? (
+                                    <>
+                                        <RenderLetter currentLetter={letter.parentLetter} />
+                                        <RenderReply letter={letter} />
+                                    </>
+                                ) : (
+                                    <>
+                                        <RenderLetter currentLetter={letter} />
 
-                        {letter?.parentLetter != undefined ? (
-                            <div className="one-letter-main-container">
-                                <div className="one-letter-header">
-                                    <div className="one-letter-title-block">
-                                        <p className="one-letter-title">{letter?.parentLetter?.title}</p>
-                                        <p className="one-letter-datetime">
-                                            {new Date(letter?.parentLetter?.sendTime).toLocaleDateString("ru-RU")} в
-                                            {new Date(letter?.parentLetter?.sendTime).toLocaleTimeString("ru-RU")}
-                                        </p>
-                                    </div>
-                                    <div className="one-letter-sender-block">
-                                        <div className="one-letter-avatar">
-                                            <p className="one-letter-avatar-letter">{letter?.parentLetter?.adresseeName[0]}</p>
-                                        </div>
-                                        <div>
-                                            <p className="one-letter-adressee-name">{letter?.parentLetter?.adresseeName} {letter?.parentLetter?.adresseeSurname}</p>
-                                            <p className="one-letter-adressee-email">{letter?.parentLetter?.adresseeEmail}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="one-letter-text">{letter?.parentLetter?.text}</p>
-                            </div>
+                                        {letter?.childrenLetters?.map((childLetter) =>
+                                        (
+                                            <RenderReply letter={childLetter} key={childLetter.id} />
+                                        ))}
+                                    </>
+                                )}
+                            </>
                         ) : (
-                            <></>
-                        )}
-
-
-
-                        {letter === undefined ? (
                             <div className="one-letter-main-container">
                                 <p>Данные загружаются</p>
                             </div>
-                        ) : (
-                            <div className="one-letter-main-container">
-                                <div className="one-letter-header">
-                                    <div className="one-letter-title-block">
-                                        <p className="one-letter-title">{letter.title}</p>
-                                        <p className="one-letter-datetime">
-                                            {new Date(letter.sendTime).toLocaleDateString("ru-RU")} в
-                                            {new Date(letter.sendTime).toLocaleTimeString("ru-RU")}
-                                        </p>
-                                    </div>
-                                    <div className="one-letter-sender-block">
-                                        <div className="one-letter-avatar">
-                                            <p className="one-letter-avatar-letter">{letter.adresseeName[0]}</p>
-                                        </div>
-                                        <div>
-                                            <p className="one-letter-adressee-name">{letter.adresseeName} {letter.adresseeSurname}</p>
-                                            <p className="one-letter-adressee-email">{letter.adresseeEmail}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <p className="one-letter-text">{letter.text}</p>
-                                {replyMode ? (
-                                    <div className="main-reply-container">
-                                        <textarea
-                                            className="reply-textarea"
-                                            placeholder="Текст письма"
-                                            value={replyText}
-                                            onChange={(e) => setReplyText(e.target.value)}>
-                                        </textarea>
-                                        <div className="reply-form-footer">
-                                            <p className="reply-error-message">{errorMessage}</p>
-                                            <div className="reply-action-buttons">
-                                                <button onClick={Reply} className="reply-action-button">Ответить</button>
-                                                <button className="reply-action-button">Отменить</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                ) : (
-                                    <div className="one-letter-button-container">
-                                        <button onClick={ChangeReplyMode} className="one-letter-activity-button">Ответить</button>
-                                        <button className="one-letter-activity-button">Переслать</button>
-                                    </div>
-                                )}
-                            </div>
                         )}
 
-                        {letter?.childrenLetters?.map((childLetter) =>
-                        (
-                            <RenderLetter letter={childLetter} key={childLetter.id} />
-                        ))
-                        }
+
+
                     </div>
                 </div>
             </div>
