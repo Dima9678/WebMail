@@ -206,28 +206,6 @@ function letter() {
                     </div>
                 </div>
                 <p className="one-letter-text">{letter.text}</p>
-                {replyMode ? (
-                    <div className="main-reply-container">
-                        <textarea
-                            className="reply-textarea"
-                            placeholder="Текст письма"
-                            value={replyText}
-                            onChange={(e) => setReplyText(e.target.value)}>
-                        </textarea>
-                        <div className="reply-form-footer">
-                            <p className="reply-error-message">{errorMessage}</p>
-                            <div className="reply-action-buttons">
-                                <button onClick={Reply} className="reply-action-button">Ответить</button>
-                                <button className="reply-action-button">Отменить</button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="one-letter-button-container">
-                        <button onClick={ChangeReplyMode} className="one-letter-activity-button">Ответить</button>
-                        <button className="one-letter-activity-button">Переслать</button>
-                    </div>
-                )}
             </div>
         )
     }
