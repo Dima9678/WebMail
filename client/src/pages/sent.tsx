@@ -45,7 +45,7 @@ function Sent() {
     }, [user]);
 
     async function refreshLetters(startIndex: number, endIndex: number) {
-        const response = await fetch(`https://localhost:7094/api/letter/get/send/${startIndex}/${endIndex}`,
+        const response = await fetch(`https://localhost:7094/api/letter/sent/${startIndex}/${endIndex}`,
             {
                 credentials: "include",
                 method: "GET",
@@ -60,7 +60,7 @@ function Sent() {
     }
 
     function changeStarred(i: number) {
-        fetch(`https://localhost:7094/api/letter/changestarred/${sentLetters[i].id}`, {
+        fetch(`https://localhost:7094/api/letter/${sentLetters[i].id}/toggle-starred`, {
             credentials: "include",
             method: "PUT"
         })
@@ -150,7 +150,7 @@ function Sent() {
     }
 
     async function TotalSentLettersGet() {
-        const response = await fetch(`https://localhost:7094/api/letter/get/send/total  `, {
+        const response = await fetch(`https://localhost:7094/api/letter/sent/count`, {
             credentials: "include",
             method: "GET"
         })

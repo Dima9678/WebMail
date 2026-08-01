@@ -35,9 +35,9 @@ function EditDraft() {
                         setUser(currentUser);
                     }
 
-                    const draftResponce = await fetch(
-                        `https://localhost:7094/api/draft/getbyid/${id}`,
+                    const draftResponce = await fetch(`https://localhost:7094/api/draft/${id}`,
                         {
+                            method: "GET",
                             credentials: "include"
                         }
                     );
@@ -71,8 +71,8 @@ function EditDraft() {
         const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
 
         if (submitter.value === "save") {
-            const response = await fetch(`https://localhost:7094/api/draft/save/${id}`, {
-                method: "POST",
+            const response = await fetch(`https://localhost:7094/api/draft/${id}`, {
+                method: "PATCH",
                 credentials: "include",
                 headers: {
                     "Content-Type": "application/json"
@@ -94,51 +94,7 @@ function EditDraft() {
             }
 
         } else if (submitter.value === "send") {
-            const response = await fetch(`https://localhost:7094/api/draft/send/${id}`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    recipientEmail,
-                    title,
-                    text,
-                })
-            });
-
-            if (response.ok) {
-                setErrorMessage("Отправлено");
-                setSucsess(true);
-            }
-            else {
-                const message = await response.text();
-                setErrorMessage(message);
-            }
-        } else if (submitter.value === "new") {
-            const response = await fetch(`https://localhost:7094/api/draft/add`, {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    recipientEmail,
-                    title,
-                    text,
-                })
-            });
-
-            if (response.ok) {
-                setErrorMessage("Создано");
-                setSucsess(true);
-            }
-            else {
-                const message = await response.text();
-                setErrorMessage(message);
-            }
-        } else if (submitter.value === "sendnew") {
-            const response = await fetch(`https://localhost:7094/api/draft/sendnew`, {
+            const response = await fetch(`https://localhost:7094/api/draft/send`, {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -218,8 +174,8 @@ function EditDraft() {
 
                                 {isNew === true ? (
                                     <div className="write-letter-activity-buttons">
-                                        <button type="submit" className="write-letter-submit-button" value="new">Создать</button>
-                                        <button type="submit" className="write-letter-submit-button" value="sendnew">Отправить</button>
+                                        <button type="submit" className="write-letter-submit-button" value="new">Сохранить</button>
+                                        <button type="submit" className="write-letter-submit-button" value="send">Отправить</button>
                                     </div>
                                 ) : (
                                     <div className="write-letter-activity-buttons">
@@ -227,8 +183,6 @@ function EditDraft() {
                                         <button type="submit" className="write-letter-submit-button" value="send">Отправить</button>
                                     </div>
                                 )}
-
-
                             </div>
                         </form>
                     </div>

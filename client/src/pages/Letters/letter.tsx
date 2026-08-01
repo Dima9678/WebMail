@@ -63,10 +63,10 @@ function letter() {
         }
     }
     async function LoadLetter(currentUserId: string) {
-        const letterResponse = await fetch(
-            `https://localhost:7094/api/letter/${id}`,
+        const letterResponse = await fetch(`https://localhost:7094/api/letter/${id}`,
             {
-                credentials: "include"
+                credentials: "include",
+                method:"GET"
             }
         );
 
@@ -93,7 +93,7 @@ function letter() {
     }
     async function GetTotal(type: string) {
         if (type === "sent") {
-            const response = await fetch(`https://localhost:7094/api/letter/total`, {
+            const response = await fetch(`https://localhost:7094/api/letter/inbox/count`, {
                 credentials: "include",
                 method: "GET"
             });
@@ -105,7 +105,7 @@ function letter() {
             setLettersTotal(data)
         }
         else {
-            const response = await fetch(`https://localhost:7094/api/letter/get/send/total`, {
+            const response = await fetch(`https://localhost:7094/api/letter/sent/count`, {
                 credentials: "include",
                 method: "GET"
             });
@@ -119,7 +119,7 @@ function letter() {
     }
 
     function changeStarred() {
-        fetch(`https://localhost:7094/api/letter/changestarred/${letter?.id}`, {
+        fetch(`https://localhost:7094/api/letter/${letter?.id}/toggle-starred`, {
             credentials: "include",
             method: "PUT"
         })
@@ -132,7 +132,7 @@ function letter() {
             .catch(console.error);
     }
     function changeReadState() {
-        fetch(`https://localhost:7094/api/letter/changeread/${letter?.id}`, {
+        fetch(`https://localhost:7094/api/letter/${letter?.id}/toggle-read`, {
             credentials: "include",
             method: "PUT"
         })
@@ -153,7 +153,7 @@ function letter() {
 
     async function Reply() {
         const replyId = id;
-        const response = await fetch(`https://localhost:7094/api/letter/write/reply/${id}`, {
+        const response = await fetch(`https://localhost:7094/api/letter/reply/${id}`, {
             method: "POST",
             credentials: "include",
             headers: {

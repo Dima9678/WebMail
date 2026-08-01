@@ -17,8 +17,8 @@ namespace Server.Development
         }
 
         //https://localhost:7094/api/dev/dev/generateletters
-        [HttpGet("generateletters")]
-        public async Task<IActionResult> AddLetters()
+        [HttpGet("generate{count:int}")]
+        public async Task<IActionResult> AddLetters(int count)
         {
             Guid adresseeId = Guid.Parse("dedba6a8-2bd7-42c9-b5c8-ee3099c04dca");
             Guid recipientId = Guid.Parse("cb3f8751-8aea-44d0-a1ff-32dbda067eca");

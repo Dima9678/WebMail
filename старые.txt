@@ -1,0 +1,25 @@
+api/draft/getdrafts
+api/draft/add
+api/draft/gettotal
+api/draft/getbyid
+api/draft/save
+api/draft/send
+api/draft/sendnew
+
+
+api/letter/write
+api/letter/write/reply(parrentId)
+
+api/letter/(id)
+
+api/letter/getuserletters(startIndex, lastIndex)
+api/letter/total
+
+api/letter/get/send(startIndex, lastIndex)
+api/letter/get/send/total
+
+api/letter/getuserstarredletters
+
+api/letter/changestarred(id)
+api/letter/changeread(id)
+api/letter/forward

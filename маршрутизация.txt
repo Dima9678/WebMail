@@ -1,0 +1,25 @@
+GET api/draft/
+GET api/draft/total-count
+GET api/draft/(id)
+POST api/draft/ - создание новго
+PATCH api/draft/(id) - сохраннеие
+POST api/draft/send
+
+
+POST  api/letter
+POST  api/letter/reply
+
+GET   api/letter/(id)
+
+GET   api/letter/inbox
+GET   api/letter/inbox/count
+
+GET   api/letter/sent
+GET   api/letter/sent/count
+
+GET   api/letter/starred
+
+PATCH api/letter/(id)/toggle-starred
+PATHC api/letter/(id)/toggle-read
+
+POST  api/letter/forward

@@ -49,7 +49,7 @@ function Starred() {
     }, [user]);
 
     async function refreshLetters() {
-        const response = await fetch('https://localhost:7094/api/letter/getuserstarredletters',
+        const response = await fetch('https://localhost:7094/api/letter/starred',
             {
                 credentials: "include",
             });
@@ -73,7 +73,7 @@ function Starred() {
     }
 
     function changeStarred(i: number) {
-        fetch(`https://localhost:7094/api/letter/changestarred/${acceptLetters[i].id}`, {
+        fetch(`https://localhost:7094/api/letter/${acceptLetters[i].id}/toggle-starred`, {
             credentials: "include",
             method: "PUT"
         })

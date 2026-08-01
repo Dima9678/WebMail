@@ -3,7 +3,6 @@ using Domain.Models.DTO;
 using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
@@ -25,8 +24,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPost("write")]
-        public async Task<IActionResult> Write([FromBody] NewLetterDTO request)
+        [HttpPost]
+        public async Task<IActionResult> Create([FromBody] NewLetterDTO request)
         {
             bool result;
             string message;
@@ -37,23 +36,6 @@ namespace Server.Controllers
             }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             await _letterService.Add(request, adresseeId);
-            return Ok();
-        }
-
-        [Authorize]
-        [HttpPost("write/reply/{parentLetterId:guid}")]
-        public async Task<IActionResult> Reply([FromBody] ReplyDTO reply, Guid parentLetterId)
-        {
-            bool result;
-            string message;
-            (result, message) = await _validation.ValidateReplyRequest(reply);
-            if (!result)
-            {
-                return BadRequest(message);
-            }
-
-            Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.AddReply(reply, adresseeId, parentLetterId);
             return Ok();
         }
 
@@ -75,8 +57,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("getuserletters/{startIndex:int}/{endIndex:int}")]
-        public async Task<IActionResult> GetUserAcceptLetters(int startIndex, int endIndex)
+        [HttpGet("inbox/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetInbox(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<LetterDTO> userLetters = await _letterService.GetAcceptLetters(userId, startIndex, endIndex);
@@ -84,25 +66,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("get/send/{startIndex:int}/{endIndex:int}")]
-        public async Task<IActionResult> GetUserSentLetters(int startIndex, int endIndex)
-        {
-            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId, startIndex, endIndex);
-            return Ok(userLetters);
-        }
-        [Authorize]
-        [HttpGet("get/send/total")]
-        public async Task<IActionResult> GetTotalUserSentLetters()
-        {
-            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int total = await _letterService.GetTotalSendCount(userId);
-            return Ok(total);
-        }
-
-        [Authorize]
-        [HttpGet("total")]
-        public async Task<IActionResult> GetTotal()
+        [HttpGet("inbox/count")]
+        public async Task<IActionResult> GetInboxCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             int total = await _letterService.GetTotalAcceptCount(userId);
@@ -110,8 +75,26 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("getuserstarredletters")]
-        public async Task<IActionResult> GetUserStarredLetters()
+        [HttpGet("sent/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetSent(int startIndex, int endIndex)
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId, startIndex, endIndex);
+            return Ok(userLetters);
+        }
+
+        [Authorize]
+        [HttpGet("sent/count")]
+        public async Task<IActionResult> GetSentCount()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int total = await _letterService.GetTotalSendCount(userId);
+            return Ok(total);
+        }
+
+        [Authorize]
+        [HttpGet("starred")]
+        public async Task<IActionResult> GetInboxStarred()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId);
@@ -119,8 +102,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut("changestarred/{letterid:guid}")]
-        public async Task<IActionResult> ChangeStarred(Guid letterid)
+        [HttpPut("{letterid:guid}/toggle-starred")]
+        public async Task<IActionResult> ToggleStarred(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             await _letterService.ChangeStarred(letterid, userId);
@@ -128,8 +111,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut("changeread/{letterid:guid}")]
-        public async Task<IActionResult> ChangeRead(Guid letterid)
+        [HttpPut("{letterid:guid}/toggle-read")]
+        public async Task<IActionResult> ToggleRead(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             await _letterService.ChangeIsReaden(letterid, userId);
@@ -138,7 +121,7 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpPost("forward")]
-        public async Task<IActionResult> ForwardLetter([FromBody]ForwardRequest request)
+        public async Task<IActionResult> Forward([FromBody]ForwardRequest request)
         {
             bool valResult = _validation.CorrectEmai(request.ForwardEmail);
             if (!valResult)
@@ -158,6 +141,23 @@ namespace Server.Controllers
             {
                 return BadRequest(result.ErrorMessage);
             }
+        }
+
+        [Authorize]
+        [HttpPost("reply/{parentLetterId:guid}")]
+        public async Task<IActionResult> Reply([FromBody] ReplyDTO reply, Guid parentLetterId)
+        {
+            bool result;
+            string message;
+            (result, message) = await _validation.ValidateReplyRequest(reply);
+            if (!result)
+            {
+                return BadRequest(message);
+            }
+
+            Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+            await _letterService.AddReply(reply, adresseeId, parentLetterId);
+            return Ok();
         }
     }
 }

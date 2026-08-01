@@ -24,8 +24,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("getdrafts/{startIndex:int}/{endIndex:int}")]
-        public async Task<IActionResult> GetDrafts(int startIndex, int endIndex)
+        [HttpGet("{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> Get(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             var drafts = await _draftService.GetUserDrafts(userId, startIndex, endIndex);
@@ -33,8 +33,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPost("add")]
-        public async Task<IActionResult> AddDrafts([FromBody] NewDraftDTO request)
+        [HttpPost("")]
+        public async Task<IActionResult> Create([FromBody] NewDraftDTO request)
         {
             bool result;
             string message;
@@ -49,8 +49,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("gettotal")]
-        public async Task<IActionResult> GetTotal()
+        [HttpGet("count")]
+        public async Task<IActionResult> GetCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             int total = await _draftService.GetTotalAcceptCount(userId);
@@ -58,15 +58,15 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("getbyid/{draftId:guid}")]
-        public async Task<IActionResult> GetDraftById(Guid draftId)
+        [HttpGet("{draftId:guid}")]
+        public async Task<IActionResult> GetById(Guid draftId)
         {
             DraftDTO draft = await _draftService.GetById(draftId);
             return Ok(draft);
         }
 
         [Authorize]
-        [HttpPatch("save/{draftId:guid}")]
+        [HttpPatch("{draftId:guid}")]
         public async Task<IActionResult> Save([FromBody] NewDraftDTO request, Guid draftId)
         {
             bool result;
@@ -81,29 +81,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPost("send/{draftId:guid}")]
-        public async Task<IActionResult> Send([FromBody] NewDraftDTO request, Guid draftId)
-        {
-            bool result;
-            string message;
-
-            NewLetterDTO newLetter = LetterMapper.DraftDTOToLetterDTO(request);
-
-            (result, message) = await _validation.ValidateWriteLetterRequest(newLetter);
-            if (!result)
-            {
-                return BadRequest(message);
-            }
-
-            Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
-            await _letterService.Add(newLetter, adresseeId);
-            return Ok();
-        }
-
-        [Authorize]
-        [HttpPost("sendnew")]
-        public async Task<IActionResult> SendNew([FromBody] NewDraftDTO request)
+        [HttpPost("send")]
+        public async Task<IActionResult> Send([FromBody] NewDraftDTO request)
         {
             bool result;
             string message;

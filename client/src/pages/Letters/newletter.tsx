@@ -41,7 +41,7 @@ function newletter() {
 
         if (submitter.value === "letter") {
             console.log("letter");
-            const response = await fetch("https://localhost:7094/api/letter/write", {
+            const response = await fetch("https://localhost:7094/api/letter", {
                 method: "POST",
                 credentials: "include",
                 headers: {
@@ -68,7 +68,7 @@ function newletter() {
 
         } else if (submitter.value === "draft") {
             console.log("draft");
-            const response = await fetch("https://localhost:7094/api/draft/add", {
+            const response = await fetch("https://localhost:7094/api/draft", {
                 method: "POST",
                 credentials: "include",
                 headers: {

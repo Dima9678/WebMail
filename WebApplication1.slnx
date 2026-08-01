@@ -1,4 +1,8 @@
 <Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="маршрутизация.txt" />
+    <File Path="старые.txt" />
+  </Folder>
   <Project Path="Client/client.esproj">
     <Build />
     <Deploy />

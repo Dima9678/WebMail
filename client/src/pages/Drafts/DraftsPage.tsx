@@ -45,9 +45,10 @@ function Drafts() {
     }, [user]);
 
     async function refreshDrafts(startIndex: number, endIndex: number) {
-        const response = await fetch(`https://localhost:7094/api/draft/getdrafts/${startIndex}/${endIndex}`,
+        const response = await fetch(`https://localhost:7094/api/draft/${startIndex}/${endIndex}`,
             {
                 credentials: "include",
+                method: "GET"
             });
 
         if (!response.ok)
@@ -59,7 +60,7 @@ function Drafts() {
     }
 
     async function TotalDraftsGet() {
-        const response = await fetch(`https://localhost:7094/api/draft/gettotal`, {
+        const response = await fetch(`https://localhost:7094/api/draft/count`, {
             credentials: "include",
             method: "GET"
         })
