@@ -7,6 +7,7 @@ using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
 using Domain;
+using Domain.Models.Requests;
 
 namespace Server.Controllers
 {

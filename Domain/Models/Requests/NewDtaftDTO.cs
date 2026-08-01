@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Domain.Models.DTO
+namespace Domain.Models.Requests
 {
     public class NewDraftDTO
     {

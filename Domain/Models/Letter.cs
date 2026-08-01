@@ -13,7 +13,12 @@ namespace Domain.Models
         public User Recipient { get; set; }
         public Guid RecipientId { get; set; }
 
+        public bool? Forwarded { get; set; }
+        public User? OriginalAuthor { get; set; }
+        public Guid? OriginalAuthorId { get; set; }
+
         public DateTime SendTime { get; set; }
+
         public List<LetterState> LetterStates { get; set; }
 
         public List<Letter> ChildrenLetters { get; set; } = [];

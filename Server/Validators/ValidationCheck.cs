@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Domain.Models.DTO;
-using Server.Controllers;
+using Domain.Models.Requests;
 
 namespace Server.Validators
 {

@@ -10,4 +10,7 @@
     <None Include=".vscode\launch.json" />
     <None Include=".vscode\launch.vs.json" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="src\components\Letter\" />
+  </ItemGroup>
 </Project>

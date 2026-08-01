@@ -5,6 +5,7 @@ using Persistence;
 using Microsoft.EntityFrameworkCore;
 using Server.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Domain.Models.Requests;
 
 namespace Server.Service
 {

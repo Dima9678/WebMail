@@ -20,6 +20,9 @@ export interface Letter {
     recipientName: string;
     recipientEmail: string;
 
+    forwarded: boolean;
+    originalAuthor: User;
+
     sendTime: Date;
     letterStates: LetterState[];
 

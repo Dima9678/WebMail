@@ -1,4 +1,5 @@
 ﻿using Domain.Models.DTO;
+using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Mappers;

@@ -15,6 +15,9 @@
         public string RecipientSurname { get; set; }
         public string RecipientEmail { get; set; }
 
+        public bool? Forwarded { get; set; }
+        public UserDTO? OriginalAuthor { get; set; }
+
         public DateTime SendTime { get; set; }
         public List<LetterStateDTO> LetterStates { get; set; }
 

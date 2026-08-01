@@ -1,7 +1,7 @@
 ﻿using Domain;
 using Domain.Models;
 using Domain.Models.DTO;
-using Server.Controllers;
+using Domain.Models.Requests;
 
 namespace Server.Mappers
 {
@@ -9,6 +9,8 @@ namespace Server.Mappers
     {
         public static List<LetterDTO> SentToDto(User user)
         {
+            Console.WriteLine(user == null);
+            Console.WriteLine(user?.SentLetters == null);
             List<LetterDTO> letterDTO = user.SentLetters.Select(l => new LetterDTO
             {
                 Id = l.Id,
@@ -59,6 +61,8 @@ namespace Server.Mappers
                 AdresseeSurname = letterInDb.Addressee.Surname,
                 AdresseeEmail = letterInDb.Addressee.Email,
                 LetterStates = LetterStateMapper.StateListToDTO(letterInDb.LetterStates),
+                Forwarded = letterInDb.Forwarded,
+                OriginalAuthor = UserMapper.ToShortDto(letterInDb.OriginalAuthor),
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,
@@ -78,7 +82,6 @@ namespace Server.Mappers
 
             return letterDTO;
         }
-
         public static NewLetterDTO DraftDTOToLetterDTO(NewDraftDTO draft)
         {
             NewLetterDTO letter = new NewLetterDTO()
@@ -89,7 +92,6 @@ namespace Server.Mappers
             };
             return letter;
         }
-
         public static List<LetterDTO> ListToDTO(List<Letter> letterInDb)
         {
             List<LetterDTO> list = new List<LetterDTO>(); 

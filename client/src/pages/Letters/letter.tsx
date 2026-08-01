@@ -5,6 +5,9 @@ import type { User } from "../interfaces/User";
 import type { Letter } from "../interfaces/Letter";
 import type { FullLetter } from '../../interfaces/FullLetter';
 
+import RenderLetter from "../../components/Letter/RenderLetter";
+import RenderReply from "../../components/Letter/RenderReply";
+
 
 function letter() {
     const [user, setUser] = useState<User | null>(null);
@@ -23,22 +26,11 @@ function letter() {
     const [replyMode, setReplyMode] = useState(false);
     const [replyText, setReplyText] = useState("");
 
+    const [forwardMode, setForwardMode] = useState(false);
+    const [forwardEmail, setForwardEmail] = useState("");
+
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
-
-    /*
-    {
-        letter.parentLetter != undefined ? (
-            <>
-                <p>{letter.parentLetter.adresseeName} {letter.parentLetter.adresseeSurname}</p>
-                <p>{letter.parentLetter.title}</p>
-                <br></br>
-            </>
-        ) : (
-        <></>
-    )
-    }
-    */
 
     useEffect(() => {
         async function loadData() {
@@ -70,7 +62,6 @@ function letter() {
             LoadLetter(currentUser.id)
         }
     }
-
     async function LoadLetter(currentUserId: string) {
         const letterResponse = await fetch(
             `https://localhost:7094/api/letter/${id}`,
@@ -100,7 +91,6 @@ function letter() {
         }
         GetTotal("accept");
     }
-
     async function GetTotal(type: string) {
         if (type === "sent") {
             const response = await fetch(`https://localhost:7094/api/letter/total`, {
@@ -127,6 +117,7 @@ function letter() {
             setLettersTotal(data)
         }
     }
+
     function changeStarred() {
         fetch(`https://localhost:7094/api/letter/changestarred/${letter?.id}`, {
             credentials: "include",
@@ -156,6 +147,10 @@ function letter() {
     function ChangeReplyMode() {
         setReplyMode(!replyMode);
     }
+    function ChangeForwardMode() {
+        setForwardMode(!forwardMode);
+    }
+
     async function Reply() {
         const replyId = id;
         const response = await fetch(`https://localhost:7094/api/letter/write/reply/${id}`, {
@@ -182,86 +177,34 @@ function letter() {
             setErrorMessage(message);
         }
     }
-
-    function RenderReply({ letter }: { letter: Letter }) {
-        console.log("ответ " + letter)
-        return (
-            <div className="one-letter-reply-container">
-                <div className="one-letter-header">
-                    <div className="one-letter-title-block">
-                        <p className="one-letter-title">{letter.title}</p>
-                        <p className="one-letter-datetime">
-                            {new Date(letter.sendTime).toLocaleDateString("ru-RU")} в
-                            {new Date(letter.sendTime).toLocaleTimeString("ru-RU")}
-                        </p>
-                    </div>
-                    <div className="one-letter-sender-block">
-                        <div className="one-letter-avatar">
-                            <p className="one-letter-avatar-letter">{letter.adresseeName[0]}</p>
-                        </div>
-                        <div>
-                            <p className="one-letter-adressee-name">{letter.adresseeName} {letter.adresseeSurname}</p>
-                            <p className="one-letter-adressee-email">{letter.adresseeEmail}</p>
-                        </div>
-                    </div>
-                </div>
-                <p className="one-letter-text">{letter.text}</p>
-            </div>
-        )
+    async function Forward() {
+        const letterId = letter?.parentLetter ? letter.parentLetterId : id;
+        const response = await fetch("https://localhost:7094/api/letter/forward", {
+            credentials: 'include',
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                forwardEmail,
+                letterId,
+            })
+        })
+        if (response.ok) {
+            setForwardEmail("");
+            setForwardMode(false);
+            setSucsess(true);
+            setErrorMessage("Успешно");
+        }
+        else {
+            setSucsess(false);
+            setErrorMessage("");
+            const message = await response.text();
+            setErrorMessage(message);
+        }
     }
 
-    function RenderLetter({ currentLetter }: { currentLetter: Letter }) {
-        console.log("текущее письмо " + currentLetter)
-        return (
-            <div className="one-letter-main-container">
-                <div className="one-letter-header">
-                    <div className="one-letter-title-block">
-                        <p className="one-letter-title">{currentLetter.title}</p>
-                        <p className="one-letter-datetime">
-                            {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU")} в
-                            {new Date(currentLetter.sendTime).toLocaleTimeString("ru-RU")}
-                        </p>
-                    </div>
-                    <div className="one-letter-sender-block">
-                        <div className="one-letter-avatar">
-                            <p className="one-letter-avatar-letter">{currentLetter.adresseeName[0]}</p>
-                        </div>
-                        <div>
-                            <p className="one-letter-adressee-name">{currentLetter.adresseeName} {currentLetter.adresseeSurname}</p>
-                            <p className="one-letter-adressee-email">{currentLetter.adresseeEmail}</p>
-                        </div>
-                    </div>
-                </div>
-                <p className="one-letter-text">{currentLetter.text}</p>
-                {replyMode ? (
-                    <div className="main-reply-container">
-                        <textarea
-                            className="reply-textarea"
-                            placeholder="Текст письма"
-                            value={replyText}
-                            onChange={(e) => setReplyText(e.target.value)}>
-                        </textarea>
-                        <div className="reply-form-footer">
-                            <p className="reply-error-message">{errorMessage}</p>
-                            <div className="reply-action-buttons">
-                                <button onClick={Reply} className="reply-action-button">Ответить</button>
-                                <button onClick={ChangeReplyMode} className="reply-action-button">Отменить</button>
-                            </div>
-                        </div>
-                    </div>
-                ) : (
-                    <div className="one-letter-button-container">
-                        <button onClick={ChangeReplyMode} className="one-letter-activity-button">Ответить</button>
-                        <button className="one-letter-activity-button">Переслать</button>
-                    </div>
-                )}
-            </div>
-        );
-    }
-
-    console.log("проверка основного письма: " + letter)
-    console.log("проверка родительского: " + letter?.parentLetter)
-
+    
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -322,16 +265,43 @@ function letter() {
                             <>
                                 {letter?.parentLetter ? (
                                     <>
-                                        <RenderLetter currentLetter={letter.parentLetter} />
-                                        <RenderReply letter={letter} />
+                                        <RenderLetter
+                                            currentLetter={letter.parentLetter}
+                                            replyMode={replyMode}
+                                            forwardMode={forwardMode}
+                                            replyText={replyText}
+                                            forwardEmail={forwardEmail}
+                                            errorMessage={errorMessage}
+                                            setReplyText={setReplyText}
+                                            setForwardEmail={setForwardEmail}
+                                            Reply={Reply}
+                                            Forward={Forward}
+                                            ChangeReplyMode={ChangeReplyMode}
+                                            ChangeForwardMode={ChangeForwardMode}
+                                        />
+                                        <RenderReply currentLetter={letter} />
                                     </>
+
                                 ) : (
                                     <>
-                                        <RenderLetter currentLetter={letter} />
+                                        <RenderLetter
+                                            currentLetter={letter}
+                                            replyMode={replyMode}
+                                            forwardMode={forwardMode}
+                                            replyText={replyText}
+                                            forwardEmail={forwardEmail}
+                                            errorMessage={errorMessage}
+                                            setReplyText={setReplyText}
+                                            setForwardEmail={setForwardEmail}
+                                            Reply={Reply}
+                                            Forward={Forward}
+                                            ChangeReplyMode={ChangeReplyMode}
+                                            ChangeForwardMode={ChangeForwardMode}
+                                        />
 
                                         {letter?.childrenLetters?.map((childLetter) =>
                                         (
-                                            <RenderReply letter={childLetter} key={childLetter.id} />
+                                            <RenderReply currentLetter={childLetter} key={childLetter.id} />
                                         ))}
                                     </>
                                 )}
@@ -341,9 +311,6 @@ function letter() {
                                 <p>Данные загружаются</p>
                             </div>
                         )}
-
-
-
                     </div>
                 </div>
             </div>

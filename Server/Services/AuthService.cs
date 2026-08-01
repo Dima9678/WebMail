@@ -1,8 +1,8 @@
 ﻿using Domain;
+using Domain.Models.Requests;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
-using Server.Controllers;
 
 namespace Server.Service
 {

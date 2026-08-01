@@ -1,9 +1,11 @@
-﻿using Domain.Models;
+﻿using Domain;
+using Domain.Models;
 using Domain.Models.DTO;
+using Domain.Models.Requests;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Persistence;
-using Server.Controllers;
 using Server.Mappers;
 
 namespace Server.Service
@@ -15,7 +17,7 @@ namespace Server.Service
      * Спам
      * Корзина
      */
-    
+
     public class LetterService
     {
         private readonly DatabaseContext _db;
@@ -53,7 +55,6 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-
         public async Task AddReply(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
         {
             var parentLetter = await _db.Letters.SingleOrDefaultAsync(u => u.Id == parentLetterId);
@@ -107,6 +108,13 @@ namespace Server.Service
             {
                 return null;
             }
+            if (letterInDb.Forwarded == true)
+            {
+                await _db.Entry(letterInDb)
+                    .Reference(l => l.OriginalAuthor)
+                    .LoadAsync();
+            }
+
 
             await ChangeIsReaden(userId, letterInDb);
 
@@ -225,7 +233,7 @@ namespace Server.Service
 
             return count;
         }
-        public async Task<FullLetterDTO> AppendNavigationInfo(FullLetterDTO fullLetter)
+        public async Task<FullLetterDTO> AppendNavigationInfo([FromBody] FullLetterDTO fullLetter)
         {
             var letters = await _db.Letters
                 .Where(l => l.RecipientId == fullLetter.RecipientId)
@@ -244,6 +252,91 @@ namespace Server.Service
             fullLetter.LetterNumber = letterNumber;
 
             return fullLetter;
+        }
+        public async Task<OperationResult> Forward(ForwardRequest request, Guid userId)
+        {
+            //Это юзер, который пересылает сообщение
+            User? adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
+            //Это получатель, которому будет переслано сообщение
+            User? recipient = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.ForwardEmail);
+            //Если не найден, выбросить ошибку
+
+            if (adressee == null)
+            {
+                return new OperationResult()
+                {
+                    Sucsessed = false,
+                    ErrorMessage = "Такого пользователя не существует",
+                };
+            }
+
+            if (recipient == null)
+            {
+                return new OperationResult()
+                {
+                    Sucsessed = false,
+                    ErrorMessage = "Получатель не найден",
+                };
+            }
+
+            //оригинальное письмо
+            Letter? letterInDb = await _db.Letters
+                .Include(x => x.Addressee)
+                .Include(x => x.Recipient)
+                .Include(x => x.Recipient)
+                .FirstOrDefaultAsync(x => x.Id == request.LetterId);
+
+            if (letterInDb == null)
+            {
+                return new OperationResult()
+                {
+                    Sucsessed = false,
+                    ErrorMessage = "Письмо не найдено",
+                };
+            }
+
+            Letter forwardLetter = new()
+            {
+                Title = letterInDb.Title,
+                Text = letterInDb.Text,
+
+                Addressee = adressee,
+                AddresseeId = adressee.Id,
+
+                Recipient = recipient,
+                RecipientId = recipient.Id,
+
+                Forwarded = true,
+                OriginalAuthor = letterInDb.Addressee,
+                OriginalAuthorId = letterInDb.AddresseeId,
+
+                SendTime = letterInDb.SendTime,
+
+                LetterStates = new List<LetterState>()
+                {
+                    new LetterState()
+                    {
+                        IsRead = true,
+                        UserId = adressee.Id,
+                    },
+                    new LetterState()
+                    {
+                        IsRead = false,
+                        UserId = recipient.Id,
+                    },
+                },
+
+                ChildrenLetters = letterInDb.ChildrenLetters,
+            };
+
+            _db.Letters.Add(forwardLetter);
+            _db.SaveChanges();
+
+            return new OperationResult()
+            {
+                Sucsessed = true,
+                ErrorMessage = null,
+            };
         }
     }
 }

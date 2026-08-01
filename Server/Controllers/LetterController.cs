@@ -1,4 +1,6 @@
-﻿using Domain.Models.DTO;
+﻿using Domain.Models;
+using Domain.Models.DTO;
+using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Persistence;
@@ -132,6 +134,30 @@ namespace Server.Controllers
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             await _letterService.ChangeIsReaden(letterid, userId);
             return Ok();
+        }
+
+        [Authorize]
+        [HttpPost("forward")]
+        public async Task<IActionResult> ForwardLetter([FromBody]ForwardRequest request)
+        {
+            bool valResult = _validation.CorrectEmai(request.ForwardEmail);
+            if (!valResult)
+            {
+                //Контроллер не должен сам писать BadRequest. Должен принимать OperationResult
+                return BadRequest("Невалидный Email");
+            }
+
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            OperationResult result = await _letterService.Forward(request, userId);
+
+            if (result.Sucsessed)
+            {
+                return Ok();
+            }
+            else
+            {
+                return BadRequest(result.ErrorMessage);
+            }
         }
     }
 }

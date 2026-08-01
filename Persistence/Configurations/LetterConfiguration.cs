@@ -17,6 +17,15 @@ namespace Persistence.Configurations
                 .WithOne(x => x.ParentLetter)
                 .HasForeignKey(x => x.ParentLetterId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(l => l.OriginalAuthor)
+                .WithMany()
+                .HasForeignKey(l => l.OriginalAuthorId)
+                .OnDelete(DeleteBehavior.SetNull);
+            builder
+                .Property(x => x.Forwarded)
+                .HasDefaultValue(false);
         }
     }
 }

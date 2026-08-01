@@ -1,4 +1,4 @@
-﻿namespace Server.Controllers
+﻿namespace Domain.Models.Requests
 {
     public class LoginDTO
     {

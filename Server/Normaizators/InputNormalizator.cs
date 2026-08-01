@@ -1,4 +1,4 @@
-﻿using Server.Controllers;
+﻿using Domain.Models.Requests;
 
 namespace Server.Normaizators
 {
