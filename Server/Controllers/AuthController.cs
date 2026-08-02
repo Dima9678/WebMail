@@ -8,6 +8,7 @@ using Server.Validators;
 using System.Security.Claims;
 using Domain;
 using Domain.Models.Requests;
+using Domain.Models;
 
 namespace Server.Controllers
 {
@@ -30,13 +31,11 @@ namespace Server.Controllers
         {
             request = InputNormalizator.NormalizeRegisterDTO(request);
 
-            bool validResult;
-            string message;
-            (validResult, message) = await _val.ValidateRegisterRequest(request);
+            OperationResult result = await _val.ValidateRegisterRequest(request);
 
-            if (!validResult)
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
 
             User user = await _authService.Register(request);
@@ -51,28 +50,27 @@ namespace Server.Controllers
         public async Task<IActionResult> Login([FromBody] LoginDTO request)
         {
             request = InputNormalizator.NormalizeLoginDTO(request);
-            bool validResult;
-            string message;
-            (validResult, message) = await _val.ValidateLoginRequest(request);
+            OperationResult result = await _val.ValidateLoginRequest(request);
 
-            if (!validResult)
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
 
             User user = await _authService.Login(request);
+            OperationResult userExistResult = new OperationResult();
 
-            if (user != null)
+            if (user == null)
             {
-                ClaimsPrincipal principal = _claimFactory.CreateClaims(user);
-                await HttpContext.SignInAsync("Cookies", principal);
-                return Ok("Успешно");
+                userExistResult.ErrorMessage = "Неправильное имя пользователя или пароль";
+                userExistResult.Sucsessed = false;
+
+                return BadRequest(userExistResult.ErrorMessage);
             }
-            else
-            {
-                return BadRequest("Неправильное имя пользователя или пароль");
-            }
-            
+
+            ClaimsPrincipal principal = _claimFactory.CreateClaims(user);
+            await HttpContext.SignInAsync("Cookies", principal);
+            return Ok(userExistResult.ErrorMessage);
         }
 
         [HttpPost("logout")]

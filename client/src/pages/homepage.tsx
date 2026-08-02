@@ -60,6 +60,7 @@ function homepage() {
         const data = await response.json();
 
         setAcceptLetters(data);
+        TotalLettersGet();
     }
 
     function changeStarred(i: number) {
@@ -218,7 +219,7 @@ function homepage() {
                     <div className="letters-block">
                         <Link to="/newletter" className="new-letter-button">Новое письмо</Link>
                         <div className="letters-topbar">
-                            <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
+                            <button onClick={() => refreshLetters(0, maxOnPage-1)} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>

@@ -269,11 +269,14 @@
 }
 
 .letter-sender-read {
+    white-space: nowrap;
     margin-left: 10px;
+    text-overflow: ellipsis;
+    overflow: hidden;
 }
 
 .letter-theme-read {
-    margin-right: 5px;
+    margin-left: 10px;
 }
 
 .letter-text-read {
@@ -281,6 +284,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     color: #6D79AC;
+    padding-right: 10px;
 }
 
 .letter-unread {
@@ -295,10 +299,13 @@
 
 .letter-sender-unread {
     margin-left: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .letter-theme-unread {
-    margin-right: 5px;
+    margin-left: 10px;
 }
 
 .letter-text-unread {
@@ -306,6 +313,7 @@
     white-space: nowrap;
     text-overflow: ellipsis;
     color: #485899;
+    padding-right: 10px;
 }
 
 .starred {
@@ -429,8 +437,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
     flex-direction: column;
     margin-bottom: 40px;
+    width: 80%;
 }
 
 .sign-error-message {

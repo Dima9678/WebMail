@@ -1,4 +1,5 @@
-﻿using Domain.Models.DTO;
+﻿using Domain.Models;
+using Domain.Models.DTO;
 using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -36,12 +37,10 @@ namespace Server.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Create([FromBody] NewDraftDTO request)
         {
-            bool result;
-            string message;
-            (result, message) = await _validation.ValidateWriteDraftRequest(request);
-            if (!result)
+            OperationResult result = await _validation.ValidateWriteDraftRequest(request);
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             await _draftService.Add(request, adresseeId);
@@ -69,12 +68,10 @@ namespace Server.Controllers
         [HttpPatch("{draftId:guid}")]
         public async Task<IActionResult> Save([FromBody] NewDraftDTO request, Guid draftId)
         {
-            bool result;
-            string message;
-            (result, message) = await _validation.ValidateWriteDraftRequest(request);
-            if (!result)
+            OperationResult result = await _validation.ValidateWriteDraftRequest(request);
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
             await _draftService.Save(request, draftId);
             return Ok();
@@ -84,15 +81,12 @@ namespace Server.Controllers
         [HttpPost("send")]
         public async Task<IActionResult> Send([FromBody] NewDraftDTO request)
         {
-            bool result;
-            string message;
-
             NewLetterDTO newLetter = LetterMapper.DraftDTOToLetterDTO(request);
 
-            (result, message) = await _validation.ValidateWriteLetterRequest(newLetter);
-            if (!result)
+            OperationResult result = await _validation.ValidateWriteLetterRequest(newLetter);
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);

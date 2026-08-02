@@ -62,7 +62,6 @@ namespace Server.Mappers
                 AdresseeEmail = letterInDb.Addressee.Email,
                 LetterStates = LetterStateMapper.StateListToDTO(letterInDb.LetterStates),
                 Forwarded = letterInDb.Forwarded,
-                OriginalAuthor = UserMapper.ToShortDto(letterInDb.OriginalAuthor),
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,
@@ -70,6 +69,10 @@ namespace Server.Mappers
                 ParentLetterId = letterInDb.ParentLetterId,
                 ChildrenLetters = LetterMapper.ListToDTO(letterInDb.ChildrenLetters)
             };
+            if (letterInDb.Forwarded == true)
+            {
+                letterDTO.OriginalAuthor = UserMapper.ToShortDto(letterInDb.OriginalAuthor);
+            }
             //на случай, если нет родительского письма
             if (letterInDb.ParentLetter == null)
             {

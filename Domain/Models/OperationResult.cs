@@ -6,7 +6,7 @@ namespace Domain.Models
 {
     public class OperationResult
     {
-        public bool Sucsessed { get; set; } 
-        public string? ErrorMessage { get; set; }
+        public bool Sucsessed { get; set; } = true;
+        public string? ErrorMessage { get; set; } = string.Empty;
     }
 }

@@ -27,12 +27,10 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] NewLetterDTO request)
         {
-            bool result;
-            string message;
-            (result, message) = await _validation.ValidateWriteLetterRequest(request);
-            if (!result)
+            OperationResult result = await _validation.ValidateWriteLetterRequest(request);
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
             await _letterService.Add(request, adresseeId);
@@ -123,23 +121,21 @@ namespace Server.Controllers
         [HttpPost("forward")]
         public async Task<IActionResult> Forward([FromBody]ForwardRequest request)
         {
-            bool valResult = _validation.CorrectEmai(request.ForwardEmail);
-            if (!valResult)
+            OperationResult validationResult = _validation.CorrectEmail(request.ForwardEmail);
+            if (!validationResult.Sucsessed)
             {
-                //Контроллер не должен сам писать BadRequest. Должен принимать OperationResult
-                return BadRequest("Невалидный Email");
+                return BadRequest(validationResult.ErrorMessage);
             }
 
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            OperationResult result = await _letterService.Forward(request, userId);
-
-            if (result.Sucsessed)
+            OperationResult forwardResult = await _letterService.Forward(request, userId);
+            if (forwardResult.Sucsessed)
             {
                 return Ok();
             }
             else
             {
-                return BadRequest(result.ErrorMessage);
+                return BadRequest(forwardResult.ErrorMessage);
             }
         }
 
@@ -147,12 +143,10 @@ namespace Server.Controllers
         [HttpPost("reply/{parentLetterId:guid}")]
         public async Task<IActionResult> Reply([FromBody] ReplyDTO reply, Guid parentLetterId)
         {
-            bool result;
-            string message;
-            (result, message) = await _validation.ValidateReplyRequest(reply);
-            if (!result)
+            OperationResult result = await _validation.ValidateReplyRequest(reply);
+            if (!result.Sucsessed)
             {
-                return BadRequest(message);
+                return BadRequest(result.ErrorMessage);
             }
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);

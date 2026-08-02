@@ -55,11 +55,12 @@ function Drafts() {
             throw new Error(await response.text());
 
         const data = await response.json();
-
+        TotalDraftsGet();
         setDrafts(data);
     }
 
     async function TotalDraftsGet() {
+        console.log("Перед запросом. Максимум на странице: " + maxOnPage)
         const response = await fetch(`https://localhost:7094/api/draft/count`, {
             credentials: "include",
             method: "GET"
@@ -91,8 +92,6 @@ function Drafts() {
     var startIndex = draftPage * maxOnPage;
 
     const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
-    console.log(maxDraftPage);
-    console.log(draftPage);
 
     return (
         <div className="parent-container">
@@ -127,7 +126,7 @@ function Drafts() {
                     <div className="letters-block">
                         <Link to="/draft/new" className="new-draft-button">Новый черновик</Link>
                         <div className="letters-topbar">
-                            <button onClick={refreshDrafts} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
+                            <button onClick={() => refreshDrafts(0,maxOnPage-1)} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>

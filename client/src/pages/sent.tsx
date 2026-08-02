@@ -98,7 +98,7 @@ function Sent() {
                         i={i}
                         changeStarred={changeStarred}
                     />
-                    <p className="letter-sender-read">{letter.adresseeName}</p>
+                    <p className="letter-sender-read">{letter.adresseeName} {letter.adresseeSurname}</p>
                     <div className="letter-content">
                         <p className="letter-theme-read">{letter.title}</p>
                         <p className="letter-text-read"> - {letter.text}</p>
@@ -215,7 +215,7 @@ function Sent() {
                     <div className="letters-block">
                         <Link to="/newletter" className="new-letter-button">Новое письмо</Link>
                         <div className="letters-topbar">
-                            <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
+                            <button onClick={() => refreshLetters(0, maxOnPage - 1)} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
