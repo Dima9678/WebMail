@@ -105,12 +105,12 @@ function newletter() {
                         <Link to="/" className="website-logo">MyMail</Link>
                     </div>
                     <div className="auth-buttons">
-                        <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                        <Link to="/myprofile" className="auth-button">{user?.name}</Link>
                     </div>
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                        <Link to="/allmails" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
+                        <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
                         <Link to="/drafts" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/draft.svg" alt="черновики"></img></Link>

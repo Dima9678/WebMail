@@ -39,10 +39,10 @@ namespace Server.Controllers
 
         [Authorize]
         [HttpGet("{letterId:guid}")]
-        public async Task<IActionResult> GetById(Guid letterId)
+        public async Task<IActionResult> GetById(Guid letterId, [FromQuery] string from)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            FullLetterDTO fullLetterDto = await _letterService.GetById(letterId, userId);
+            FullLetterDTO fullLetterDto = await _letterService.GetById(letterId, userId, from);
 
             if (fullLetterDto == null)
             {
@@ -68,7 +68,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetInboxCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int total = await _letterService.GetTotalAcceptCount(userId);
+            int total = await _letterService.GetAcceptCount(userId);
             return Ok(total);
         }
 
@@ -86,17 +86,26 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSentCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int total = await _letterService.GetTotalSendCount(userId);
+            int total = await _letterService.GetSendCount(userId);
             return Ok(total);
         }
 
         [Authorize]
         [HttpGet("starred")]
-        public async Task<IActionResult> GetInboxStarred()
+        public async Task<IActionResult> GetStarred()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId);
             return Ok(userLetters);
+        }
+
+        [Authorize]
+        [HttpGet("starred/count")]
+        public async Task<IActionResult> GetStarredCount()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            int count = await _letterService.GetStarredCount(userId);
+            return Ok(count);
         }
 
         [Authorize]

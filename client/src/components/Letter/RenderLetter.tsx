@@ -54,11 +54,18 @@ export default function RenderLetter({
             <div className="one-letter-header">
                 <div className="one-letter-title-block">
                     <p className="one-letter-title">{currentLetter.title}</p>
-                    <p className="one-letter-datetime">
-                        {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU")
-                            + " в " +
-                         new Date(currentLetter.sendTime).toLocaleTimeString("ru-RU")}
-                    </p>
+                    <div className="one-letter-datetime">
+                        <p className="one-letter-datetime">
+                            {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU")}
+                            {", "}
+                            {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU", {
+                                weekday: "short"
+                            })}
+                            {", "}
+                            {" в "}
+                            {new Date(currentLetter.sendTime).toLocaleTimeString("ru-RU")}
+                        </p>
+                    </div>
                 </div>
                 <div className="one-letter-sender-block">
                     <div className="one-letter-avatar">

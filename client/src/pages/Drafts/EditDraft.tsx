@@ -8,8 +8,9 @@ function EditDraft() {
     const [recipientEmail, setRecipientEmail] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
+    const [lastEdit, setLastEdit] = useState<Date | null>(null);
 
-    const [, setUser] = useState<User | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
     const { id } = useParams();
@@ -17,44 +18,45 @@ function EditDraft() {
     const isNew = id === "new";
 
     useEffect(() => {
-        if (!isNew && id) {
+        fetch("https://localhost:7094/api/User", {
 
-            async function loadData() {
-                try {
-                    const userResponse = await fetch("https://localhost:7094/api/User", {
-                        credentials: "include"
-                    });
-
-                    let currentUser: User | null = null;
-
-                    if (userResponse.status !== 401) {
-                        if (!userResponse.ok) {
-                            throw new Error(await userResponse.text());
-                        }
-                        currentUser = await userResponse.json();
-                        setUser(currentUser);
-                    }
-
-                    const draftResponce = await fetch(`https://localhost:7094/api/draft/${id}`,
-                        {
-                            method: "GET",
-                            credentials: "include"
-                        }
-                    );
-
-                    if (!draftResponce.ok) {
-                        throw new Error(await draftResponce.text());
-                    }
-
-                    const draftData: Draft = await draftResponce.json();
-
-                    setRecipientEmail(draftData.recipientEmail ?? "")
-                    setTitle(draftData.title ?? "")
-                    setText(draftData.text ?? "")
-
-                } catch (error) {
-                    console.error(error);
+            credentials: "include"
+        })
+            .then(async r => {
+                if (r.status === 401) {
+                    setUser(null);
+                    return null;
                 }
+                if (!r.ok) {
+                    throw new Error(await r.text());
+                }
+                return r.json();
+            })
+            .then(data => {
+                if (data) {
+                    setUser(data);
+                }
+            })
+            .catch(console.error);
+        if (!isNew && id) {
+            async function loadData() {
+                const draftResponce = await fetch(`https://localhost:7094/api/draft/${id}`,
+                    {
+                        method: "GET",
+                        credentials: "include"
+                    }
+                );
+
+                if (!draftResponce.ok) {
+                    throw new Error(await draftResponce.text());
+                }
+
+                const draftData: Draft = await draftResponce.json();
+
+                setRecipientEmail(draftData.recipientEmail ?? "")
+                setTitle(draftData.title ?? "")
+                setText(draftData.text ?? "")
+                setLastEdit(draftData.lastEditDate ?? null)
             }
             loadData();
         }
@@ -69,7 +71,8 @@ function EditDraft() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         const submitter = (e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement;
-
+        console.log("кнопка работает")
+        console.log(submitter.value)
         if (submitter.value === "save") {
             const response = await fetch(`https://localhost:7094/api/draft/${id}`, {
                 method: "PATCH",
@@ -115,6 +118,28 @@ function EditDraft() {
                 const message = await response.text();
                 setErrorMessage(message);
             }
+        }else if (submitter.value === "new") {
+            const response = await fetch(`https://localhost:7094/api/draft/`, {
+                method: "POST",
+                credentials: "include",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    recipientEmail,
+                    title,
+                    text,
+                })
+            });
+
+            if (response.ok) {
+                setErrorMessage("Отправлено");
+                setSucsess(true);
+            }
+            else {
+                const message = await response.text();
+                setErrorMessage(message);
+            }
         }
     }
 
@@ -126,12 +151,12 @@ function EditDraft() {
                         <Link to="/" className="website-logo">MyMail</Link>
                     </div>
                     <div className="auth-buttons">
-                        <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                        <Link to="/myprofile" className="auth-button">{user?.name}</Link>
                     </div>
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                        <Link to="/allmails" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
+                        <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
                         <Link to="/drafts" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/draft.svg" alt="черновики"></img></Link>
@@ -165,6 +190,16 @@ function EditDraft() {
                                 onChange={(e) => setText(e.target.value)}
                             >
                             </textarea>
+                            <p className="one-letter-datetime">
+                                {new Date(lastEdit).toLocaleDateString("ru-RU")}
+                                {", "}
+                                {new Date(lastEdit).toLocaleDateString("ru-RU", {
+                                    weekday: "short"
+                                })}
+                                {", "}
+                                {" в "}
+                                {new Date(lastEdit).toLocaleTimeString("ru-RU")}
+                            </p>
                             <div className="submit-button-centrer">
                                 {sucsess ? (
                                     <p className="write-letter-sucsess-message">{errorMessage}</p>

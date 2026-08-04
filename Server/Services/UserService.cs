@@ -17,14 +17,9 @@ namespace Server.Service
         public async Task<UserDTO> Get(Guid userId)
         {
             var user = await _db.Users
-                .Include(u => u.AcceptLetters)
-                    .ThenInclude(l => l.Addressee)
-                .Include(u => u.SentLetters)
-                    .ThenInclude(l => l.Recipient)
-                .Include(u => u.LetterStates)
                 .SingleOrDefaultAsync(u => u.Id == userId);
 
-            UserDTO dto = UserMapper.ToDto(user);
+            UserDTO dto = UserMapper.ToShortDto(user);
 
             return dto;
         }

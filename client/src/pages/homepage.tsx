@@ -96,7 +96,7 @@ function homepage() {
 
         return (
             state?.isRead ? (
-                <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
+                <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-read">
                     <StarredStatusLetter
                         state={state}
                         i={i}
@@ -112,13 +112,13 @@ function homepage() {
                     </p>
                 </Link>
             ) : (
-                <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
+                    <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-unread">
                     <StarredStatusLetter
                         state={state}
                         i={i}
                         changeStarred={changeStarred}
                     />
-                        <p className="letter-sender-unread">{letter.adresseeName} {letter.adresseeSurname}</p>
+                    <p className="letter-sender-unread">{letter.adresseeName} {letter.adresseeSurname}</p>
                     <div className="letter-content">
                         <p className="letter-theme-unread">{letter.title}</p>
                         <p className="letter-text-unread"> - {letter.text}</p>
@@ -183,7 +183,7 @@ function homepage() {
 
     const maxLettersPage = Math.ceil(total / maxOnPage);
     var startIndex = lettersPage * maxOnPage;
-    
+
     const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
 
     return (
@@ -201,7 +201,7 @@ function homepage() {
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                                <Link to="/myprofile" className="auth-button">{user.name}</Link>
+                            <Link to="/myprofile" className="auth-button">{user.name}</Link>
                         </div>
                     )}
 
@@ -219,7 +219,7 @@ function homepage() {
                     <div className="letters-block">
                         <Link to="/newletter" className="new-letter-button">Новое письмо</Link>
                         <div className="letters-topbar">
-                            <button onClick={() => refreshLetters(0, maxOnPage-1)} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
+                            <button onClick={() => refreshLetters(0, maxOnPage - 1)} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>

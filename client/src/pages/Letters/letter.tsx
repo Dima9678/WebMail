@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Link, useParams } from "react-router-dom";
 
 import type { User } from "../interfaces/User";
@@ -7,6 +8,8 @@ import type { FullLetter } from '../../interfaces/FullLetter';
 
 import RenderLetter from "../../components/Letter/RenderLetter";
 import RenderReply from "../../components/Letter/RenderReply";
+
+import { useLocation } from "react-router-dom";
 
 
 function letter() {
@@ -32,7 +35,11 @@ function letter() {
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
 
+    const location = useLocation();
+    const from = location.state?.from;
+
     useEffect(() => {
+        console.log(from);
         async function loadData() {
             try {
                 await LoadUser();
@@ -44,6 +51,7 @@ function letter() {
 
         loadData();
     }, [id]);
+
 
     async function LoadUser() {
         const userResponse = await fetch("https://localhost:7094/api/User", {
@@ -63,10 +71,10 @@ function letter() {
         }
     }
     async function LoadLetter(currentUserId: string) {
-        const letterResponse = await fetch(`https://localhost:7094/api/letter/${id}`,
+        const letterResponse = await fetch(`https://localhost:7094/api/letter/${id}?from=${encodeURIComponent(from)}`,
             {
                 credentials: "include",
-                method:"GET"
+                method: "GET",
             }
         );
 
@@ -86,36 +94,50 @@ function letter() {
         setStarred(state.starred)
         setIsRead(state.isRead)
 
-        if (letter?.adresseeId === user?.id) {
-            GetTotal("sent");
-        }
-        GetTotal("accept");
+        console.log(from)
+        GetTotal(from);
+
     }
     async function GetTotal(type: string) {
-        if (type === "sent") {
-            const response = await fetch(`https://localhost:7094/api/letter/inbox/count`, {
+        let response;
+        console.log(type);
+        if (type === "inbox") {
+            response = await fetch(`https://localhost:7094/api/letter/inbox/count`, {
                 credentials: "include",
                 method: "GET"
             });
-
-            if (!response.ok)
-                throw new Error(await response.text());
-
-            const data = await response.json();
-            setLettersTotal(data)
         }
-        else {
-            const response = await fetch(`https://localhost:7094/api/letter/sent/count`, {
+        else if (type === "sent") {
+            response = await fetch(`https://localhost:7094/api/letter/sent/count`, {
                 credentials: "include",
                 method: "GET"
             });
-
-            if (!response.ok)
-                throw new Error(await response.text());
-
-            const data = await response.json();
-            setLettersTotal(data)
         }
+        else if (type === "starred") {
+            response = await fetch(`https://localhost:7094/api/letter/starred/count`, {
+                credentials: "include",
+                method: "GET"
+            });
+        }
+        else if (type === "spam") {
+            response = await fetch(`https://localhost:7094/api/letter/spam/count`, {
+                credentials: "include",
+                method: "GET"
+            });
+        }
+        else if (type === "deleted") {
+            response = await fetch(`https://localhost:7094/api/letter/deleted/count`, {
+                credentials: "include",
+                method: "GET",
+                body: JSON.stringify(from)
+            });
+        }
+
+        if (!response?.ok)
+            throw new Error(await response?.text());
+
+        const data = await response.json();
+        setLettersTotal(data)
     }
 
     function changeStarred() {
@@ -177,6 +199,7 @@ function letter() {
             setErrorMessage(message);
         }
     }
+
     async function Forward() {
         const letterId = letter?.parentLetter ? letter.parentLetterId : id;
         const response = await fetch("https://localhost:7094/api/letter/forward", {
@@ -204,7 +227,7 @@ function letter() {
         }
     }
 
-    
+    const navigate = useNavigate();
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -213,12 +236,11 @@ function letter() {
                         <Link to="/" className="website-logo">MyMail</Link>
                     </div>
                     <div className="auth-buttons">
-                        <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                        <Link to="/myprofile" className="auth-button">{user?.name}</Link>
                     </div>
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-
                         <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
@@ -228,7 +250,9 @@ function letter() {
                     </nav>
                     <div className="letters-block">
                         <div className="one-letter-topbar">
-                            <Link to="/"><img className="arrow" src="/images/arrow.svg" alt="назад"></img></Link>
+                            <button onClick={() => navigate(-1)}>
+                                <img className="arrow" src="/images/arrow.svg" alt="назад" />
+                            </button>
 
                             <div className="one-letter-topbar-buttons">
                                 {starred ? (
@@ -250,13 +274,14 @@ function letter() {
                                 {nextId === null ? (
                                     <div className="pages-navigation-button-hidden"></div>
                                 ) : (
-                                    <Link to={`/letter/${nextId}`} className="pages-navigation-button">Предыдущее</Link>
+                                    <Link to={`/letter/${nextId}`} state={{ from: from }} className="pages-navigation-button">Предыдущее</Link>
                                 )}
                                 <p className="pages-navigation-text">{letterNumber} из {lettersTotal}</p>
                                 {previousId === null ? (
                                     <div className="pages-navigation-button-hidden"></div>
                                 ) : (
-                                    <Link to={`/letter/${previousId}`} className="pages-navigation-button">Следующее</Link>
+
+                                    <Link to={`/letter/${previousId}`} state={{ from: from }} className="pages-navigation-button">Следующее</Link>
                                 )}
                             </div>
                         </div>

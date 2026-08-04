@@ -12,7 +12,13 @@ export default function RenderReply({
                 <div className="one-letter-title-block">
                     <p className="one-letter-title">{currentLetter.title}</p>
                     <p className="one-letter-datetime">
-                        {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU")} в
+                        {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU")}
+                        {", "}
+                        {new Date(currentLetter.sendTime).toLocaleDateString("ru-RU", {
+                            weekday: "short"
+                        })}
+                        {", "}
+                        {" в "}
                         {new Date(currentLetter.sendTime).toLocaleTimeString("ru-RU")}
                     </p>
                 </div>

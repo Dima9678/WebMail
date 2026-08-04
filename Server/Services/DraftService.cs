@@ -18,11 +18,12 @@ namespace Server.Service
         }
 
 
-        public async Task<List<DraftDTO>> GetUserDrafts(Guid  UserId, int startIndex, int endIndex)
+        public async Task<List<DraftDTO>> GetUserDrafts(Guid UserId, int startIndex, int endIndex)
         {
             List<DraftDTO> draftsList = await _db.Drafts
                 .Where(l => l.AuthorId == UserId)
                 .Include(l => l.Author)
+                .OrderByDescending(l => l.LastEditDate)
                 .Select(l => DraftMapper.ToDTO(l)).ToListAsync();
 
             List<DraftDTO> drafts = new List<DraftDTO>();

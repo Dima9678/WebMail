@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import type { Draft } from "../../interfaces/Draft";
 import type { User } from "../../interfaces/User";
@@ -108,7 +108,7 @@ function Drafts() {
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                            <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                            <Link to="/myprofile" className="auth-button">{user.name}</Link>
                         </div>
                     )}
 

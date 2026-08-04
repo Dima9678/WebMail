@@ -92,7 +92,7 @@ function Sent() {
 
         return (
             state?.isRead ? (
-                <Link to={`/letter/${letter.id}`} key={i} className="letter-read">
+                <Link to={`/letter/${letter.id}`} state={{ from: "sent" }} key={i} className="letter-read">
                     <StarredStatusLetter
                         state={state}
                         i={i}
@@ -108,7 +108,7 @@ function Sent() {
                     </p>
                 </Link>
             ) : (
-                <Link to={`/letter/${letter.id}`} key={i} className="letter-unread">
+                <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-unread">
                     <StarredStatusLetter
                         state={state}
                         i={i}
@@ -197,14 +197,14 @@ function Sent() {
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                            <Link to="/myprofile" className="auth-button">Мой аккаунт</Link>
+                            <Link to="/myprofile" className="auth-button">{user?.name}</Link>
                         </div>
                     )}
 
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                         
+
                         <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
