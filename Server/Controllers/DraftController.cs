@@ -37,14 +37,25 @@ namespace Server.Controllers
         [HttpPost("")]
         public async Task<IActionResult> Create([FromBody] NewDraftDTO request)
         {
-            OperationResult result = await _validation.ValidateWriteDraftRequest(request);
+            OperationResult result = 
+                await _validation.ValidateWriteDraftRequest(request);
             if (!result.Sucsessed)
             {
                 return BadRequest(result.ErrorMessage);
             }
-            Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _draftService.Add(request, adresseeId);
-            return Ok();
+            Guid adresseeId = Guid.Parse(
+                User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
+
+            if (!String.IsNullOrEmpty(request.DraftId))
+            {
+                await Save(request, Guid.Parse(request.DraftId));
+                return Ok(request.DraftId);
+            }
+            else
+            {
+                Guid newDraftId = await _draftService.Add(request, adresseeId);
+                return Ok(newDraftId.ToString());
+            }
         }
 
         [Authorize]
@@ -92,6 +103,14 @@ namespace Server.Controllers
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
             await _letterService.Add(newLetter, adresseeId);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpDelete("{draftId:guid}")]
+        public async Task<IActionResult> DeleteDraft(Guid draftId)
+        {
+            await _draftService.Delete(draftId);
             return Ok();
         }
     }

@@ -17,7 +17,14 @@ namespace Server.Service
             _db = db;
         }
 
-
+        public async Task<DraftDTO> GetById(Guid draftId)
+        {
+            Draft draft = await _db.Drafts
+                .Include(x => x.Author)
+                .SingleOrDefaultAsync(x => x.Id == draftId);
+            DraftDTO draftDTO = DraftMapper.ToDTO(draft);
+            return draftDTO;
+        }
         public async Task<List<DraftDTO>> GetUserDrafts(Guid UserId, int startIndex, int endIndex)
         {
             List<DraftDTO> draftsList = await _db.Drafts
@@ -42,8 +49,16 @@ namespace Server.Service
 
             return drafts;
         }
+        public async Task<int> GetTotalAcceptCount(Guid userId)
+        {
+            int count = await _db.Drafts
+                .Where(l => l.AuthorId == userId)
+                .CountAsync();
 
-        public async Task Add(NewDraftDTO request, Guid authorId)
+            return count;
+        }
+
+        public async Task<Guid> Add(NewDraftDTO request, Guid authorId)
         {
             User? user = await _db.Users.SingleOrDefaultAsync(x => x.Id == authorId);
             
@@ -60,14 +75,13 @@ namespace Server.Service
 
             _db.Drafts.Add(draft);
             _db.SaveChanges();
+
+            return draft.Id;
         }
-        public async Task<DraftDTO> GetById(Guid draftId)
+        public async Task Delete(Guid draftId)
         {
-            Draft draft = await _db.Drafts
-                .Include(x => x.Author)
-                .SingleOrDefaultAsync(x => x.Id == draftId);
-            DraftDTO draftDTO = DraftMapper.ToDTO(draft);
-            return draftDTO;
+            _db.Drafts.Remove(new Draft {Id = draftId});
+            await _db.SaveChangesAsync();
         }
         public async Task Save(NewDraftDTO request, Guid draftId)
         {
@@ -80,14 +94,6 @@ namespace Server.Service
             draftInDb?.LastEditDate = DateTime.UtcNow;
 
             await _db.SaveChangesAsync();
-        }
-        public async Task<int> GetTotalAcceptCount(Guid userId)
-        {
-            int count = await _db.Drafts
-                .Where(l => l.AuthorId == userId)
-                .CountAsync();
-
-            return count;
         }
     }
 }

@@ -9,10 +9,12 @@ function EditDraft() {
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [lastEdit, setLastEdit] = useState<Date | null>(null);
+    const [draftId, setDraftId] = useState("");
 
     const [user, setUser] = useState<User | null>(null);
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
+    const [saveInDrafts, setSaveInDrafts] = useState(false)
     const { id } = useParams();
 
     const isNew = id === "new";
@@ -67,6 +69,48 @@ function EditDraft() {
         }
     }, [id]);
 
+    useEffect(() => {
+        console.log("Обновление")
+        if (!recipientEmail && !title && !text) {
+            return;
+        }
+        else {
+            const timeout = setTimeout(() => { 
+                SaveDraft();
+                
+            }, 4000)
+            return () => clearTimeout(timeout);
+        }
+    }, [recipientEmail, title, text])
+
+    async function SaveDraft() {
+        const response = await fetch("https://localhost:7094/api/draft", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                recipientEmail,
+                title,
+                text,
+                draftId
+            })
+        });
+        console.log("Sending", draftId);
+
+        if (response.ok) {
+            const draftData = await response.text();
+            setDraftId(draftData);
+            setSaveInDrafts(true);
+            setErrorMessage("Черновик сохранен");
+            setSucsess(true);
+        }
+        else {
+            const message = await response.text();
+            setErrorMessage(message);
+        }
+    }
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -200,6 +244,11 @@ function EditDraft() {
                                 {" в "}
                                 {new Date(lastEdit).toLocaleTimeString("ru-RU")}
                             </p>
+                            {saveInDrafts ? (
+                                <p>Сохранено автоматически</p>
+                            ) : (
+                                <></>
+                            )}
                             <div className="submit-button-centrer">
                                 {sucsess ? (
                                     <p className="write-letter-sucsess-message">{errorMessage}</p>

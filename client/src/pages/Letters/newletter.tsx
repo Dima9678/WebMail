@@ -8,9 +8,13 @@ function newletter() {
     const [recipient, setRecipient] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
-    const [, setUser] = useState<User | null>(null);
+    const [draftId, setDraftId] = useState("");
+
+    const [user, setUser] = useState<User | null>(null);
+
     const [errorMessage, setErrorMessage] = useState("");
     const [sucsess, setSucsess] = useState(false);
+    const [saveInDrafts, setSaveInDrafts] = useState(false);
 
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
@@ -33,7 +37,17 @@ function newletter() {
             })
             .catch(console.error);
     }, []);
-
+    useEffect(() => {
+        if (!recipient && !title && !text) {
+            return;
+        }
+        else {
+            const timeout = setTimeout(() => {
+                SaveDraft();
+            }, 4000);
+            return () => clearTimeout(timeout);
+        }
+    }, [recipient, title, text])
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -65,37 +79,45 @@ function newletter() {
                 const message = await response.text();
                 setErrorMessage(message);
             }
+            //если 
+            const deleteDraftResponse = await fetch(`https://localhost:7094/api/draft/${draftId}`, {
+                method: "DELETE",
+                credentials: 'include'
+            })
 
         } else if (submitter.value === "draft") {
             console.log("draft");
-            const response = await fetch("https://localhost:7094/api/draft", {
-                method: "POST",
-                credentials: "include",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify({
-                    recipient,
-                    title,
-                    text,
-                })
-            });
-
-            if (response.ok) {
-                setRecipient("");
-                setTitle("");
-                setText("");
-                setErrorMessage("Черновик сохранен");
-                setSucsess(true);
-            }
-            else {
-                const message = await response.text();
-                setErrorMessage(message);
-            }
+            SaveDraft();
         }
     }
+    async function SaveDraft() {
+        const response = await fetch("https://localhost:7094/api/draft", {
+            method: "POST",
+            credentials: "include",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                recipient,
+                title,
+                text,
+                draftId
+            })
+        });
+        console.log("Sending", draftId);
 
+        if (response.ok) {
+            const draftData = await response.text();
+            setDraftId(draftData);
+            setSaveInDrafts(true);
+            setErrorMessage("Черновик сохранен");
+            setSucsess(true);
+        }
+        else {
+            const message = await response.text();
+            setErrorMessage(message);
+        }
+    }
 
     return (
         <div className="parent-container">
@@ -144,6 +166,11 @@ function newletter() {
                                 onChange={(e) => setText(e.target.value)}
                             >
                             </textarea>
+                            {saveInDrafts ? (
+                                <p>Сохранено в черновики</p>
+                            ) : (
+                                <></>
+                            )}
                             <div className="submit-button-centrer">
                                 {sucsess ? (
                                     <p className="write-letter-sucsess-message">{errorMessage}</p>
