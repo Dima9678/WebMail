@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
 
@@ -9,11 +9,16 @@ function Signup() {
     const [surname, setSurame] = useState("");
     const [, setLogin] = useState("");
     const [password, setPassword] = useState("");
+    const [isMan, setIsMan] = useState(true);
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
 
     const [resultMessage, setResultMessage] = useState("");
     const [authResult, setAuthResult] = useState(false);
+
+    useEffect(() => {
+        console.log("Положение переключателя " + isMan)
+    }, [isMan])
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -30,6 +35,7 @@ function Signup() {
                 email,
                 password,
                 repeatPassword,
+                isMan
             })
         });
 
@@ -40,6 +46,7 @@ function Signup() {
             setSurame("");
             setLogin("");
             setPassword("");
+            setIsMan(true);
             setRepeatPassword("");
             setEmail("");
         }
@@ -67,6 +74,22 @@ function Signup() {
                         value={surname}
                         onChange={(e) => setSurame(e.target.value)}
                     />
+
+                    <div className="gender-selector">
+                        <div
+                            className={isMan ? "gender-selector-left-on" : "gender-selector-left-off"}
+                            onClick={(e) => setIsMan(true)}
+                        >
+                        М
+                        </div>
+                        <div
+                            className={!isMan ? "gender-selector-right-on" : "gender-selector-right-off"}
+                            onClick={(e) => setIsMan(false)}
+                        >
+                        Ж
+                        </div>
+                    </div>
+
                     <div className="email-create-main">
                         <input
                             className="email-create-input-box"

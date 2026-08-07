@@ -22,6 +22,7 @@ namespace Server.Service
                 Name = dto.Name,
                 Surname = dto.Surname,
                 Email = dto.Email,
+                IsMan = dto.IsMan,
                 PasswordHash = _hasher.HashPassword(new User(), dto.Password),
             };
 

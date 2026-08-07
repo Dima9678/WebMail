@@ -361,12 +361,12 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 10px;
 }
 
 .sign-page-name {
     color: #24367D;
     font-size: 50px;
-    margin-bottom: 30px;
 }
 
 .sign-input-box {
@@ -374,7 +374,6 @@
     height: 55px;
     background-color: #24367D;
     border-radius: 20px;
-    margin-bottom: 20px;
     outline: none;
     color: white;
     padding: 20px;
@@ -385,6 +384,40 @@
         color: #FFFFFF;
         opacity: 0.50;
     }
+
+.gender-selector {
+    width: 500px;
+    height: 55px;
+    border: 1px solid #24367D;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: row;
+    overflow: hidden;
+}
+
+.gender-selector-left-on,
+.gender-selector-left-off,
+.gender-selector-right-on,
+.gender-selector-right-off {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    font-size: 30px;
+}
+
+.gender-selector-left-on,
+.gender-selector-right-on {
+    color: white;
+    background-color: #24367D;
+}
+
+.gender-selector-left-off,
+.gender-selector-right-off {
+    color: #24367D;
+    background-color: white;
+}
 
 .email-create-main {
     width: 500px;
@@ -424,7 +457,6 @@
 .have-a-account-message {
     color: #24367D;
     font-size: 25px;
-    margin-bottom: 40px;
 }
 
 .links {
@@ -439,7 +471,6 @@
     align-items: center;
     text-align: center;
     flex-direction: column;
-    margin-bottom: 40px;
     width: 80%;
 }
 
