@@ -16,10 +16,6 @@ function Signup() {
     const [resultMessage, setResultMessage] = useState("");
     const [authResult, setAuthResult] = useState(false);
 
-    useEffect(() => {
-        console.log("Положение переключателя " + isMan)
-    }, [isMan])
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 

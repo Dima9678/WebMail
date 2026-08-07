@@ -512,14 +512,22 @@
     display: flex;
     flex-direction: column;
     flex: 1;
+    align-items: center;
+    padding: 30px;
+}
+
+.write-letter-form,
+.write-letter-activity-buttons {
+    align-items: end;
 }
 
 .write-letter-recipient,
 .write-letter-title,
 .write-letter-text {
+    width: 100%;
     color: #1C1C1C;
     outline: none;
-    border-bottom: 3px solid #24367D;
+    border-bottom: 3px solid #6070B3;
     padding: 5px;
     font-size: 20px;
 }
@@ -550,7 +558,6 @@
 }
 
 .write-letter-activity-buttons {
-    width: 30%;
     height: 50px;
     color: white;
     display: flex;
@@ -562,7 +569,7 @@
 }
 
 .write-letter-submit-button {
-    width: 300px;
+    width: 250px;
     height: 50px;
     font-size: 25px;
     color: white;

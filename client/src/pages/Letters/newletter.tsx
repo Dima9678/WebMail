@@ -142,12 +142,12 @@ function newletter() {
 
                     <div className="write-letter">
                         <div className="write-letter-topbar">
-                            Написать письмо
+                            Новое письмо
                         </div>
                         <form onSubmit={handleSubmit} className="write-letter-form">
                             <input
                                 className="write-letter-recipient"
-                                placeholder="Получатель"
+                                placeholder="Получатель(и) через запятую"
                                 value={recipient}
                                 onChange={(e) => setRecipient(e.target.value)}
                             >
