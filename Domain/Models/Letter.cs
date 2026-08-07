@@ -10,8 +10,7 @@ namespace Domain.Models
         public User Addressee { get; set; }
         public Guid AddresseeId { get; set; }
 
-        public User Recipient { get; set; }
-        public Guid RecipientId { get; set; }
+        public List<User> Recipients { get; set; }
 
         public bool? Forwarded { get; set; }
         public User? OriginalAuthor { get; set; }

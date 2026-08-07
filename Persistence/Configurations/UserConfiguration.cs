@@ -22,8 +22,8 @@ namespace Persistence.Configurations
 
             builder
                 .HasMany(u => u.AcceptLetters)
-                .WithOne(l => l.Recipient)
-                .HasForeignKey(l => l.RecipientId);
+                .WithMany(l => l.Recipients);
+
             builder
                 //У каждого юзера есть много черновиков
                 .HasMany(x => x.Drafts)
