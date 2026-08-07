@@ -9,6 +9,8 @@ export interface User {
     surname: string;
     email: string;
 
+    isMan: boolean;
+
     sentLetters: Letter[];
     acceptLetters: Letter[];
 

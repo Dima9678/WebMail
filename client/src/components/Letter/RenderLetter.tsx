@@ -29,8 +29,6 @@ export default function RenderLetter({
     ChangeReplyMode,
     ChangeForwardMode,
 }: RenderLetterProps) {
-    console.log(currentLetter?.forwarded)
-    console.log(currentLetter?.originalAuthor)
     return (
         
                                 

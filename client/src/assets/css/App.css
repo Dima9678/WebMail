@@ -85,6 +85,7 @@
 
 .sidebar {
     width: 90px;
+    height: 100%;
     border-right: 3px solid #24367D;
     display: flex;
     justify-content: flex-start;
@@ -675,7 +676,7 @@
     color: white;
 }
 
-.one-letter-adressee-name-block{
+.one-letter-adressee-name-block {
     display: flex;
     flex-direction: column;
     height: 100px;
@@ -868,4 +869,118 @@
 .draft-date {
     text-decoration: none;
     color: #5C6DB0;
+}
+
+.myprofile-main-content {
+    width: 100%;
+    height: 100%;
+    background-color: White;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.myprofile-main-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 40px;
+}
+
+.myprofile-second-container {
+    width: 100%;
+    height: 92%;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.myprofile-user-info {
+    color: #1c1c1c;
+    font-size: 30px;
+}
+
+.myprofile-buttons{
+    width: 100%;
+    height: 8%;
+    display: flex;
+    gap: 5%;
+}
+
+.myprofile-button {
+    color: #1c1c1c;
+    font-size: 20px;
+    width: 20%;
+    height: 50px;
+    border: 2px solid #1c1c1c;
+    display: inline;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.myprofile-modal-overlay{
+    position: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    inset: 0;
+    z-index: 20;
+}
+
+.myprofile-modal-form {
+    width: 35%;
+    height: 60%;
+    border-radius: 20px;
+    border: 1px solid black;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+}
+
+.myprofile-modal-form-forms-block{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+}
+
+.myprofile-modal-form-heading {
+   color:  #1c1c1c;
+   font-size: 30px;
+}
+
+.myprofile-modal-form-imput {
+    border: 1px solid black;
+    width: 90%;
+    height: 12%;
+    padding: 10px;
+    font-size: 20px;
+    border-radius: 10px;
+}
+
+.myprofile-modal-form-buttons {
+    width: 100%;
+    height: 20%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 20px;
+}
+
+.myprofile-modal-form-button {
+    width: 40%;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 5px;
 }

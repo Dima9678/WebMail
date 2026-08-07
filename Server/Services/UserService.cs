@@ -23,5 +23,17 @@ namespace Server.Service
 
             return dto;
         }
+
+        public async Task ChangeUserInfo(UserDataChangeRequest request, Guid userId)
+        {
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+
+            user.Surname = request.Surname;
+            user.Email = request.Email;
+            user.Name = request.Name;
+            user.IsMan = request.IsMan;
+
+            await _db.SaveChangesAsync();
+        }
     }
 }

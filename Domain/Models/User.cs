@@ -9,6 +9,7 @@ namespace Domain
         public string Surname { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
+        public bool IsMan { get; set; }
         public List<Letter> SentLetters { get; set; }
         public List<Letter> AcceptLetters { get; set; }
         public List<LetterState> LetterStates { get; set; }

@@ -4,8 +4,6 @@ import { Link } from "react-router-dom";
 import type { Letter } from "../interfaces/Letter";
 import type { User } from "../interfaces/User";
 
-
-
 function homepage() {
     const [user, setUser] = useState<User | null>(null);
     const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);

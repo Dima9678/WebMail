@@ -15,7 +15,7 @@ namespace Persistence.Configurations
                 .HasOne(x => x.Letter)
                 .WithMany(x => x.LetterStates)
                 .HasForeignKey(x => x.LetterId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder
                 .HasOne(x => x.User)

@@ -29,6 +29,7 @@ namespace Server.Mappers
                 Surname = user.Surname,
                 Email = user.Email,
                 Id = user.Id,
+                IsMan = user.IsMan,
             };
             
             return dto;
