@@ -27,13 +27,15 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] NewLetterDTO request)
         {
-            OperationResult result = await _validation.ValidateWriteLetterRequest(request);
+            string[] recipients = request.Recipients.Split(" ");
+            OperationResult result = await _validation.ValidateWriteLetterRequest(request, recipients);
+            
             if (!result.Sucsessed)
             {
                 return BadRequest(result.ErrorMessage);
             }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.Add(request, adresseeId);
+            await _letterService.Add(request, adresseeId, recipients);
             return Ok();
         }
 

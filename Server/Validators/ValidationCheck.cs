@@ -59,44 +59,48 @@ namespace Server.Validators
             }
             return new OperationResult();
         }
-        public async Task<OperationResult> ValidateWriteLetterRequest(NewLetterDTO request)
+        public async Task<OperationResult> ValidateWriteLetterRequest(NewLetterDTO request, string[] recipients)
         {
-            OperationResult emailValResult = CorrectEmail(request.Recipient);
-            if (string.IsNullOrWhiteSpace(request.Recipient))
+            foreach (var recipient in recipients)
             {
-                return new OperationResult()
+                if (string.IsNullOrWhiteSpace(recipient))
                 {
-                    ErrorMessage = "Не введен получатель",
-                    Sucsessed = false,
-                };
-            }
+                    return new OperationResult()
+                    {
+                        ErrorMessage = "Не введен получатель",
+                        Sucsessed = false,
+                    };
+                }
+                OperationResult emailValResult = CorrectEmail(recipient);
 
-            if (string.IsNullOrWhiteSpace(request.Title))
-            {
-                return new OperationResult()
+                if (string.IsNullOrWhiteSpace(request.Title))
                 {
-                    ErrorMessage = "Тема письма не может быть пустой",
-                    Sucsessed = false,
-                };
-            }
+                    return new OperationResult()
+                    {
+                        ErrorMessage = "Тема письма не может быть пустой",
+                        Sucsessed = false,
+                    };
+                }
 
-            if (string.IsNullOrWhiteSpace(request.Text))
-            {
-                return new OperationResult()
+                if (string.IsNullOrWhiteSpace(request.Text))
                 {
-                    ErrorMessage = "Текст письма не может быть пустым",
-                    Sucsessed = false,
-                };
-            }
+                    return new OperationResult()
+                    {
+                        ErrorMessage = "Текст письма не может быть пустым",
+                        Sucsessed = false,
+                    };
+                }
 
-            var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
-            if (userInDb == null)
-            {
-                return new OperationResult()
+                var userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == recipient);
+                if (userInDb == null)
                 {
-                    ErrorMessage = "Такого пользователя не существует",
-                    Sucsessed = false,
-                };
+                    return new OperationResult()
+                    {
+                        ErrorMessage = "Такого пользователя не существует",
+                        Sucsessed = false,
+                    };
+                }
+
             }
 
             return new OperationResult();
@@ -117,7 +121,7 @@ namespace Server.Validators
         }
         public async Task<OperationResult> ValidateWriteDraftRequest(NewDraftDTO request)
         {
-            if (string.IsNullOrWhiteSpace(request.RecipientEmail) &&
+            if (string.IsNullOrWhiteSpace(request.Recipients) &&
                 string.IsNullOrWhiteSpace(request.Title) &&
                 string.IsNullOrWhiteSpace(request.Text)
                 )

@@ -31,7 +31,6 @@ namespace Server.Development
                 Letter letter = new Letter()
                 {
                     AddresseeId = adressee.Id,
-                    RecipientId = recipient.Id,
                     Title = $"Письмо {i}",
                     Text = $"Здравствуйте Дмитрий, это письмо {i}",
                     SendTime = DateTime.UtcNow,
@@ -72,7 +71,7 @@ namespace Server.Development
                     Author = user,
                     AuthorId = userId,
                     Title = "Здравствуйте Дмитрий, это чернровик " + i,
-                    RecipientEmail = "egor@mymail.com",
+                    //RecipientEmail = "egor@mymail.com",
                     Text = ""
                 };
                 

@@ -2,9 +2,7 @@
 using Domain.Models;
 using Domain.Models.DTO;
 using Domain.Models.Requests;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Persistence;
 using Server.Mappers;
 
@@ -17,32 +15,43 @@ namespace Server.Service
         {
             _db = db;
         }
-        public async Task Add(NewLetterDTO request, Guid adresseeId)
+        public async Task Add(NewLetterDTO request, Guid adresseeId, string[] recipients)
         {
-            var recipient = await _db.Users.SingleOrDefaultAsync(u => u.Email == request.Recipient);
+            User[] recipientsList = new User[recipients.Length];
+            for (int i = 0; i < recipients.Length; i++)
+            {
+                recipientsList[i] = await _db.Users.SingleOrDefaultAsync(u => u.Email == recipients[i]);
+            }
             var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
+
+            List<LetterState> recipientsStates = new List<LetterState>();
+
+            //добавляем состояние адресата
+            recipientsStates.Add(new LetterState()
+            {
+                IsRead = true,
+                UserId = adressee.Id,
+            });
+
+            //Добавление состояний получателя
+            for (int i = 0; i < recipientsList.Length; i++)
+            {
+                recipientsStates.Add(new LetterState()
+                {
+                    IsRead = false,
+                    UserId = recipientsList[i].Id,
+                });
+            }
 
             Letter letter = new Letter()
             {
                 AddresseeId = adressee.Id,
-                RecipientId = recipient.Id,
                 Title = request.Title,
                 Text = request.Text,
                 SendTime = DateTime.UtcNow,
-
-                LetterStates = new List<LetterState>()
-                {
-                    new LetterState()
-                    {
-                        IsRead = true,
-                        UserId = adressee.Id,
-                    },
-                    new LetterState()
-                    {
-                        IsRead = false,
-                        UserId = recipient.Id,
-                    },
-                }
+                LetterStates = recipientsStates,
+                Recipients = recipientsList.ToList(),
+                
             };
             _db.Letters.Add(letter);
             _db.SaveChanges();
@@ -55,7 +64,6 @@ namespace Server.Service
             Letter letter = new Letter()
             {
                 AddresseeId = adressee.Id,
-                RecipientId = parentLetter.AddresseeId,
                 Title = $"Ответ на письмо: \"{parentLetter.Title}\"",
                 Text = replyText.ReplyText,
                 SendTime = DateTime.UtcNow,
@@ -111,8 +119,7 @@ namespace Server.Service
             //оригинальное письмо
             Letter? letterInDb = await _db.Letters
                 .Include(x => x.Addressee)
-                .Include(x => x.Recipient)
-                .Include(x => x.Recipient)
+                .Include(x => x.Recipients)
                 .FirstOrDefaultAsync(x => x.Id == request.LetterId);
 
             if (letterInDb == null)
@@ -132,8 +139,10 @@ namespace Server.Service
                 Addressee = adressee,
                 AddresseeId = adressee.Id,
 
-                Recipient = recipient,
-                RecipientId = recipient.Id,
+                Recipients = letterInDb.Recipients,
+
+                ForwardRecipient = recipient,
+                ForwardRecipientId = recipient.Id,
 
                 Forwarded = true,
                 OriginalAuthor = letterInDb.Addressee,
@@ -174,11 +183,12 @@ namespace Server.Service
                 .Where(u => u.Id == letterId)
                 .Include(u => u.LetterStates)
                 .Include(u => u.Addressee)
+                .Include(u => u.Recipients)
                 .Include(u => u.ParentLetter)
                 .ThenInclude(u => u.Addressee)
                 .ThenInclude(u => u.LetterStates)
                 .Include(u => u.ChildrenLetters
-                    .Where(l => l.RecipientId == userId || l.AddresseeId == userId))
+                    .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId))
                     .ThenInclude(l => l.Addressee)
                 .SingleOrDefaultAsync();
 
@@ -186,6 +196,7 @@ namespace Server.Service
             {
                 return null;
             }
+
             if (letterInDb.Forwarded == true)
             {
                 await _db.Entry(letterInDb)
@@ -207,7 +218,7 @@ namespace Server.Service
             }
             else
             {
-                fullLetterDTO = await AppendAcceptNavigationInfo(fullLetterDTO);
+                fullLetterDTO = await AppendAcceptNavigationInfo(fullLetterDTO, userId);
             }
             return fullLetterDTO;
         }
@@ -215,7 +226,7 @@ namespace Server.Service
         public async Task<List<LetterDTO>> GetAcceptLetters(Guid userId, int startIndex, int endIndex)
         {
             List<LetterDTO> letters = await _db.Letters
-                .Where(l => l.RecipientId == userId)
+                .Where(l => l.Recipients.Any(r => r.Id == userId))
                 .Include(l => l.Addressee)
                 .Include(l => l.LetterStates)
                 .OrderByDescending(l => l.SendTime)
@@ -240,7 +251,7 @@ namespace Server.Service
         public async Task<List<LetterDTO>> GetStarredLetters(Guid userId)
         {
             List<LetterDTO> userLetters = await _db.Letters
-                .Where(l => l.RecipientId == userId || l.AddresseeId == userId)
+                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
                 .Include(l => l.LetterStates)
                 .Include(l => l.Addressee)
@@ -312,7 +323,7 @@ namespace Server.Service
         public async Task<int> GetAcceptCount(Guid userId)
         {
             int count = await _db.Letters
-                .Where(l => l.RecipientId == userId)
+                .Where(l => l.Recipients.Any(r => r.Id == userId))
                 .CountAsync();
 
             return count;
@@ -328,17 +339,17 @@ namespace Server.Service
         public async Task<int> GetStarredCount(Guid userId)
         {
             int count = await _db.Letters
-                .Where(l => l.RecipientId == userId || l.AddresseeId == userId)
+                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
                 .CountAsync();
 
             return count;
         }
 
-        public async Task<FullLetterDTO> AppendAcceptNavigationInfo(FullLetterDTO fullLetter)
+        public async Task<FullLetterDTO> AppendAcceptNavigationInfo(FullLetterDTO fullLetter, Guid userId)
         {
             var letters = await _db.Letters
-                .Where(l => l.RecipientId == fullLetter.RecipientId)
+                .Where(l => l.Recipients.Any(r => r.Id == userId))
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => l.Id)
                 .ToListAsync();
@@ -378,7 +389,7 @@ namespace Server.Service
         public async Task<FullLetterDTO> AppendStarredNavigationInfo(FullLetterDTO fullLetter, Guid userId)
         {
             var letters = await _db.Letters
-                .Where(l => l.RecipientId == userId || l.AddresseeId == userId)
+                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => l.Id)

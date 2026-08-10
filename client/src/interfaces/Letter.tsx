@@ -10,8 +10,7 @@ export interface Letter {
     adressee: User;
     adresseeId: string;
 
-    recipient: User;
-    recipientId: string;
+    recipients: User[];
 
     adresseeName: string;
     adresseeSurname: string;

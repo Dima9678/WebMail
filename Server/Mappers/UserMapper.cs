@@ -34,5 +34,17 @@ namespace Server.Mappers
             
             return dto;
         }
+
+        public static List<UserDTO> ToShortDto(List<User> users)
+        {
+            UserDTO[] dTOs = new UserDTO[users.Count];
+
+            for (int i = 0; i < users.Count; i++)
+            {
+                dTOs[i] = ToShortDto(users[i]);
+            }
+
+            return dTOs.ToList();
+        }
     }
 }

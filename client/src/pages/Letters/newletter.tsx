@@ -5,7 +5,7 @@ import type { User } from "../interfaces/User";
 
 
 function newletter() {
-    const [recipient, setRecipient] = useState("");
+    const [recipients, setRecipients] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [draftId, setDraftId] = useState("");
@@ -38,7 +38,7 @@ function newletter() {
             .catch(console.error);
     }, []);
     useEffect(() => {
-        if (!recipient && !title && !text) {
+        if (!recipients && !title && !text) {
             return;
         }
         else {
@@ -47,7 +47,7 @@ function newletter() {
             }, 4000);
             return () => clearTimeout(timeout);
         }
-    }, [recipient, title, text])
+    }, [recipients, title, text])
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
@@ -62,14 +62,14 @@ function newletter() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    recipient,
+                    recipients,
                     title,
                     text,
                 })
             });
 
             if (response.ok) {
-                setRecipient("");
+                setRecipients("");
                 setTitle("");
                 setText("");
                 setErrorMessage("Отправлено");
@@ -79,7 +79,6 @@ function newletter() {
                 const message = await response.text();
                 setErrorMessage(message);
             }
-            //если 
             const deleteDraftResponse = await fetch(`https://localhost:7094/api/draft/${draftId}`, {
                 method: "DELETE",
                 credentials: 'include'
@@ -98,7 +97,7 @@ function newletter() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                recipient,
+                recipients,
                 title,
                 text,
                 draftId
@@ -148,8 +147,8 @@ function newletter() {
                             <input
                                 className="write-letter-recipient"
                                 placeholder="Получатель(и) через запятую"
-                                value={recipient}
-                                onChange={(e) => setRecipient(e.target.value)}
+                                value={recipients}
+                                onChange={(e) => setRecipients(e.target.value)}
                             >
                             </input>
                             <input

@@ -93,8 +93,8 @@ namespace Server.Controllers
         public async Task<IActionResult> Send([FromBody] NewDraftDTO request)
         {
             NewLetterDTO newLetter = LetterMapper.DraftDTOToLetterDTO(request);
-
-            OperationResult result = await _validation.ValidateWriteLetterRequest(newLetter);
+            string[] recipients = request.Recipients.Split(" ");
+            OperationResult result = await _validation.ValidateWriteLetterRequest(newLetter, recipients);
             if (!result.Sucsessed)
             {
                 return BadRequest(result.ErrorMessage);
@@ -102,7 +102,7 @@ namespace Server.Controllers
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _letterService.Add(newLetter, adresseeId);
+            await _letterService.Add(newLetter, adresseeId, recipients);
             return Ok();
         }
 

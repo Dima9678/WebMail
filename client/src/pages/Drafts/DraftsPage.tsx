@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import type { Draft } from "../../interfaces/Draft";
 import type { User } from "../../interfaces/User";

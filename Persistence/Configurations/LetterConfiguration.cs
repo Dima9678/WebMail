@@ -18,7 +18,14 @@ namespace Persistence.Configurations
                 .HasOne(l => l.OriginalAuthor)
                 .WithMany()
                 .HasForeignKey(l => l.OriginalAuthorId)
-                .OnDelete(DeleteBehavior.SetNull);
+                .OnDelete(DeleteBehavior.Restrict);
+
+            builder
+                .HasOne(x => x.ForwardRecipient)
+                .WithMany()
+                .HasForeignKey(x => x.ForwardRecipientId)
+                .OnDelete(DeleteBehavior.Restrict);
+
             builder
                 .Property(x => x.Forwarded)
                 .HasDefaultValue(false);

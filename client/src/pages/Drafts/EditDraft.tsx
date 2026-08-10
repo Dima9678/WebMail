@@ -5,7 +5,7 @@ import type { Draft } from "../../interfaces/Draft";
 import type { User } from "../../interfaces/User";
 
 function EditDraft() {
-    const [recipientEmail, setRecipientEmail] = useState("");
+    const [recipients, setRecipients] = useState("");
     const [title, setTitle] = useState("");
     const [text, setText] = useState("");
     const [lastEdit, setLastEdit] = useState<Date | null>(null);
@@ -55,7 +55,7 @@ function EditDraft() {
 
                 const draftData: Draft = await draftResponce.json();
 
-                setRecipientEmail(draftData.recipientEmail ?? "")
+                setRecipients(draftData.recipients ?? "")
                 setTitle(draftData.title ?? "")
                 setText(draftData.text ?? "")
                 setLastEdit(draftData.lastEditDate ?? null)
@@ -63,7 +63,7 @@ function EditDraft() {
             loadData();
         }
         else {
-            setRecipientEmail("")
+            setRecipients("")
             setTitle("")
             setText("")
         }
@@ -71,7 +71,7 @@ function EditDraft() {
 
     useEffect(() => {
         console.log("Обновление")
-        if (!recipientEmail && !title && !text) {
+        if (!recipients && !title && !text) {
             return;
         }
         else {
@@ -81,7 +81,7 @@ function EditDraft() {
             }, 4000)
             return () => clearTimeout(timeout);
         }
-    }, [recipientEmail, title, text])
+    }, [recipients, title, text])
 
     async function SaveDraft() {
         const response = await fetch("https://localhost:7094/api/draft", {
@@ -91,7 +91,7 @@ function EditDraft() {
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                recipientEmail,
+                recipients,
                 title,
                 text,
                 draftId
@@ -125,7 +125,7 @@ function EditDraft() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    recipientEmail,
+                    recipients,
                     title,
                     text,
                 })
@@ -148,7 +148,7 @@ function EditDraft() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    recipientEmail,
+                    recipients,
                     title,
                     text,
                 })
@@ -170,7 +170,7 @@ function EditDraft() {
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    recipientEmail,
+                    recipients,
                     title,
                     text,
                 })
@@ -216,8 +216,8 @@ function EditDraft() {
                             <input
                                 className="write-letter-recipient"
                                 placeholder="Получатель"
-                                value={recipientEmail}
-                                onChange={(e) => setRecipientEmail(e.target.value)}
+                                value={recipients}
+                                onChange={(e) => setRecipients(e.target.value)}
                             >
                             </input>
                             <input

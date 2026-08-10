@@ -52,7 +52,6 @@ function letter() {
         loadData();
     }, [id]);
 
-
     async function LoadUser() {
         const userResponse = await fetch("https://localhost:7094/api/User", {
             credentials: "include"
@@ -139,7 +138,6 @@ function letter() {
         const data = await response.json();
         setLettersTotal(data)
     }
-
     function changeStarred() {
         fetch(`https://localhost:7094/api/letter/${letter?.id}/toggle-starred`, {
             credentials: "include",
@@ -172,7 +170,6 @@ function letter() {
     function ChangeForwardMode() {
         setForwardMode(!forwardMode);
     }
-
     async function Reply() {
         const replyId = id;
         const response = await fetch(`https://localhost:7094/api/letter/reply/${id}`, {
@@ -199,7 +196,6 @@ function letter() {
             setErrorMessage(message);
         }
     }
-
     async function Forward() {
         const letterId = letter?.parentLetter ? letter.parentLetterId : id;
         const response = await fetch("https://localhost:7094/api/letter/forward", {
@@ -306,7 +302,6 @@ function letter() {
                                         />
                                         <RenderReply currentLetter={letter} />
                                     </>
-
                                 ) : (
                                     <>
                                         <RenderLetter
@@ -323,7 +318,6 @@ function letter() {
                                             ChangeReplyMode={ChangeReplyMode}
                                             ChangeForwardMode={ChangeForwardMode}
                                         />
-
                                         {letter?.childrenLetters?.map((childLetter) =>
                                         (
                                             <RenderReply currentLetter={childLetter} key={childLetter.id} />

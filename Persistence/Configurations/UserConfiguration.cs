@@ -25,11 +25,8 @@ namespace Persistence.Configurations
                 .WithMany(l => l.Recipients);
 
             builder
-                //У каждого юзера есть много черновиков
                 .HasMany(x => x.Drafts)
-                //У каждого черновика есть один юзер
                 .WithOne(x => x.Author)
-                //+ у него есть id
                 .HasForeignKey(x => x.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
         }

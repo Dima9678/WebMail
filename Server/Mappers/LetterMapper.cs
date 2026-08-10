@@ -17,7 +17,6 @@ namespace Server.Mappers
                 Title = l.Title,
                 Text = l.Text,
                 SendTime = l.SendTime,
-                RecipientId = l.RecipientId,
                 AddresseeId = l.AddresseeId,
             }).ToList();
 
@@ -31,7 +30,6 @@ namespace Server.Mappers
                 Title = l.Title,
                 Text = l.Text,
                 SendTime = l.SendTime,
-                RecipientId = l.RecipientId,
                 AddresseeId = l.AddresseeId,
             }).ToList();
 
@@ -65,8 +63,8 @@ namespace Server.Mappers
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,
-                RecipientId = letterInDb.RecipientId,
                 ParentLetterId = letterInDb.ParentLetterId,
+                Recipients = UserMapper.ToShortDto(letterInDb.Recipients),
                 ChildrenLetters = LetterMapper.ListToDTO(letterInDb.ChildrenLetters)
             };
             if (letterInDb.Forwarded == true)
@@ -89,7 +87,7 @@ namespace Server.Mappers
         {
             NewLetterDTO letter = new NewLetterDTO()
             {
-                Recipient = draft.RecipientEmail,
+                Recipients = draft.Recipients,
                 Title = draft.Title,
                 Text = draft.Text,
             };

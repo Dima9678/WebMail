@@ -17,6 +17,7 @@ namespace Persistence
         {
             modelBuilder.ApplyConfiguration(new UserConfiguration());
             modelBuilder.ApplyConfiguration(new LetterStateConfiguration());
+            modelBuilder.ApplyConfiguration(new LetterConfiguration());
             base.OnModelCreating(modelBuilder);
         }
     }
