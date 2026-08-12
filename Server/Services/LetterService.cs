@@ -15,7 +15,7 @@ namespace Server.Service
         {
             _db = db;
         }
-        public async Task Add(NewLetterDTO request, Guid adresseeId, string[] recipients)
+        public async Task Create(NewLetterDTO request, Guid adresseeId, string[] recipients)
         {
             User[] recipientsList = new User[recipients.Length];
             for (int i = 0; i < recipients.Length; i++)
@@ -56,7 +56,7 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-        public async Task AddReply(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
+        public async Task CreateReply(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
         {
             var parentLetter = await _db.Letters.SingleOrDefaultAsync(u => u.Id == parentLetterId);
             var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);

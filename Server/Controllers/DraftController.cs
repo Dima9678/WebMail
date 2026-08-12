@@ -102,7 +102,7 @@ namespace Server.Controllers
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _letterService.Add(newLetter, adresseeId, recipients);
+            await _letterService.Create(newLetter, adresseeId, recipients);
             return Ok();
         }
 

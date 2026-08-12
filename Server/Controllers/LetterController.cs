@@ -3,6 +3,7 @@ using Domain.Models.DTO;
 using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Server.Normaizators;
 using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
@@ -27,7 +28,8 @@ namespace Server.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] NewLetterDTO request)
         {
-            string[] recipients = request.Recipients.Split(" ");
+            string[] recipients = InputNormalizator.SplitEmails(request.Recipients);
+            
             OperationResult result = await _validation.ValidateWriteLetterRequest(request, recipients);
             
             if (!result.Sucsessed)
@@ -35,7 +37,7 @@ namespace Server.Controllers
                 return BadRequest(result.ErrorMessage);
             }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.Add(request, adresseeId, recipients);
+            await _letterService.Create(request, adresseeId, recipients);
             return Ok();
         }
 
@@ -161,7 +163,7 @@ namespace Server.Controllers
             }
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.AddReply(reply, adresseeId, parentLetterId);
+            await _letterService.CreateReply(reply, adresseeId, parentLetterId);
             return Ok();
         }
     }
