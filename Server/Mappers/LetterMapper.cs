@@ -7,34 +7,6 @@ namespace Server.Mappers
 {
     public class LetterMapper
     {
-        public static List<LetterDTO> SentToDto(User user)
-        {
-            Console.WriteLine(user == null);
-            Console.WriteLine(user?.SentLetters == null);
-            List<LetterDTO> letterDTO = user.SentLetters.Select(l => new LetterDTO
-            {
-                Id = l.Id,
-                Title = l.Title,
-                Text = l.Text,
-                SendTime = l.SendTime,
-                AddresseeId = l.AddresseeId,
-            }).ToList();
-
-            return letterDTO;
-        }
-        public static List<LetterDTO> AcceptToDto(User user)
-        {
-            List<LetterDTO> letterDTO = user.AcceptLetters.Select(l => new LetterDTO
-            {
-                Id = l.Id,
-                Title = l.Title,
-                Text = l.Text,
-                SendTime = l.SendTime,
-                AddresseeId = l.AddresseeId,
-            }).ToList();
-
-            return letterDTO;
-        }
         public static LetterDTO ToDto(Letter letterInDb)
         {
             LetterDTO letterDTO = new LetterDTO()
@@ -49,6 +21,25 @@ namespace Server.Mappers
                 SendTime = letterInDb.SendTime,
             };
             return letterDTO;
+        }
+        public static List<LetterDTO> ToDTO(List<Letter> letterInDb)
+        {
+            List<LetterDTO> list = new List<LetterDTO>(); 
+            foreach (Letter letter in letterInDb)
+            {
+                LetterDTO letterDTO = new LetterDTO()
+                {
+                    Id = letter.Id,
+                    AdresseeName = letter.Addressee.Name,
+                    AdresseeSurname = letter.Addressee.Surname,
+                    AdresseeEmail = letter.Addressee.Email,
+                    Title = letter.Title,
+                    Text = letter.Text,
+                    SendTime = letter.SendTime,
+                };
+                list.Add(letterDTO);
+            }
+            return list;
         }
         public static FullLetterDTO ToFullDto(Letter letterInDb)
         {
@@ -65,7 +56,7 @@ namespace Server.Mappers
                 SendTime = letterInDb.SendTime,
                 ParentLetterId = letterInDb.ParentLetterId,
                 Recipients = UserMapper.ToShortDto(letterInDb.Recipients),
-                ChildrenLetters = LetterMapper.ListToDTO(letterInDb.ChildrenLetters)
+                ChildrenLetters = LetterMapper.ToDTO(letterInDb.ChildrenLetters)
             };
             if (letterInDb.Forwarded == true)
             {
@@ -92,25 +83,6 @@ namespace Server.Mappers
                 Text = draft.Text,
             };
             return letter;
-        }
-        public static List<LetterDTO> ListToDTO(List<Letter> letterInDb)
-        {
-            List<LetterDTO> list = new List<LetterDTO>(); 
-            foreach (Letter letter in letterInDb)
-            {
-                LetterDTO letterDTO = new LetterDTO()
-                {
-                    Id = letter.Id,
-                    AdresseeName = letter.Addressee.Name,
-                    AdresseeSurname = letter.Addressee.Surname,
-                    AdresseeEmail = letter.Addressee.Email,
-                    Title = letter.Title,
-                    Text = letter.Text,
-                    SendTime = letter.SendTime,
-                };
-                list.Add(letterDTO);
-            }
-            return list;
         }
     }
 }

@@ -15,8 +15,8 @@ namespace Server.Mappers
                 Surname = user.Surname,
                 Email = user.Email,
                 Id = user.Id,
-                SentLetters = LetterMapper.SentToDto(user),
-                AcceptLetters = LetterMapper.AcceptToDto(user),
+                SentLetters = LetterMapper.ToDTO(user.SentLetters),
+                AcceptLetters = LetterMapper.ToDTO(user.AcceptLetters),
             };
             
             return dto;
@@ -34,7 +34,6 @@ namespace Server.Mappers
             
             return dto;
         }
-
         public static List<UserDTO> ToShortDto(List<User> users)
         {
             UserDTO[] dTOs = new UserDTO[users.Count];
