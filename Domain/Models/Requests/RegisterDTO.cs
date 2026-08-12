@@ -6,6 +6,7 @@
         public string Surname { get; set; }
         public string Email { get; set; }
         public bool IsMan { get; set; }
+        public bool RememberMe { get; set; } = false;
         public string Password { get; set; }
         public string RepeatPassword { get; set; }
     }

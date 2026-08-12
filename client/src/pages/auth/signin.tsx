@@ -6,6 +6,8 @@ function Signin() {
     
     const [password, setPassword] = useState("");
     const [email, setEmail] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
+
     const [resultMessage, setResultMessage] = useState("");
     const [authResult, setAuthResult] = useState(false);
 
@@ -21,7 +23,8 @@ function Signin() {
             },
             body: JSON.stringify({
                 email,
-                password
+                password,
+                rememberMe
             })
         });
 
@@ -30,6 +33,7 @@ function Signin() {
             setPassword("");
             setEmail("");
             setAuthResult(true);
+            setRememberMe(false);
         }
         else {
             const message = await response.text();
@@ -55,6 +59,11 @@ function Signin() {
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                     />
+                    <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                    ></input><p>Запомнить меня</p>
                     <p className="have-a-account-message">Еще не зарегистрированы? <Link to="/signup" className="links">Регистрация</Link></p>
                     {authResult ? (
                         <div className="sign-error-container">

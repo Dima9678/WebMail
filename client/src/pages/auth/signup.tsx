@@ -12,6 +12,7 @@ function Signup() {
     const [isMan, setIsMan] = useState(true);
     const [repeatPassword, setRepeatPassword] = useState("");
     const [email, setEmail] = useState("");
+    const [rememberMe, setRememberMe] = useState(false);
 
     const [resultMessage, setResultMessage] = useState("");
     const [authResult, setAuthResult] = useState(false);
@@ -31,7 +32,8 @@ function Signup() {
                 email,
                 password,
                 repeatPassword,
-                isMan
+                isMan,
+                rememberMe
             })
         });
 
@@ -45,6 +47,8 @@ function Signup() {
             setIsMan(true);
             setRepeatPassword("");
             setEmail("");
+            setRememberMe(false);
+            
         }
         else {
             const message = await response.text();
@@ -110,6 +114,11 @@ function Signup() {
                         value={repeatPassword}
                         onChange={(e) => setRepeatPassword(e.target.value)}
                     />
+                    <input
+                        type="checkbox"
+                        checked={rememberMe}
+                        onChange={(e) => setRememberMe(e.target.checked)}
+                    ></input><p>Запомнить меня</p>
                     <p className="have-a-account-message">Уже есть аккаунт? <Link to="/signin" className="links">Вход</Link></p>
                     {authResult ? (
                         <div className="sign-error-container">

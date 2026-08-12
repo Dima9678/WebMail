@@ -41,7 +41,11 @@ namespace Server.Controllers
             User user = await _authService.Register(request);
 
             ClaimsPrincipal principal = _claimFactory.CreateClaims(user);
-            await HttpContext.SignInAsync("Cookies", principal);
+            await HttpContext.SignInAsync
+                ("Cookies",
+                principal,
+                new AuthenticationProperties { IsPersistent = request.RememberMe });
+
 
             return Ok();
         }
@@ -69,7 +73,11 @@ namespace Server.Controllers
             }
 
             ClaimsPrincipal principal = _claimFactory.CreateClaims(user);
-            await HttpContext.SignInAsync("Cookies", principal);
+            await HttpContext.SignInAsync
+                ("Cookies",
+                principal,
+                new AuthenticationProperties { IsPersistent = request.RememberMe });
+
             return Ok(userExistResult.ErrorMessage);
         }
 
