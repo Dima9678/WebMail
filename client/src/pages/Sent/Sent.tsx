@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
-import type { Letter } from "../interfaces/Letter";
-import type { User } from "../interfaces/User";
+import type { Letter } from "../../interfaces/Letter";
+import type { User } from "../../interfaces/User";
 
 function Sent() {
     const [sentLetters, setSentLetters] = useState<Letter[]>([]);

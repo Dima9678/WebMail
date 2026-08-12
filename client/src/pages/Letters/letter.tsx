@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link, useParams } from "react-router-dom";
 
-import type { User } from "../interfaces/User";
-import type { Letter } from "../interfaces/Letter";
+import type { User } from "../../interfaces/User";
+import type { Letter } from "../../interfaces/Letter";
 import type { FullLetter } from '../../interfaces/FullLetter';
 
 import RenderLetter from "../../components/Letter/RenderLetter";

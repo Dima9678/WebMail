@@ -1,4 +1,4 @@
-import type { Letter } from "../interfaces/User";
+import type { Letter } from "../../interfaces/Letter";
 
 type RenderLetterProps = {
     currentLetter: Letter;

@@ -1,8 +1,8 @@
 import { useState, useEffect, use } from 'react';
 import { Link } from "react-router-dom";
 
-import type { User } from "../interfaces/User";
-import App from '../App';
+import type { User } from "../../interfaces/User";
+import App from '../../app/App';
 
 function myprofile() {
     const [user, setUser] = useState<User | null>(null);

@@ -1,22 +1,23 @@
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
-import type { Letter } from "../interfaces/Letter";
-import type { User } from "../interfaces/User";
+import type { Letter } from "../../interfaces/Letter";
+import type { User } from "../../interfaces/User";
 
-function Starred() {
-    const [maxOnPage, setMaxOnPage] = useState(20);
-    const [LettersPage,] = useState(1);
+function homepage() {
+    const [user, setUser] = useState<User | null>(null);
     const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
 
-    const [user, setUser] = useState<User | null>(null);
+    const [maxOnPage] = useState(40);
 
-    const [startIndex, setStartIndex] = useState(maxOnPage * LettersPage - maxOnPage + 1);
-    const [endIndex, setEndIndex] = useState(maxOnPage * LettersPage);
-    const [messagesTotal, setMessagesTotal] = useState(0);
+    const [minLettersPage] = useState(0);
+    const [lettersPage, setlettersPage] = useState(0);
+
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
+
             credentials: "include"
         })
             .then(async r => {
@@ -35,23 +36,20 @@ function Starred() {
                 }
             })
             .catch(console.error);
-
-        if (user != null) {
-
-            refreshLetters();
-        }
     }, []);
 
     useEffect(() => {
         if (user) {
-            refreshLetters();
+            TotalLettersGet();
+            refreshLetters(0, maxOnPage - 1);
         }
     }, [user]);
 
-    async function refreshLetters() {
-        const response = await fetch('https://localhost:7094/api/letter/starred',
+    async function refreshLetters(startIndex: number, endIndex: number) {
+        const response = await fetch(`https://localhost:7094/api/letter/inbox/${startIndex}/${endIndex}`,
             {
                 credentials: "include",
+                method: "GET",
             });
 
         if (!response.ok)
@@ -60,16 +58,7 @@ function Starred() {
         const data = await response.json();
 
         setAcceptLetters(data);
-
-        if (data.length < maxOnPage) {
-            setEndIndex(data.length);
-            setMaxOnPage(data.length);
-            setMessagesTotal(data.length)
-
-            if (data.length === 0) {
-                setStartIndex(0);
-            }
-        }
+        TotalLettersGet();
     }
 
     function changeStarred(i: number) {
@@ -105,7 +94,7 @@ function Starred() {
 
         return (
             state?.isRead ? (
-                <Link to={`/letter/${letter.id}`} state={{ from: "starred" }} key={i} className="letter-read">
+                <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-read">
                     <StarredStatusLetter
                         state={state}
                         i={i}
@@ -121,13 +110,13 @@ function Starred() {
                     </p>
                 </Link>
             ) : (
-                    <Link to={`/letter/${letter.id}`} state={ { from: "starred" }}  key={i} className="letter-unread">
+                    <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-unread">
                     <StarredStatusLetter
                         state={state}
                         i={i}
                         changeStarred={changeStarred}
                     />
-                        <p className="letter-sender-unread">{letter.adresseeName} {letter.adresseeSurname}</p>
+                    <p className="letter-sender-unread">{letter.adresseeName} {letter.adresseeSurname}</p>
                     <div className="letter-content">
                         <p className="letter-theme-unread">{letter.title}</p>
                         <p className="letter-text-unread"> - {letter.text}</p>
@@ -140,11 +129,23 @@ function Starred() {
         );
     }
 
+    async function TotalLettersGet() {
+        const response = await fetch(`https://localhost:7094/api/letter/inbox/count`, {
+            credentials: "include",
+            method: "GET"
+        })
+
+        if (!response.ok)
+            throw new Error(await response.text());
+
+        const data = await response.json();
+        setTotal(data);
+    }
+
     function StarredStatusLetter({ state, i, changeStarred }) {
         return (
             <>
                 {
-                    
                     state?.starred ? (
                         <button onClick={(e) => {
                             e.preventDefault();
@@ -163,6 +164,26 @@ function Starred() {
         );
     }
 
+    const ClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const value = event.currentTarget.value;
+
+        const newPage = value === "prev"
+            ? lettersPage - 1
+            : lettersPage + 1;
+
+        const newStart = newPage * maxOnPage;
+        const newEnd = Math.min(newStart + maxOnPage - 1, total - 1);
+
+        setlettersPage(newPage);
+
+        refreshLetters(newStart, newEnd);
+    };
+
+    const maxLettersPage = Math.ceil(total / maxOnPage);
+    var startIndex = lettersPage * maxOnPage;
+
+    const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
+
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -178,14 +199,14 @@ function Starred() {
                         </div>
                     ) : (
                         <div className="auth-buttons">
-                            <Link to="/myprofile" className="auth-button">{user?.name}</Link>
+                            <Link to="/myprofile" className="auth-button">{user.name}</Link>
                         </div>
                     )}
 
                 </div>
                 <div className="main-content">
                     <nav className="sidebar">
-                         
+
                         <Link to="/" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/envelope.svg" alt="конверт"></img></Link>
                         <Link to="/sent" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/plane.svg" alt="самолет"></img></Link>
                         <Link to="/starred" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/star.svg" alt="звезда"></img></Link>
@@ -194,17 +215,33 @@ function Starred() {
                         <Link to="/trash" className="leftbar-navigation-button"><img className="leftbar-navigation-button-style" src="/images/trash.svg" alt="корзина"></img></Link>
                     </nav>
                     <div className="letters-block">
-
+                        <Link to="/newletter" className="new-letter-button">Новое письмо</Link>
                         <div className="letters-topbar">
-                            <button onClick={refreshLetters} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
+                            <button onClick={() => refreshLetters(0, maxOnPage - 1)} className="reload-button"><img src="/images/reload.svg" alt="reload"></img></button>
                             <div className="search-string">
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
+                                <button className="search-details-button"><img src="/images/searchDetails.svg"></img></button>
                             </div>
-                            {user == null ? (
+                            {user === null || total === 0 ? (
                                 <div className="pagination"></div>
                             ) : (
-                                <div className="pagination">{startIndex}-{endIndex} из {maxOnPage}</div>
+                                <div className="pagination">
+                                    {lettersPage > minLettersPage ? (
+                                        <button value="prev" onClick={ClickHandler} className="pagination-button">назад</button>
+                                    ) : (
+                                        <></>
+                                    )}
+                                    <p>
+                                        {startIndex + 1}-{endIndex + 1} из {total}
+                                    </p>
+                                    {lettersPage < maxLettersPage - 1 ? (
+                                        <button value="next" onClick={ClickHandler} className="pagination-button">вперед</button>
+                                    ) : (
+                                        <></>
+                                    )}
+
+                                </div>
                             )}
                         </div>
 
@@ -213,7 +250,7 @@ function Starred() {
                                 <p className="please-sign">Войдите в свой аккаунт или зарегиструйтесь</p>
                             ) : (
 
-                                messagesTotal === 0 ? (
+                                total === 0 ? (
                                     <p className="please-sign">Входящих сообщений нет</p>
                                 ) : (
 
@@ -234,4 +271,4 @@ function Starred() {
         </div>
     );
 }
-export default Starred;
+export default homepage;

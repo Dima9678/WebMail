@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Link } from "react-router-dom";
 
-import type { User } from "../interfaces/User";
+import type { User } from "../../interfaces/User";
 
 
 function newletter() {
