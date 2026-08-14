@@ -40,5 +40,14 @@ namespace Server.Controllers
             await _userService.ChangeUserInfo(request, userId);
             return Ok();
         }
+
+        [Authorize]
+        [HttpPost("{userId:guid}/add-spam")]
+        public async Task<IActionResult> AddToSpam([FromBody] string adresseeEmail)
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _userService.AddSpamEmail(userId, adresseeEmail);
+            return Ok();
+        }
     }
 }

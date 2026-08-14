@@ -35,5 +35,24 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
+
+        public async Task AddSpamEmail(Guid userId, string adresseeEmail)
+        {
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            if (user.SpamEmails == null)
+            {
+                user.SpamEmails = new List<string>()
+                {
+                    adresseeEmail
+                };
+            }
+            else
+            {
+                user.SpamEmails.Add(adresseeEmail);
+            }
+            user.SpamEmails.Add(adresseeEmail);
+
+            await _db.SaveChangesAsync();
+        }
     }
 }

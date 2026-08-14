@@ -42,15 +42,18 @@ namespace Server.Service
                     UserId = recipientsList[i].Id,
                     IsRead = false,
                 };
-                if (recipientsList[i].SpamEmails.Contains(adressee.Email))
+                if (recipientsList[i].SpamEmails != null)
                 {
-                    recipientState.IsSpam = true;
+                    if (recipientsList[i].SpamEmails.Contains(adressee.Email))
+                    {
+                        recipientState.IsSpam = true;
+                    }
+                    else
+                    {
+                        recipientState.IsSpam = false;
+                    }
+                    recipientsStates.Add(recipientState);
                 }
-                else
-                {
-                    recipientState.IsSpam = false;
-                }
-                recipientsStates.Add(recipientState);
             }
 
             Letter letter = new Letter()

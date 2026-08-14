@@ -20,7 +20,9 @@ function letter() {
 
     const [starred, setStarred] = useState(false);
     const [isRead, setIsRead] = useState(false);
-    const [isSpam, setIsSpam] = useState(false)
+    const [isSpam, setIsSpam] = useState(false);
+
+    const [renderIsSpamForm, setRenderIsSpamForm] = useState(false);
 
     const [previousId, setPreviousId] = useState("");
     const [nextId, setNextId] = useState("");
@@ -40,7 +42,6 @@ function letter() {
     const from = location.state?.from;
 
     useEffect(() => {
-        console.log(from);
         async function loadData() {
             try {
                 await LoadUser();
@@ -52,6 +53,12 @@ function letter() {
 
         loadData();
     }, [id]);
+
+    useEffect(() => {
+        if (isSpam) {
+            setRenderIsSpamForm(isSpam);
+        }
+    }, [isSpam])
 
     async function LoadUser() {
         const userResponse = await fetch("https://localhost:7094/api/User", {
@@ -185,6 +192,20 @@ function letter() {
     function ChangeForwardMode() {
         setForwardMode(!forwardMode);
     }
+    async function AddUserToSpam() {
+        const responce = await fetch(`https://localhost:7094/api/user/${user?.id}/add-spam`, {
+            credentials: 'include',
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(letter?.adresseeEmail),
+        });
+
+        if (!responce.ok) {
+            throw new Error(await responce?.text());
+        }
+    }
     async function Reply() {
         const replyId = id;
         const response = await fetch(`https://localhost:7094/api/letter/reply/${id}`, {
@@ -302,7 +323,16 @@ function letter() {
                                 )}
                             </div>
                         </div>
-
+                        {renderIsSpamForm ? (<>
+                            {<RenderAddUserToSpam
+                                letter={letter}
+                                AddUserToSpam={AddUserToSpam}
+                            />}
+                        </>
+                        ) : (
+                            <>
+                            </>
+                        )}
                         {letter ? (
                             <>
                                 {letter?.parentLetter ? (
@@ -357,5 +387,32 @@ function letter() {
         </div>
     );
 }
+
+type RenderAddUserToSpamProps = {
+    letter?: Letter;
+    AddUserToSpam(): void;
+
+}
+function RenderAddUserToSpam({
+    letter,
+    AddUserToSpam,
+}: RenderAddUserToSpamProps ) {
+    return (
+        <>
+            <div className="add-to-spam-overlay">
+                <div className="add-to-spam-form">
+                    <div className="add-to-spam-text">Пометить {letter?.adresseeEmail} как спам?</div>
+                    <div className="add-to-spam-buttons">
+                        <button onClick={AddUserToSpam} className="add-to-spam-button">Да</button>
+                        <button onClick={AddUserToSpam} className="add-to-spam-button">Нет</button>
+                    </div>
+                </div>
+            </div>
+        </>
+    );
+}
+
+
+
 
 export default letter;
