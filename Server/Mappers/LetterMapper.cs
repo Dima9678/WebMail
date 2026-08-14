@@ -15,7 +15,8 @@ namespace Server.Mappers
                 AdresseeName = letterInDb.Addressee.Name,
                 AdresseeSurname = letterInDb.Addressee.Surname,
                 AdresseeEmail = letterInDb.Addressee.Email,
-                LetterStates = LetterStateMapper.StateListToDTO(letterInDb.LetterStates),
+                LetterStates = LetterStateMapper
+                    .StateListToDTO(letterInDb.LetterStates),
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,

@@ -95,6 +95,24 @@ namespace Server.Controllers
         }
 
         [Authorize]
+        [HttpGet("spam")]
+        public async Task<IActionResult> GetSpam()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            List<LetterDTO> userLetters = await _letterService.GetSpamLetters(userId);
+            return Ok(userLetters);
+        }
+
+        [Authorize]
+        [HttpGet("spam/count")]
+        public async Task<IActionResult> GetSpamCount()
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+           int count = await _letterService.GetSpamCount(userId);
+           return Ok(count);
+        }
+
+        [Authorize]
         [HttpGet("starred")]
         public async Task<IActionResult> GetStarred()
         {
@@ -113,7 +131,7 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut("{letterid:guid}/toggle-starred")]
+        [HttpPatch("{letterid:guid}/toggle-starred")]
         public async Task<IActionResult> ToggleStarred(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -122,11 +140,20 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpPut("{letterid:guid}/toggle-read")]
+        [HttpPatch("{letterid:guid}/toggle-read")]
         public async Task<IActionResult> ToggleRead(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             await _letterService.ChangeIsReaden(letterid, userId);
+            return Ok();
+        }
+
+        [Authorize]
+        [HttpPatch("{letterid:guid}/toggle-spam")]
+        public async Task<IActionResult> ToggleSpam(Guid letterid)
+        {
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _letterService.ChangeIsSpam(letterid, userId);
             return Ok();
         }
 

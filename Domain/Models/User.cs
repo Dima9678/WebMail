@@ -14,6 +14,7 @@ namespace Domain
         public List<Letter> AcceptLetters { get; set; }
         public List<LetterState> LetterStates { get; set; }
         public List<Draft> Drafts { get; set; }
+        public List<string>? SpamEmails { get; set; } = new();
 
         public User() 
         {

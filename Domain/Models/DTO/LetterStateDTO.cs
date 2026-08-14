@@ -14,5 +14,6 @@ namespace Domain.Models.DTO
         public bool Starred { get; set; }
         public bool IsDeleted { get; set; }
         public bool IsRead { get; set; }
+        public bool IsSpam { get; set; }
     }
 }

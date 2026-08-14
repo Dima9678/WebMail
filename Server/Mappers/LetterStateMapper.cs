@@ -16,6 +16,7 @@ namespace Server.Mappers
                     Starred = l.Starred,
                     IsDeleted = l.IsDeleted,
                     IsRead = l.IsRead,
+                    IsSpam = l.IsSpam,
                 }).ToList();
 
             return stateDTO;

@@ -20,6 +20,7 @@ function letter() {
 
     const [starred, setStarred] = useState(false);
     const [isRead, setIsRead] = useState(false);
+    const [isSpam, setIsSpam] = useState(false)
 
     const [previousId, setPreviousId] = useState("");
     const [nextId, setNextId] = useState("");
@@ -92,6 +93,7 @@ function letter() {
 
         setStarred(state.starred)
         setIsRead(state.isRead)
+        setIsSpam(state.isSpam)
 
         console.log(from)
         GetTotal(from);
@@ -141,7 +143,7 @@ function letter() {
     function changeStarred() {
         fetch(`https://localhost:7094/api/letter/${letter?.id}/toggle-starred`, {
             credentials: "include",
-            method: "PUT"
+            method: "PATCH"
         })
             .then(async r => {
                 if (!r.ok) {
@@ -154,13 +156,26 @@ function letter() {
     function changeReadState() {
         fetch(`https://localhost:7094/api/letter/${letter?.id}/toggle-read`, {
             credentials: "include",
-            method: "PUT"
+            method: "PATCH"
         })
             .then(async r => {
                 if (!r.ok) {
                     throw new Error(await r.text());
                 }
                 setIsRead(!isRead);
+            })
+            .catch(console.error);
+    }
+    function changeSpamState() {
+        fetch(`https://localhost:7094/api/letter/${letter?.id}/toggle-spam`, {
+            credentials: "include",
+            method: "PATCH"
+        })
+            .then(async r => {
+                if (!r.ok) {
+                    throw new Error(await r.text());
+                }
+                setIsSpam(!isSpam);
             })
             .catch(console.error);
     }
@@ -263,7 +278,13 @@ function letter() {
                                     <button onClick={changeReadState}><img src="/images/letterPage/mark_read.svg" className="one-letter-topbar-button" alt="read" /></button>
                                 )}
 
-                                <button><img src="/images/letterPage/spam.svg" className="one-letter-topbar-button" alt="spam" /></button>
+                                {isSpam ? (
+                                    <button onClick={changeSpamState}><img src="/images/letterPage/spam.svg" className="one-letter-topbar-button" alt="spam" /></button>
+                                ) : (
+                                    <button onClick={changeSpamState}><img src="/images/letterPage/unspam.svg" className="one-letter-topbar-button" alt="unread" /></button>
+                                )}
+
+
                                 <button><img src="/images/letterPage/trash.svg" className="one-letter-topbar-button" alt="trash" /></button>
                             </div>
                             <div className="one-letter-pages-navigation-container">

@@ -16,7 +16,7 @@ namespace Server.Service
 
         public async Task<UserDTO> Get(Guid userId)
         {
-            var user = await _db.Users
+             var user = await _db.Users
                 .SingleOrDefaultAsync(u => u.Id == userId);
 
             UserDTO dto = UserMapper.ToShortDto(user);

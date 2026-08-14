@@ -31,16 +31,26 @@ namespace Server.Service
             {
                 IsRead = true,
                 UserId = adressee.Id,
+                IsSpam = false,
             });
 
             //Добавление состояний получателя
             for (int i = 0; i < recipientsList.Length; i++)
             {
-                recipientsStates.Add(new LetterState()
+                var recipientState = new LetterState()
                 {
-                    IsRead = false,
                     UserId = recipientsList[i].Id,
-                });
+                    IsRead = false,
+                };
+                if (recipientsList[i].SpamEmails.Contains(adressee.Email))
+                {
+                    recipientState.IsSpam = true;
+                }
+                else
+                {
+                    recipientState.IsSpam = false;
+                }
+                recipientsStates.Add(recipientState);
             }
 
             Letter letter = new Letter()
@@ -51,7 +61,7 @@ namespace Server.Service
                 SendTime = DateTime.UtcNow,
                 LetterStates = recipientsStates,
                 Recipients = recipientsList.ToList(),
-                
+
             };
             _db.Letters.Add(letter);
             _db.SaveChanges();
@@ -212,7 +222,7 @@ namespace Server.Service
             {
                 fullLetterDTO = await AppendStarredNavigationInfo(fullLetterDTO, userId);
             }
-            else if(from == "sent")
+            else if (from == "sent")
             {
                 fullLetterDTO = await AppendSentNavigationInfo(fullLetterDTO, userId);
             }
@@ -227,10 +237,12 @@ namespace Server.Service
         {
             List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
+                .Where(l => l.LetterStates.Any(r => r.UserId == userId && !r.IsSpam))
                 .Include(l => l.Addressee)
                 .Include(l => l.LetterStates)
                 .OrderByDescending(l => l.SendTime)
-                .Select(l => LetterMapper.ToDto(l)).ToListAsync();
+                .Select(l => LetterMapper.ToDto(l))
+                .ToListAsync();
 
             List<LetterDTO> filtredetters = new List<LetterDTO>();
 
@@ -247,19 +259,6 @@ namespace Server.Service
             }
 
             return filtredetters;
-        }
-        public async Task<List<LetterDTO>> GetStarredLetters(Guid userId)
-        {
-            List<LetterDTO> userLetters = await _db.Letters
-                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
-                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
-                .Include(l => l.LetterStates)
-                .Include(l => l.Addressee)
-                .OrderByDescending(l => l.SendTime)
-                .Select(l => LetterMapper.ToDto(l))
-                .ToListAsync();
-
-            return userLetters;
         }
         public async Task<List<LetterDTO>> GetSentLetters(Guid userId, int startIndex, int endIndex)
         {
@@ -285,6 +284,32 @@ namespace Server.Service
             }
 
             return filtredetters;
+        }
+        public async Task<List<LetterDTO>> GetStarredLetters(Guid userId)
+        {
+            List<LetterDTO> userLetters = await _db.Letters
+                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
+                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
+                .Include(l => l.LetterStates)
+                .Include(l => l.Addressee)
+                .OrderByDescending(l => l.SendTime)
+                .Select(l => LetterMapper.ToDto(l))
+                .ToListAsync();
+
+            return userLetters;
+        }
+        public async Task<List<LetterDTO>> GetSpamLetters(Guid userId)
+        {
+            List<LetterDTO> userLetters = await _db.Letters
+                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
+                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.IsSpam == true))
+                .Include(l => l.LetterStates)
+                .Include(l => l.Addressee)
+                .OrderByDescending(l => l.SendTime)
+                .Select(l => LetterMapper.ToDto(l))
+                .ToListAsync();
+
+            return userLetters;
         }
 
         public async Task ChangeStarred(Guid letterId, Guid userId)
@@ -319,6 +344,16 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
+        public async Task ChangeIsSpam(Guid letterId, Guid userId)
+        {
+            LetterState? state = _db.LetterStates
+                .Where(x => x.LetterId == letterId)
+                .FirstOrDefault(x => x.UserId == userId);
+
+            state.IsSpam = !state.IsSpam;
+
+            await _db.SaveChangesAsync();
+        }
 
         public async Task<int> GetAcceptCount(Guid userId)
         {
@@ -341,6 +376,15 @@ namespace Server.Service
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
+                .CountAsync();
+
+            return count;
+        }
+        public async Task<int> GetSpamCount(Guid userId)
+        {
+            int count = await _db.Letters
+                .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
+                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.IsSpam == true))
                 .CountAsync();
 
             return count;
@@ -396,14 +440,14 @@ namespace Server.Service
                 .ToListAsync();
 
             int letterIndex = letters.IndexOf(fullLetter.Id);
-            
+
             Guid? previousId = letterIndex + 1 < letters.Count ? letters[letterIndex + 1] : null;
             Guid? nextId = letterIndex > 0 ? letters[letterIndex - 1] : null;
             int letterNumber = letterIndex + 1;
 
             Console.WriteLine("\n\nПредыдущее письмо " + previousId);
             Console.WriteLine("Следующее письмо " + nextId);
-            Console.WriteLine("Номер письма " + letterNumber  + "\n\n");
+            Console.WriteLine("Номер письма " + letterNumber + "\n\n");
 
             fullLetter.PreviousLetterId = previousId;
             fullLetter.NextLetterId = nextId;
@@ -411,6 +455,5 @@ namespace Server.Service
 
             return fullLetter;
         }
-        
     }
 }

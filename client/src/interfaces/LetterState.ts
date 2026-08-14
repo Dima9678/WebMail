@@ -11,4 +11,5 @@ export interface LetterState
     starred: boolean;
     isDeleted: boolean;
     isRead: boolean;
+    isSpam: boolean;
 }

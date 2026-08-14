@@ -16,7 +16,7 @@ namespace Persistence.Configurations
             builder.HasKey(x => x.Id);
 
             builder
-                .HasMany(u => u.SentLetters)         
+                .HasMany(u => u.SentLetters)
                 .WithOne(l => l.Addressee)
                 .HasForeignKey(l => l.AddresseeId);
 
@@ -29,6 +29,9 @@ namespace Persistence.Configurations
                 .WithOne(x => x.Author)
                 .HasForeignKey(x => x.AuthorId)
                 .OnDelete(DeleteBehavior.Restrict);
+
+            builder.Property(x => x.SpamEmails)
+                .HasColumnType("text[]");
         }
     }
 }
