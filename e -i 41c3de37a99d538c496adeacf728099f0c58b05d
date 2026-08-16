@@ -1,0 +1,466 @@
+[33mcommit cded2082e84605e4084b4e2c679872661946c17a[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m)[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Aug 14 20:57:57 2026 +0300
+
+    Написана логика отправления юзера в спам
+
+[33mcommit 856974fc67f6bc06cf27b7a14de1e09e2d534292[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Aug 14 14:04:06 2026 +0300
+
+    написан весь основной функционал спама
+
+[33mcommit fb5f06d7e14edf65642d6be428a63cfea986990d[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Aug 12 17:25:01 2026 +0300
+
+    добавлена кнопка "запомнить меня"
+
+[33mcommit 062e22062826a2c40acaf35655836194af27961e[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Aug 12 14:18:31 2026 +0300
+
+    сделана нормальная структура папок, нормальные названия
+
+[33mcommit 8165d4edf73821dea4691f3bb71199c7e1496d3f[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Aug 12 12:55:33 2026 +0300
+
+    вместо нескольких методов мапперов сделан один метод с перегрузками
+
+[33mcommit 14ff424445a32a915df369509e8ba1eb60b1f7f0[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Aug 12 11:36:13 2026 +0300
+
+    разбивка строки с email на отдельные
+
+[33mcommit b1fc54d9f14e8881b0489119bcbde7cf6c1b5025[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Mon Aug 10 18:34:38 2026 +0300
+
+    реализована возможность отправить письмо нескольким людям
+
+[33mcommit daefac53897fe47a424485b40f5d181203ebba9b[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Aug 7 22:00:16 2026 +0300
+
+    уалены пустые миграции
+    добавлена миграция, у письма может быть много получателей
+
+[33mcommit c52258aa446b4cc6966c2d7fbb1b31bf19e795fa[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Aug 7 21:41:46 2026 +0300
+
+    Изменен внешний вид страницы написания письма, и написания черновика
+
+[33mcommit c94f3d8cda6335143d495ae062f5b503d57aec7a[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Aug 7 19:15:45 2026 +0300
+
+    Добавлен выбор пола при регистрации
+
+[33mcommit 8f8135d7666f2ae47476c4a9d82286411cdff0f0[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Aug 7 12:40:15 2026 +0300
+
+    написана и подключена страница myprofile и подключена к API
+
+[33mcommit 34a0643b7b847d36b68b35b0073baefe0903f185[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Aug 5 14:23:39 2026 +0300
+
+    автоматическое сохранение письма и черновиков
+
+[33mcommit 87b462f312344fb170ce0846d746109ff4330af2[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Aug 4 21:48:24 2026 +0300
+
+    Небольшие изменения
+    При запросе данных юзера, раньше на клиент приходили его письма.
+    Теперь на всех страницах на кнопке перехода в профиль отображается имя человека
+    Починена пагинация, навигация по письмам
+    Фикс багов
+
+[33mcommit 8225819817f5edbb25bf86c7e972205630a4df68[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sun Aug 2 14:07:10 2026 +0300
+
+    Фикс багов
+    Пофикшены:
+    Баг с обновлением через кнопку на главной странице и странице черновиков
+    Раньше у НЕпересланного письма все равно пытался скопироваться оригинальный автор
+    Фикс небольшхих багов на фронтенде
+    Изменен принцип валидации. Теперь валидаторы возвращают OperationResult, вместо (bool,string)
+
+[33mcommit cd1d9bbfe006ab0169956c53f32faeec2a6439e0[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Aug 1 15:01:45 2026 +0300
+
+    изменена марштуризация на соответсвтующую REST
+
+[33mcommit 687ed0af5768cae01eeb61c0a85e75c381bbbede[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Aug 1 11:20:38 2026 +0300
+
+    Написана персылка писем
+
+[33mcommit 550b9f3dc81e57fe2d481e63aaf952cd90132e60[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 30 13:19:22 2026 +0300
+
+    Небольшое исправление
+    Убраны возможность ответить на ответ
+
+[33mcommit 9ea2cb297298c19358880c630acf6f45b6199a80[m
+Merge: ddb0012 8238668
+Author: Dima9678 <dmitry9678@gmail.com>
+Date:   Thu Jul 30 13:14:33 2026 +0300
+
+    Merge pull request #5 from Dima9678/email--chains
+    
+    Цепочки писем
+
+[33mcommit 8238668c5d6d7e4730f1846f5f8dba46f8808c68[m[33m ([m[1;31morigin/email--chains[m[33m, [m[1;32memail--chains[m[33m)[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 30 13:07:40 2026 +0300
+
+    небольшие изменения.
+    Подключена кнопка отмены в форме ответа на письмо
+    Измненено форматирование темы ответа на письмо
+    Фикс бага. Теперь цепочка отображается одинаково, независимо от того, с какого письма на нее зашли
+
+[33mcommit 0e22434560337eb9a3d6174a26e817705e03f58d[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 30 11:31:49 2026 +0300
+
+    написано отбражение цепочки писем
+
+[33mcommit 200c03aa95aab0f08697fb87ba0410ec2efcef2a[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 29 12:18:11 2026 +0300
+
+    функция ответа вместо страницы newLetter перенесена сразу в страницу letter
+
+[33mcommit 5e95ab59456421f4c0f11e5f4e89167fa884f875[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 28 19:16:54 2026 +0300
+
+    на странице письма видно, если текущее письмо является дочерним для другого письма
+
+[33mcommit 940aba1bef84d9a7bb7e974cbc5b43d543eff8f9[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 28 18:26:41 2026 +0300
+
+    сделаны ответы на сообщение
+
+[33mcommit 346c78c55c1744ef1c50664a80e55b436b8ac5fc[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 28 14:26:39 2026 +0300
+
+    сделаны модели для цепочек сообщений
+
+[33mcommit ddb0012c4363a6d51e138b0837a7d2ac0d4da41f[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sun Jul 26 16:08:14 2026 +0300
+
+    добавлена пагинация и навигация на почти все страницы. фикс багов
+
+[33mcommit 8f402bb4b864f187d7ae2497bd097728cd0b6eba[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 25 16:39:27 2026 +0300
+
+    сделаны кнопки на топбаре на странице письма
+
+[33mcommit 36c86d2ae3675fb1847f5c29416f5ec3ab47b041[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 23 21:31:18 2026 +0300
+
+    добавлены фамилии юзеров
+
+[33mcommit a12b664f68efa1d8ca40b6c663b2ef76f5bbe7f6[m
+Merge: 8b20a46 7a7cc51
+Author: Dima9678 <dmitry9678@gmail.com>
+Date:   Wed Jul 22 19:51:46 2026 +0300
+
+    Merge pull request #4 from Dima9678/drafts
+    
+    небольшие изменения
+
+[33mcommit 8b20a46de7571d1c3590f89a205f369ea9e2990f[m
+Merge: 5b27f45 3144424
+Author: Dima9678 <dmitry9678@gmail.com>
+Date:   Wed Jul 22 19:49:13 2026 +0300
+
+    Merge pull request #3 from Dima9678/drafts
+    
+    Написана пагинация
+
+[33mcommit 7a7cc5156b8353c3770d501867ea7d391347d79d[m[33m ([m[1;31morigin/drafts[m[33m, [m[1;32mdrafts[m[33m)[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 22 19:45:54 2026 +0300
+
+    мелкие косметические правки, и фикс мелких багов
+
+[33mcommit 13cc7ad35e89df6b528b04a698ff6bb5de919770[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 22 18:23:52 2026 +0300
+
+    сделано перемещение по письмам из открытого письма
+
+[33mcommit 3144424001aff10c523b1800bc494b64a94c8e47[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 21 23:12:45 2026 +0300
+
+    сделана пагинация на главной странице
+    сделана верстка страницы письма
+
+[33mcommit ed17ce371312bada523df4d54598a03690ee200c[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sun Jul 19 13:03:36 2026 +0300
+
+    убрана кнопка написать письмо на лефтбаре, добавлена кнопка "написать письмо" на главной странице
+
+[33mcommit 5b27f45a5d81aa4e4b3b814fab847e055228261c[m
+Merge: 3b31011 7e6ecd9
+Author: Dima9678 <dmitry9678@gmail.com>
+Date:   Sat Jul 18 20:01:42 2026 +0300
+
+    написана система черновиков
+    
+    написана система черновиков
+
+[33mcommit 7e6ecd95d14069835c1ea9a79eaaae6756d12fd5[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 18 18:40:49 2026 +0300
+
+    убрана валидация Email при создании черновика,
+    добавлена отправка черновика, его сохранение и создание
+
+[33mcommit 34a3114f1f04fb66ddc6e17aad7f5f1e1d528867[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Jul 17 20:21:03 2026 +0300
+
+    сделано добавление черновиков, их добавление в бд, и их обновление
+
+[33mcommit f33d24efa8cbc552f185b16526fe47c4cd44800a[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 16 21:43:18 2026 +0300
+
+    пофикшены даты черновиков
+    созданы несколько страниц для черновиков
+    пофикшен баг с присваиванием даты черновику
+
+[33mcommit 9f0374a0c377b8cb6741b161cd4399c630a37540[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 16 15:41:06 2026 +0300
+
+    сделан основной функционал добавления черновика.
+    сделана возможность сохранить письмо как черновик
+    сделана страница с черновиками, но на ней поломана отрисовка
+
+[33mcommit 3b31011e4a719affb1a784509ab3303c74d4e6a4[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 15 21:09:35 2026 +0300
+
+    Пофикшен баг. Сейчас написанное сообщение у отправителя прочитано, у получателя нет
+
+[33mcommit 67c095bfeac01808c87e7e6ea8fa7d8d66773857[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 15 20:37:39 2026 +0300
+
+    встроены letterStates в отправленные и избранные
+
+[33mcommit ee72fb880f4b4e6d226927990dae118024bdbeea[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 15 19:41:23 2026 +0300
+
+    глобальные фикс после изменения миграции
+
+[33mcommit 6e804d8e26d206ea4e996fefc08bee05323fe49a[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Mon Jul 13 18:00:24 2026 +0300
+
+    нестабильная версия
+
+[33mcommit 142e89b1dc7bda06e577fe2a90c7054d1d5e9008[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sun Jul 12 17:19:39 2026 +0300
+
+    доделана конфигурация Ef. Теперь всем занимается конфигурация User
+
+[33mcommit 6382170296684f92e097da3dbc02f6b8bf6b1175[m
+Merge: ef95190 3cf2115
+Author: Dima9678 <dmitry9678@gmail.com>
+Date:   Sun Jul 12 16:21:16 2026 +0300
+
+    Merge pull request #1 from Dima9678/CodeRefactoring
+    
+    Глобальный рефакторинг кода
+
+[33mcommit 3cf21150f6f101c1cd705d2eecb72c728b04fb09[m[33m ([m[1;31morigin/CodeRefactoring[m[33m, [m[1;32mCodeRefactoring[m[33m)[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sun Jul 12 16:15:29 2026 +0300
+
+    фикс багов после рефакторинга
+
+[33mcommit bb11d36f8d5e941bfbd26279aab0413f91eba2d2[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sun Jul 12 13:13:51 2026 +0300
+
+    сделан рефакторинг кода
+
+[33mcommit f7c22cb2e0c28b6d039badd75135a11e5af82aad[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 11 22:12:43 2026 +0300
+
+    закончен рефакторинг LetterController
+
+[33mcommit 9c56eb1fd9706cf9a27b08748c1acfc15b866b51[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 11 16:24:04 2026 +0300
+
+    удален ненужный TestController
+
+[33mcommit 28523a87bff448c258c8aa8036cf0162eeda8098[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 11 16:23:02 2026 +0300
+
+    разбит UserControler
+
+[33mcommit 963f0dc614a0dacfadc676be3c8451e8f44880a9[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 11 15:59:11 2026 +0300
+
+    примерно созданы все файлы для рефакторинга
+
+[33mcommit cdcd665378ae257e96d5f49679b7f68b4ace1574[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Sat Jul 11 15:45:20 2026 +0300
+
+    сделана кнопка с фильтрами поиска
+    сделан класс контроллера для генерации большого числа писем для тестов
+
+[33mcommit ef951904efa5fb35dad4e6e74be7327aab649ee8[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 9 19:01:39 2026 +0300
+
+    стабильный коммит для сборки
+
+[33mcommit 5410f81ed615786b4648a03176cf7dcfd01936e3[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 9 14:09:35 2026 +0300
+
+    изменена работа с куки
+    добавлены страницы отправленных, помеченных
+    доделана система отмеченных
+    мелкие правки
+
+[33mcommit d06dcaf3837659c0c2796a17f66731381c516235[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 8 19:52:46 2026 +0300
+
+    небольшие изменения, дописаны куки при входе и регистрации
+
+[33mcommit 1accfa874a3c69a28daf33c8856788a9ae9d7c10[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 8 19:04:57 2026 +0300
+
+    написана страница, где одно письмо
+    доделаны прочитанные и непрочитанные письма
+
+[33mcommit e487b5eaa6b1d0c85b2fee40602b03a63be4f1d9[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 8 13:05:43 2026 +0300
+
+    пофикшен баг с иконками разного размера
+
+[33mcommit df2b4f874ee4e20d1c81552d578152ff318d06c3[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 8 12:52:07 2026 +0300
+
+    добавлена кнопка "написать сообщение", доделана пагинация если писем меньше 20, сообщения сортируются по дате и времени
+
+[33mcommit f26196dd44e3ebf74e62a2488d925c1193720d94[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 8 11:33:25 2026 +0300
+
+    сделана кнопка обновления писем
+
+[33mcommit 63a16a55f28a46697c472758bd15af574078cae1[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 7 20:40:11 2026 +0300
+
+    написана отправка сообщений
+
+[33mcommit 164f15ecc0894c048d9df55686cbce2f5b4b2567[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 7 19:02:09 2026 +0300
+
+    вроде все стабильно, дописаны dto-шки и приход данных с бэка на фронтенд, и отображение писем
+
+[33mcommit 17949dd2d04571b0d26305d67d464a4edd23eea7[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Tue Jul 7 13:47:58 2026 +0300
+
+    закончена верстка страниц входа и регистрации
+
+[33mcommit 41089e88eb81b3e29989a2bf1d6d7d81d1ae6d9e[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Mon Jul 6 20:51:04 2026 +0300
+
+    итак, сделана верстка главной страницы
+
+[33mcommit 9879e9ddbf2fb6030e0b97f78a552e52b21d972f[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Jul 3 11:23:31 2026 +0300
+
+    добавлена миграция с временем отправки
+
+[33mcommit 0f440120caa6b426bcb543ebf9c911ccc160894b[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Fri Jul 3 10:58:28 2026 +0300
+
+    дописано пару проверок валидности данных при регистрации нового пользователя
+
+[33mcommit e4c761ca9107db1ec67b0cddcc06c21d55273168[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 2 22:24:00 2026 +0300
+
+    добавлено подключение к базам данных
+    добавлена около функционирующая страница регистрации
+
+[33mcommit 450802138bd89dce56906dabbe16a20926d6423a[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 2 13:38:54 2026 +0300
+
+    накручен efcore
+
+[33mcommit 2dc39e2482817d7e71581fbf0f5e6a4eedbb6718[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Thu Jul 2 12:06:17 2026 +0300
+
+    написаны страницы входящих и исходящих писем
+
+[33mcommit ac51edf1154e88aee3650ac0106d8623fb084a13[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 1 23:19:01 2026 +0300
+
+    ебал я этот фронтенд. баг пофикшен
+
+[33mcommit 4ca78fe259c8c6d4c9800be53372ed43014982fc[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 1 13:18:12 2026 +0300
+
+    короче дописаны два состояния, и получение данных по двум апи
+
+[33mcommit 41c3de37a99d538c496adeacf728099f0c58b05d[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 1 12:54:12 2026 +0300
+
+    Add project files.
+
+[33mcommit a42a5c5568ff31907923d7a7bc6f19888f8dc20f[m
+Author: Dmitry Mukharski <dmitry9678@gmail.com>
+Date:   Wed Jul 1 12:54:10 2026 +0300
+
+    Add .gitattributes and .gitignore.
