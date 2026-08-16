@@ -84,7 +84,7 @@ function letter() {
                 method: "GET",
             }
         );
-
+        console.log(letterResponse)
         if (!letterResponse.ok) {
             throw new Error(await letterResponse.text());
         }
@@ -96,7 +96,7 @@ function letter() {
         setNextId(letterData.nextLetterId);
         setLetterNumber(letterData.letterNumber)
 
-        const state = letterData.letterStates.find(s => s.userId === currentUserId);
+        const state = letterData.state;
 
         setStarred(state.starred)
         setIsRead(state.isRead)

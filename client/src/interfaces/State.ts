@@ -1,7 +1,7 @@
 import type { Letter } from './Letter';
 import type { User } from './User';
 
-export interface LetterState
+export interface State
 {
     id: string;
     letterId: string;

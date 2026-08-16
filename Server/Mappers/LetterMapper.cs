@@ -15,8 +15,7 @@ namespace Server.Mappers
                 AdresseeName = letterInDb.Addressee.Name,
                 AdresseeSurname = letterInDb.Addressee.Surname,
                 AdresseeEmail = letterInDb.Addressee.Email,
-                LetterStates = LetterStateMapper
-                    .StateListToDTO(letterInDb.LetterStates),
+                State = LetterStateMapper.ListToOne(letterInDb.LetterStates),
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
                 SendTime = letterInDb.SendTime,
@@ -50,7 +49,7 @@ namespace Server.Mappers
                 AdresseeName = letterInDb.Addressee.Name,
                 AdresseeSurname = letterInDb.Addressee.Surname,
                 AdresseeEmail = letterInDb.Addressee.Email,
-                LetterStates = LetterStateMapper.StateListToDTO(letterInDb.LetterStates),
+                State = LetterStateMapper.ListToOne(letterInDb.LetterStates),
                 Forwarded = letterInDb.Forwarded,
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,

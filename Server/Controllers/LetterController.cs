@@ -95,8 +95,8 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("spam")]
-        public async Task<IActionResult> GetSpam()
+        [HttpGet("spam/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetSpam(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
             List<LetterDTO> userLetters = await _letterService.GetSpamLetters(userId);

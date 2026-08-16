@@ -194,12 +194,13 @@ namespace Server.Service
         {
             Letter? letterInDb = await _db.Letters
                 .Where(u => u.Id == letterId)
-                .Include(u => u.LetterStates)
+                .Include(u => u.LetterStates
+                    .Where(r => r.UserId == userId))
                 .Include(u => u.Addressee)
                 .Include(u => u.Recipients)
                 .Include(u => u.ParentLetter)
-                .ThenInclude(u => u.Addressee)
-                .ThenInclude(u => u.LetterStates)
+                    .ThenInclude(u => u.Addressee)
+                    .ThenInclude(u => u.LetterStates)
                 .Include(u => u.ChildrenLetters
                     .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId))
                     .ThenInclude(l => l.Addressee)
@@ -268,7 +269,7 @@ namespace Server.Service
             List<LetterDTO> userLetters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
                 .Include(l => l.Addressee)
-                .Include(l => l.LetterStates.Any(r => r.Id == userId))//отправленное мной письмо спамом быть не может
+                .Include(l => l.LetterStates.Where(r => r.Id == userId))//отправленное мной письмо спамом быть не может
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 

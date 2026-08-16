@@ -76,11 +76,7 @@ function homepage() {
                         index === i
                             ? {
                                 ...letter,
-                                letterStates: letter.letterStates.map(state =>
-                                    state.userId === user?.id
-                                        ? { ...state, starred: !state.starred }
-                                        : state
-                                )
+                                letterStates: letter.state
                             }
                             : letter
                     )

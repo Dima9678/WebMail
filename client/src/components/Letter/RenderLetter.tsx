@@ -64,8 +64,9 @@ export default function RenderLetter({
                         </p>
                         <p>Кому:</p>
                         {currentLetter.recipients.map((user: User) => (
-
-                            <p>{user.email}</p>
+                            <div key={user.id}>
+                                <p>{user.email}</p>
+                            </div>
 
                         ))}
                     </div>

@@ -21,7 +21,7 @@
 
 
         public DateTime SendTime { get; set; }
-        public List<LetterStateDTO> LetterStates { get; set; }
+        public LetterStateDTO State { get; set; }
 
         public List<LetterDTO> ChildrenLetters { get; set; } = [];
         public LetterDTO? ParentLetter { get; set; }
