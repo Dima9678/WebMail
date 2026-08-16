@@ -268,7 +268,7 @@ namespace Server.Service
             List<LetterDTO> userLetters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
                 .Include(l => l.Addressee)
-                .Include(l => l.LetterStates)
+                .Include(l => l.LetterStates.Any(r => r.Id == userId))//отправленное мной письмо спамом быть не может
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l)).ToListAsync();
 
@@ -292,7 +292,7 @@ namespace Server.Service
         {
             List<LetterDTO> userLetters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
-                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
+                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true && !s.IsSpam))
                 .Include(l => l.LetterStates)
                 .Include(l => l.Addressee)
                 .OrderByDescending(l => l.SendTime)
@@ -362,6 +362,7 @@ namespace Server.Service
         {
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
+                .Where(l => l.LetterStates.Any(r => r.Id == userId && !r.IsSpam))
                 .CountAsync();
 
             return count;
@@ -370,6 +371,7 @@ namespace Server.Service
         {
             int count = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
+                .Where(l => l.LetterStates.Any(r => r.Id == userId && !r.IsSpam))
                 .CountAsync();
 
             return count;
@@ -378,7 +380,7 @@ namespace Server.Service
         {
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
-                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true))
+                .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true && !s.IsSpam))
                 .CountAsync();
 
             return count;
