@@ -247,7 +247,7 @@ function homepage() {
                             ) : (
 
                                 total === 0 ? (
-                                    <p className="please-sign">Входящих сообщений нет</p>
+                                    <p className="please-sign">Входящих писем нет</p>
                                 ) : (
 
                                     acceptLetters.map((letter, i) => (

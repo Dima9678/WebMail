@@ -43,5 +43,13 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
+
+        public async Task RemoveSpamEmail(Guid userId, string adresseeEmail)
+        {
+            User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
+            user.SpamEmails.Remove(adresseeEmail);
+
+            await _db.SaveChangesAsync();
+        }
     }
 }

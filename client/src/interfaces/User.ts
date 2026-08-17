@@ -17,4 +17,6 @@ export interface User {
     letterStates: LetterState[];
 
     drafts: Draft[];
+
+    spamEmails: string[];
 }

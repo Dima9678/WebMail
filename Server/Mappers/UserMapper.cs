@@ -15,6 +15,7 @@ namespace Server.Mappers
                 Surname = user.Surname,
                 Email = user.Email,
                 Id = user.Id,
+                SpamEmails = user.SpamEmails,
                 SentLetters = LetterMapper.ToDTO(user.SentLetters),
                 AcceptLetters = LetterMapper.ToDTO(user.AcceptLetters),
             };
@@ -30,6 +31,7 @@ namespace Server.Mappers
                 Email = user.Email,
                 Id = user.Id,
                 IsMan = user.IsMan,
+                SpamEmails = user.SpamEmails
             };
             
             return dto;

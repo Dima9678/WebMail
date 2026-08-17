@@ -1026,18 +1026,18 @@
 .add-to-spam-overlay {
     position: fixed;
     display: flex;
-    justify-content: end;
-    align-items: end;
+    justify-content: center;
+    align-items: center;
     inset: 0;
     z-index: 20;
 }
 
 .add-to-spam-form {
-    width: 30%;
-    height: 20%;
-    margin: 50px;
+    width: 40%;
+    height: 25%;
+    margin: 30px;
     border-radius: 15px;
-    border: 4px solid #24367D;
+    border: 3px solid #24367D;
     background-color: white;
     display: flex;
     justify-content: space-around;
@@ -1047,7 +1047,7 @@
 }
 
 .add-to-spam-text {
-    font-size: 30px;
+    font-size: 25px;
     color: #1c1c1c;
     text-align:center;
 }
@@ -1057,7 +1057,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 20px;
+    gap: 40px;
 }
 
 .add-to-spam-button{
@@ -1067,4 +1067,25 @@
     width: 35%;
     height: 40px;
     border-radius: 10px;
+}
+
+.user-in-spam-container{
+    width: 90%;
+    height: 200px;
+    border: 1px solid #2121216B;
+    background-color: #F2F2F288;
+    margin: 30px 80px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: start;
+}
+
+.user-in-spam-container-text{
+    color: #404040;
+}
+
+.user-in-spam-container-button{
+    color: #404040;
 }

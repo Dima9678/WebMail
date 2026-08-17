@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Link, useParams } from "react-router-dom";
 
@@ -12,11 +12,11 @@ import RenderReply from "../../components/Letter/RenderReply";
 import { useLocation } from "react-router-dom";
 
 
-function letter() {
+function Letter() {
     const [user, setUser] = useState<User | null>(null);
 
     const { id } = useParams();
-    const [letter, setLetter] = useState<FullLetter>();
+    const [letter, setLetter] = useState<FullLetter | null>(null);
 
     const [starred, setStarred] = useState(false);
     const [isRead, setIsRead] = useState(false);
@@ -55,9 +55,10 @@ function letter() {
     }, [id]);
 
     useEffect(() => {
-        if (isSpam) {
-            setRenderIsSpamForm(isSpam);
+        if (isSpam === true) {
+            setRenderIsSpamForm(true);
         }
+        
     }, [isSpam])
 
     async function LoadUser() {
@@ -102,7 +103,6 @@ function letter() {
         setIsRead(state.isRead)
         setIsSpam(state.isSpam)
 
-        console.log(from)
         GetTotal(from);
 
     }
@@ -157,6 +157,7 @@ function letter() {
                     throw new Error(await r.text());
                 }
                 setStarred(!starred);
+                setRenderIsSpamForm(true);
             })
             .catch(console.error);
     }
@@ -192,8 +193,26 @@ function letter() {
     function ChangeForwardMode() {
         setForwardMode(!forwardMode);
     }
-    async function AddUserToSpam() {
-        const responce = await fetch(`https://localhost:7094/api/user/${user?.id}/add-spam`, {
+    async function AddUserToSpam(event: React.MouseEvent<HTMLButtonElement>) {
+        const value = event.currentTarget.value;
+        if (value === "add") {
+            const responce = await fetch(`https://localhost:7094/api/user/${user?.id}/add-spam`, {
+                credentials: 'include',
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(letter?.adresseeEmail),
+            });
+
+            if (!responce.ok) {
+                throw new Error(await responce?.text());
+            }
+        }
+        setRenderIsSpamForm(false);
+    }
+    async function RemoveUserFromSpam() {
+        const responce = await fetch(`https://localhost:7094/api/user/${user?.id}/remove-spam`, {
             credentials: 'include',
             method: "POST",
             headers: {
@@ -206,6 +225,7 @@ function letter() {
             throw new Error(await responce?.text());
         }
     }
+
     async function Reply() {
         const replyId = id;
         const response = await fetch(`https://localhost:7094/api/letter/reply/${id}`, {
@@ -260,6 +280,7 @@ function letter() {
     }
 
     const navigate = useNavigate();
+    console.log(user?.spamEmails);
     return (
         <div className="parent-container">
             <div className="main-container">
@@ -304,8 +325,6 @@ function letter() {
                                 ) : (
                                     <button onClick={changeSpamState}><img src="/images/letterPage/unspam.svg" className="one-letter-topbar-button" alt="unread" /></button>
                                 )}
-
-
                                 <button><img src="/images/letterPage/trash.svg" className="one-letter-topbar-button" alt="trash" /></button>
                             </div>
                             <div className="one-letter-pages-navigation-container">
@@ -323,6 +342,7 @@ function letter() {
                                 )}
                             </div>
                         </div>
+
                         {renderIsSpamForm ? (<>
                             {<RenderAddUserToSpam
                                 letter={letter}
@@ -333,6 +353,19 @@ function letter() {
                             <>
                             </>
                         )}
+
+                        {user?.spamEmails.includes(letter?.adresseeEmail) ? (
+                            <div className="user-in-spam-container">
+                                <p className="user-in-spam-container-text">
+                                    Вы пометили отправителя {letter?.adresseeEmail} как спам
+                                    Все письма этого пользователя будут автоматически помечаться как спам
+                                </p>
+                                <button onClick={RemoveUserFromSpam} className="user-in-spam-container-button">Разблокировать</button>
+                            </div>
+                        ) : (
+                            <></>
+                        )}
+
                         {letter ? (
                             <>
                                 {letter?.parentLetter ? (
@@ -396,15 +429,15 @@ type RenderAddUserToSpamProps = {
 function RenderAddUserToSpam({
     letter,
     AddUserToSpam,
-}: RenderAddUserToSpamProps ) {
+}: RenderAddUserToSpamProps) {
     return (
         <>
             <div className="add-to-spam-overlay">
                 <div className="add-to-spam-form">
-                    <div className="add-to-spam-text">Пометить {letter?.adresseeEmail} как спам?</div>
+                    <p className="add-to-spam-text">Вы пометили это письмо как спам. Пометить отправителя {letter?.adresseeEmail} как спам?</p>
                     <div className="add-to-spam-buttons">
-                        <button onClick={AddUserToSpam} className="add-to-spam-button">Да</button>
-                        <button onClick={AddUserToSpam} className="add-to-spam-button">Нет</button>
+                        <button onClick={AddUserToSpam} value="add" className="add-to-spam-button">Да</button>
+                        <button onClick={AddUserToSpam} value="cancel" className="add-to-spam-button">Нет</button>
                     </div>
                 </div>
             </div>
@@ -415,4 +448,4 @@ function RenderAddUserToSpam({
 
 
 
-export default letter;
+export default Letter;

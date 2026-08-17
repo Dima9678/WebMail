@@ -7,8 +7,8 @@ import MyProfilePage from "../pages/Profile/MyProfile";
 
 import HomePage from "../pages/Home/HomePage";
 
-import NewLetter from "../pages/Letters/NewLetter";
-import Letter from "../pages/Letters/Letter";
+import NewLetter from "../pages/Letters/newletter";
+import Letter from "../pages/Letters/letter";
 
 import DraftPage from "../pages/Drafts/Drafts";
 import Draft from "../pages/Drafts/EditDraft";

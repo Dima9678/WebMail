@@ -201,7 +201,7 @@ function Starred() {
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
                             </div>
-                            {user == null ? (
+                            {user == null || messagesTotal === 0 ?(
                                 <div className="pagination"></div>
                             ) : (
                                 <div className="pagination">{startIndex}-{endIndex} из {maxOnPage}</div>
@@ -214,7 +214,7 @@ function Starred() {
                             ) : (
 
                                 messagesTotal === 0 ? (
-                                    <p className="please-sign">Входящих сообщений нет</p>
+                                    <p className="please-sign">Входящих писем нет</p>
                                 ) : (
 
                                     acceptLetters.map((letter, i) => (
