@@ -1,87 +1,150 @@
 ﻿using Domain;
 using Domain.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
+using System.Security.Claims;
 
 namespace Server.Development
 {
     [ApiController]
-    [Route("api/dev/[controller]")]
+    [Route("api/[controller]")]
     public class DevController : ControllerBase
     {
         private DatabaseContext _db { get; set; }
+        private Random _rnd = new Random();
         public DevController(DatabaseContext db)
         {
             _db = db;
         }
 
-        //https://localhost:7094/api/dev/dev/generateletters
-        [HttpGet("generate{count:int}")]
+        //https://localhost:7094/api/dev/generate10
+        [Authorize]
+        [HttpGet("generate/{count:int}")]
         public async Task<IActionResult> AddLetters(int count)
         {
-            Guid adresseeId = Guid.Parse("dedba6a8-2bd7-42c9-b5c8-ee3099c04dca");
-            Guid recipientId = Guid.Parse("cb3f8751-8aea-44d0-a1ff-32dbda067eca");
+            /*
+             * Сгенерировать:
+             * полученные
+             * отправленные
+             * часть из них пометить звездочкой
+             * часть отправить в спам
+             */
 
-            var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
-            var recipient = await _db.Users.SingleOrDefaultAsync(u => u.Id == recipientId);
+            Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
+            User user = await _db.Users.FindAsync(userId);
+            List<User> users = await _db.Users
+                .Where(r => r.Id != userId)
+                .ToListAsync();
 
-            for (int i = 0; i < 45 ; i++)
+            //Генерация полученных писем
+            for (int i = 0; i < count; i++)
             {
                 Letter letter = new Letter()
                 {
-                    AddresseeId = adressee.Id,
-                    Title = $"Письмо {i}",
-                    Text = $"Здравствуйте Дмитрий, это письмо {i}",
-                    SendTime = DateTime.UtcNow,
+                    Recipients = new List<User>()
+                    {
+                        user
+                    },
+                    Addressee = users[_rnd.Next(users.Count)],
+                    SendTime = DateTime.UtcNow
+                        .AddDays(-_rnd.Next(0, 30))
+                        .AddHours(-_rnd.Next(0, 24))
+                        .AddMinutes(-_rnd.Next(0, 60))
+                        .AddSeconds(-_rnd.Next(0, 60)),
+                    Title = "Письмо " + i,
+                    Text = "Здравствуйте, полученное письмо " + i,
+                    LetterStates = new List<LetterState>(),
 
-                    LetterStates = new List<LetterState>()
-                {
-                    new LetterState()
-                    {
-                        IsRead = true,
-                        UserId = adressee.Id,
-                    },
-                    new LetterState()
-                    {
-                        IsRead = false,
-                        UserId = recipient.Id,
-                    },
-                }
+
                 };
+
+                letter.AddresseeId = letter.Addressee.Id;
+
+                //Отправитель 
+                letter.LetterStates.Add(new LetterState()
+                {
+                    IsRead = true,
+                    UserId = letter.Addressee.Id,
+                    IsSpam = false,
+                });
+
+                //Получатель
+                letter.LetterStates.Add(new LetterState()
+                {
+                    IsRead = false,
+                    UserId = letter.Recipients[0].Id,
+                    IsSpam = _rnd.Next(100) >= 80 ? true : false,
+                    Starred = _rnd.Next(100) >= 60 ? true : false,
+                });
+
                 _db.Letters.Add(letter);
-                _db.SaveChanges();
+
+                if (i % 100 == 0)
+                {
+                    Console.WriteLine($"полученные: {i}/{count}");
+                }
+
             }
 
+            //Генерация отправленных
+            for (int i = 0; i < count; i++)
+            {
+                Letter letter = new Letter()
+                {
+                    Recipients = new List<User>()
+                    {
+                        users[_rnd.Next(users.Count)],
+                    },
+                    Addressee = user,
+                    SendTime = DateTime.UtcNow
+                        .AddDays(-_rnd.Next(0, 30))
+                        .AddHours(-_rnd.Next(0, 24))
+                        .AddMinutes(-_rnd.Next(0, 60))
+                        .AddSeconds(-_rnd.Next(0, 60)),
+                    Title = "Письмо " + i,
+                    Text = "Здравствуйте, отправленное письмо " + i,
+                    LetterStates = new List<LetterState>()
+                };
+
+                letter.AddresseeId = letter.Addressee.Id;
+
+                letter.LetterStates.Add(new LetterState()
+                {
+                    IsRead = true,
+                    UserId = letter.Addressee.Id,
+                    IsSpam = false,
+                });
+
+                //Получатель
+                letter.LetterStates.Add(new LetterState()
+                {
+                    IsRead = false,
+                    UserId = letter.Recipients[0].Id,
+                    IsSpam = _rnd.Next(100) >= 80 ? true : false,
+                    Starred = _rnd.Next(100) >= 60 ? true : false,
+                });
+
+                _db.Letters.Add(letter);
+                if (i % 100 == 0)
+                {
+                    Console.WriteLine($"полученные: {i}/{count}");
+                }
+            }
+            await _db.SaveChangesAsync();
             return Ok();
         }
 
         //https://localhost:7094/api/dev/dev/generatedrafts
+        [Authorize]
         [HttpGet("generatedrafts")]
         public async Task<IActionResult> AddDrafts()
         {
-            Guid userId = Guid.Parse("cb3f8751-8aea-44d0-a1ff-32dbda067eca");
 
-            User user = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
-
-            for (int i = 0; i < 45 ; i++)
-            {
-                Draft draft = new Draft()
-                {
-                    Author = user,
-                    AuthorId = userId,
-                    Title = "Здравствуйте Дмитрий, это чернровик " + i,
-                    //RecipientEmail = "egor@mymail.com",
-                    Text = ""
-                };
-                
-                _db.Drafts.Add(draft);
-                _db.SaveChanges();
-            }
 
             return Ok();
         }
     }
 }
 
-    

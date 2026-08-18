@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path="load-test.js" />
     <File Path="маршрутизация.txt" />
     <File Path="старые.txt" />
   </Folder>

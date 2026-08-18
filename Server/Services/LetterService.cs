@@ -246,23 +246,11 @@ namespace Server.Service
                 .Include(l => l.LetterStates)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l))
+                .Skip(startIndex)
+                .Take(endIndex - startIndex)
                 .ToListAsync();
 
-            List<LetterDTO> filtredetters = new List<LetterDTO>();
-
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                if (i < letters.Count)
-                {
-                    filtredetters.Add(letters[i]);
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return filtredetters;
+            return letters;
         }
         public async Task<List<LetterDTO>> GetSentLetters(Guid userId, int startIndex, int endIndex)
         {
@@ -322,8 +310,8 @@ namespace Server.Service
                 .Include(u => u.LetterStates)
                 .SingleOrDefaultAsync(l => l.Id == letterId);
 
-            var state = letterInDb.LetterStates
-        .Single(x => x.UserId == userId);
+            LetterState state = letterInDb.LetterStates
+        .SingleOrDefault(x => x.UserId == userId);
 
             state.Starred = !state.Starred;
 
@@ -332,7 +320,10 @@ namespace Server.Service
         private async Task ChangeIsReaden(Guid userId, Letter letterInDb)
         {
             var state = letterInDb.LetterStates
-        .FirstOrDefault(x => x.UserId == userId);
+       .FirstOrDefault(x => x.UserId == userId);
+
+            if (state == null)
+                return;
 
             state.IsRead = true;
 
@@ -363,7 +354,7 @@ namespace Server.Service
         {
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
-                .Where(l => l.LetterStates.Any(r => r.Id == userId && !r.IsSpam))
+                .Where(l => l.LetterStates.Any(r => r.UserId == userId && !r.IsSpam))
                 .CountAsync();
 
             return count;

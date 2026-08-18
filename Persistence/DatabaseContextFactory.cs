@@ -10,7 +10,7 @@ namespace Persistence
             var options = new DbContextOptionsBuilder<DatabaseContext>();
 
             options.UseNpgsql(
-                "Host=localhost;Username=Mail;Password=11111111;Database=WebMail");
+                "Host=localhost;Username=Mail;Password=11111111;Database=WebMail;Maximum Pool Size=50");
 
             return new DatabaseContext(options.Options);
         }

@@ -23,7 +23,7 @@ namespace Server.Mappers
         }
         public static LetterStateDTO ListToOne(List<LetterState> letterStates)
         {
-            if (letterStates != null && letterStates.Count >= 0)
+            if (letterStates != null && letterStates.Count > 0)
             {
                 LetterStateDTO stateDTO = new()
                 {

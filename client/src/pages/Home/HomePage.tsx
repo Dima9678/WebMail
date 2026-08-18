@@ -64,7 +64,7 @@ function homepage() {
     function changeStarred(i: number) {
         fetch(`https://localhost:7094/api/letter/${acceptLetters[i].id}/toggle-starred`, {
             credentials: "include",
-            method: "PUT"
+            method: "PATCH"
         })
             .then(async r => {
                 if (!r.ok) {
@@ -86,8 +86,7 @@ function homepage() {
     }
 
     function ReadStatusLetter({ letter, i, user }) {
-        const state = letter.letterStates.find(s => s.userId === user.id);
-
+        const state = letter.state;
         return (
             state?.isRead ? (
                 <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-read">

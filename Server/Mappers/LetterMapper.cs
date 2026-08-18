@@ -18,7 +18,7 @@ namespace Server.Mappers
                 State = LetterStateMapper.ListToOne(letterInDb.LetterStates),
                 Title = letterInDb.Title,
                 Text = letterInDb.Text,
-                SendTime = letterInDb.SendTime,
+                SendTime = letterInDb.SendTime
             };
             return letterDTO;
         }
