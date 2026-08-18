@@ -39,9 +39,11 @@ namespace Server.Service
         public async Task AddSpamEmail(Guid userId, string adresseeEmail)
         {
             User user = await _db.Users.FirstOrDefaultAsync(u => u.Id == userId);
-            user.SpamEmails.Add(adresseeEmail);
-
-            await _db.SaveChangesAsync();
+            if (!user.SpamEmails.Contains(adresseeEmail))
+            {
+                user.SpamEmails.Add(adresseeEmail);
+                await _db.SaveChangesAsync();
+            }
         }
 
         public async Task RemoveSpamEmail(Guid userId, string adresseeEmail)

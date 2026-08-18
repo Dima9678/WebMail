@@ -90,7 +90,7 @@ function homepage() {
 
         return (
             state?.isRead ? (
-                <Link to={`/letter/${letter.id}`} state={{ from: "inbox" }} key={i} className="letter-read">
+                <Link to={`/letter/${letter.id}`} state={{ from: "spam" }} key={i} className="letter-read">
                     <StarredStatusLetter
                         state={state}
                         i={i}
