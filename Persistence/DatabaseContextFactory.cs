@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Design;
+using Microsoft.Extensions.Configuration;
 
 namespace Persistence
 {
@@ -7,10 +8,16 @@ namespace Persistence
     {
         public DatabaseContext CreateDbContext(string[] args)
         {
+            var configuration = new ConfigurationBuilder()
+                .SetBasePath(Directory.GetCurrentDirectory())
+                .AddJsonFile("appsettings.json")
+                .Build();
+
+            var connectionString = configuration.GetConnectionString("DefautConnection");
+
             var options = new DbContextOptionsBuilder<DatabaseContext>();
 
-            options.UseNpgsql(
-                "Host=localhost;Username=Mail;Password=11111111;Database=WebMail;Maximum Pool Size=50");
+            options.UseNpgsql(connectionString);
 
             return new DatabaseContext(options.Options);
         }
