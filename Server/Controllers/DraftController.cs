@@ -29,7 +29,7 @@ namespace Server.Controllers
         public async Task<IActionResult> Get(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            var drafts = await _draftService.GetUserDrafts(userId, startIndex, endIndex);
+            var drafts = await _draftService.GetUserDraftsAsync(userId, startIndex, endIndex);
             return Ok(drafts);
         }
 
@@ -53,7 +53,7 @@ namespace Server.Controllers
             }
             else
             {
-                Guid newDraftId = await _draftService.Add(request, adresseeId);
+                Guid newDraftId = await _draftService.AddDraftAsync(request, adresseeId);
                 return Ok(newDraftId.ToString());
             }
         }
@@ -63,7 +63,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int total = await _draftService.GetTotalAcceptCount(userId);
+            int total = await _draftService.GetTotalAcceptCountAsync(userId);
             return Ok(total);
         }
 
@@ -71,7 +71,7 @@ namespace Server.Controllers
         [HttpGet("{draftId:guid}")]
         public async Task<IActionResult> GetById(Guid draftId)
         {
-            DraftDTO draft = await _draftService.GetById(draftId);
+            DraftDTO draft = await _draftService.GetByIdAsync(draftId);
             return Ok(draft);
         }
 
@@ -84,7 +84,7 @@ namespace Server.Controllers
             {
                 return BadRequest(result.ErrorMessage);
             }
-            await _draftService.Save(request, draftId);
+            await _draftService.SaveDraftAsync(request, draftId);
             return Ok();
         }
 
@@ -102,7 +102,7 @@ namespace Server.Controllers
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
-            await _letterService.Create(newLetter, adresseeId, recipients);
+            await _letterService.CreateLetterAsync(newLetter, adresseeId, recipients);
             return Ok();
         }
 
@@ -110,7 +110,7 @@ namespace Server.Controllers
         [HttpDelete("{draftId:guid}")]
         public async Task<IActionResult> DeleteDraft(Guid draftId)
         {
-            await _draftService.Delete(draftId);
+            await _draftService.DeleteDraftAsync(draftId);
             return Ok();
         }
     }

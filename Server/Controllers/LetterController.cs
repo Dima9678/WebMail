@@ -37,7 +37,7 @@ namespace Server.Controllers
                 return BadRequest(result.ErrorMessage);
             }
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.Create(request, adresseeId, recipients);
+            await _letterService.CreateLetterAsync(request, adresseeId, recipients);
             return Ok();
         }
 
@@ -46,7 +46,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetById(Guid letterId, [FromQuery] string from)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            FullLetterDTO fullLetterDto = await _letterService.GetById(letterId, userId, from);
+            FullLetterDTO fullLetterDto = await _letterService.GetByIdAsync(letterId, userId, from);
 
             if (fullLetterDto == null)
             {
@@ -63,7 +63,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetInbox(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetAcceptLetters(userId, startIndex, endIndex);
+            List<LetterDTO> userLetters = await _letterService.GetAcceptLettersAsync(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
 
@@ -72,7 +72,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetInboxCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int total = await _letterService.GetAcceptCount(userId);
+            int total = await _letterService.GetAcceptCountAsync(userId);
             return Ok(total);
         }
 
@@ -81,7 +81,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSent(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetSentLetters(userId, startIndex, endIndex);
+            List<LetterDTO> userLetters = await _letterService.GetSentLettersAsync(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
 
@@ -90,7 +90,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSentCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int total = await _letterService.GetSendCount(userId);
+            int total = await _letterService.GetSendCountAsync(userId);
             return Ok(total);
         }
 
@@ -99,7 +99,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSpam(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetSpamLetters(userId, startIndex, endIndex);
+            List<LetterDTO> userLetters = await _letterService.GetSpamLettersAsync(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
 
@@ -108,7 +108,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSpamCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-           int count = await _letterService.GetSpamCount(userId);
+           int count = await _letterService.GetSpamCountAsync(userId);
            return Ok(count);
         }
 
@@ -117,7 +117,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetStarred(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId, startIndex, endIndex);
+            List<LetterDTO> userLetters = await _letterService.GetStarredLettersAsync(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
 
@@ -126,7 +126,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetStarredCount()
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            int count = await _letterService.GetStarredCount(userId);
+            int count = await _letterService.GetStarredCountAsync(userId);
             return Ok(count);
         }
 
@@ -135,7 +135,7 @@ namespace Server.Controllers
         public async Task<IActionResult> ToggleStarred(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _letterService.ChangeStarred(letterid, userId);
+            await _letterService.ChangeStarredAsync(letterid, userId);
             return Ok();
         }
 
@@ -144,7 +144,7 @@ namespace Server.Controllers
         public async Task<IActionResult> ToggleRead(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _letterService.ChangeIsReaden(letterid, userId);
+            await _letterService.ChangeIsReadenAsync(letterid, userId);
             return Ok();
         }
 
@@ -153,7 +153,7 @@ namespace Server.Controllers
         public async Task<IActionResult> ToggleSpam(Guid letterid)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _letterService.ChangeIsSpam(letterid, userId);
+            await _letterService.ChangeIsSpamAsync(letterid, userId);
             return Ok();
         }
 
@@ -168,7 +168,7 @@ namespace Server.Controllers
             }
 
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            OperationResult forwardResult = await _letterService.Forward(request, userId);
+            OperationResult forwardResult = await _letterService.ForwardAsync(request, userId);
             if (forwardResult.Sucsessed)
             {
                 return Ok();
@@ -190,7 +190,7 @@ namespace Server.Controllers
             }
 
             Guid adresseeId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value);
-            await _letterService.CreateReply(reply, adresseeId, parentLetterId);
+            await _letterService.CreateReplyAsync(reply, adresseeId, parentLetterId);
             return Ok();
         }
     }

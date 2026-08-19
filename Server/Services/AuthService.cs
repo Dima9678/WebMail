@@ -15,7 +15,7 @@ namespace Server.Service
             _db = db;
         }
 
-        public async Task<User> Register(RegisterDTO dto)
+        public async Task<User> RegisterAsync(RegisterDTO dto)
         {
             User user = new User()
             {
@@ -31,7 +31,7 @@ namespace Server.Service
 
             return user;
         }
-        public async Task<User> Login(LoginDTO dto)
+        public async Task<User> LoginAsync(LoginDTO dto)
         {
             User? userInDb = await _db.Users.SingleOrDefaultAsync(u => u.Email == dto.Email);
 

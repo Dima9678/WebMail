@@ -1,11 +1,10 @@
-﻿using Domain.Models;
-using Domain;
+﻿using Domain;
+using Domain.Models;
 using Domain.Models.DTO;
-using Persistence;
-using Microsoft.EntityFrameworkCore;
-using Server.Mappers;
-using Microsoft.AspNetCore.Mvc;
 using Domain.Models.Requests;
+using Microsoft.EntityFrameworkCore;
+using Persistence;
+using Server.Mappers;
 
 namespace Server.Service
 {
@@ -17,7 +16,7 @@ namespace Server.Service
             _db = db;
         }
 
-        public async Task<DraftDTO> GetById(Guid draftId)
+        public async Task<DraftDTO> GetByIdAsync(Guid draftId)
         {
             Draft draft = await _db.Drafts
                 .Include(x => x.Author)
@@ -25,7 +24,7 @@ namespace Server.Service
             DraftDTO draftDTO = DraftMapper.ToDTO(draft);
             return draftDTO;
         }
-        public async Task<List<DraftDTO>> GetUserDrafts(Guid UserId, int startIndex, int endIndex)
+        public async Task<List<DraftDTO>> GetUserDraftsAsync(Guid UserId, int startIndex, int endIndex)
         {
             List<DraftDTO> draftsList = await _db.Drafts
                 .Where(l => l.AuthorId == UserId)
@@ -49,7 +48,7 @@ namespace Server.Service
 
             return drafts;
         }
-        public async Task<int> GetTotalAcceptCount(Guid userId)
+        public async Task<int> GetTotalAcceptCountAsync(Guid userId)
         {
             int count = await _db.Drafts
                 .Where(l => l.AuthorId == userId)
@@ -58,7 +57,7 @@ namespace Server.Service
             return count;
         }
 
-        public async Task<Guid> Add(NewDraftDTO request, Guid authorId)
+        public async Task<Guid> AddDraftAsync(NewDraftDTO request, Guid authorId)
         {
             User? user = await _db.Users.SingleOrDefaultAsync(x => x.Id == authorId);
             
@@ -78,12 +77,12 @@ namespace Server.Service
 
             return draft.Id;
         }
-        public async Task Delete(Guid draftId)
+        public async Task DeleteDraftAsync(Guid draftId)
         {
             _db.Drafts.Remove(new Draft {Id = draftId});
             await _db.SaveChangesAsync();
         }
-        public async Task Save(NewDraftDTO request, Guid draftId)
+        public async Task SaveDraftAsync(NewDraftDTO request, Guid draftId)
         {
             Draft? draftInDb = await _db.Drafts.SingleOrDefaultAsync(x => x.Id == draftId);
 

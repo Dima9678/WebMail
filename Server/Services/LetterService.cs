@@ -15,7 +15,7 @@ namespace Server.Service
         {
             _db = db;
         }
-        public async Task Create(NewLetterDTO request, Guid adresseeId, string[] recipients)
+        public async Task CreateLetterAsync(NewLetterDTO request, Guid adresseeId, string[] recipients)
         {
             User[] recipientsList = new User[recipients.Length];
             for (int i = 0; i < recipients.Length; i++)
@@ -69,7 +69,7 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-        public async Task CreateReply(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
+        public async Task CreateReplyAsync(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
         {
             var parentLetter = await _db.Letters.SingleOrDefaultAsync(u => u.Id == parentLetterId);
             var adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == adresseeId);
@@ -103,7 +103,7 @@ namespace Server.Service
             _db.Letters.Add(letter);
             _db.SaveChanges();
         }
-        public async Task<OperationResult> Forward(ForwardRequest request, Guid userId)
+        public async Task<OperationResult> ForwardAsync(ForwardRequest request, Guid userId)
         {
             //Это юзер, который пересылает сообщение
             User? adressee = await _db.Users.SingleOrDefaultAsync(u => u.Id == userId);
@@ -190,7 +190,7 @@ namespace Server.Service
             };
         }
 
-        public async Task<FullLetterDTO> GetById(Guid letterId, Guid userId, string from)
+        public async Task<FullLetterDTO> GetByIdAsync(Guid letterId, Guid userId, string from)
         {
             Letter? letterInDb = await _db.Letters
                 .Where(u => u.Id == letterId)
@@ -218,26 +218,26 @@ namespace Server.Service
                     .LoadAsync();
             }
 
-            await ChangeIsReaden(userId, letterInDb);
+            await ChangeIsReadenAsync(userId, letterInDb);
 
             FullLetterDTO fullLetterDTO = LetterMapper.ToFullDto(letterInDb);
 
             if (from == "starred")
             {
-                fullLetterDTO = await AppendStarredNavigationInfo(fullLetterDTO, userId);
+                fullLetterDTO = await AppendStarredNavigationInfoAsync(fullLetterDTO, userId);
             }
             else if (from == "sent")
             {
-                fullLetterDTO = await AppendSentNavigationInfo(fullLetterDTO, userId);
+                fullLetterDTO = await AppendSentNavigationInfoAsync(fullLetterDTO, userId);
             }
             else
             {
-                fullLetterDTO = await AppendAcceptNavigationInfo(fullLetterDTO, userId);
+                fullLetterDTO = await AppendAcceptNavigationInfoAsync(fullLetterDTO, userId);
             }
             return fullLetterDTO;
         }
 
-        public async Task<List<LetterDTO>> GetAcceptLetters(Guid userId, int startIndex, int endIndex)
+        public async Task<List<LetterDTO>> GetAcceptLettersAsync(Guid userId, int startIndex, int endIndex)
         {
             List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
@@ -252,7 +252,7 @@ namespace Server.Service
 
             return letters;
         }
-        public async Task<List<LetterDTO>> GetSentLetters(Guid userId, int startIndex, int endIndex)
+        public async Task<List<LetterDTO>> GetSentLettersAsync(Guid userId, int startIndex, int endIndex)
         {
             List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
@@ -266,7 +266,7 @@ namespace Server.Service
 
             return letters;
         }
-        public async Task<List<LetterDTO>> GetStarredLetters(Guid userId, int startIndex, int endIndex)
+        public async Task<List<LetterDTO>> GetStarredLettersAsync(Guid userId, int startIndex, int endIndex)
         {
             List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
@@ -281,7 +281,7 @@ namespace Server.Service
 
             return letters;
         }
-        public async Task<List<LetterDTO>> GetSpamLetters(Guid userId, int startIndex, int endIndex)
+        public async Task<List<LetterDTO>> GetSpamLettersAsync(Guid userId, int startIndex, int endIndex)
         {
             List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
@@ -297,7 +297,7 @@ namespace Server.Service
             return letters;
         }
 
-        public async Task ChangeStarred(Guid letterId, Guid userId)
+        public async Task ChangeStarredAsync(Guid letterId, Guid userId)
         {
             Letter? letterInDb = await _db.Letters
                 .Include(u => u.LetterStates)
@@ -310,7 +310,7 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
-        private async Task ChangeIsReaden(Guid userId, Letter letterInDb)
+        private async Task ChangeIsReadenAsync(Guid userId, Letter letterInDb)
         {
             var state = letterInDb.LetterStates
        .FirstOrDefault(x => x.UserId == userId);
@@ -322,7 +322,7 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
-        public async Task ChangeIsReaden(Guid letterId, Guid userId)
+        public async Task ChangeIsReadenAsync(Guid letterId, Guid userId)
         {
             LetterState? state = _db.LetterStates
                 .Where(x => x.LetterId == letterId)
@@ -332,7 +332,7 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
-        public async Task ChangeIsSpam(Guid letterId, Guid userId)
+        public async Task ChangeIsSpamAsync(Guid letterId, Guid userId)
         {
             LetterState? state = _db.LetterStates
                 .Where(x => x.LetterId == letterId)
@@ -343,7 +343,7 @@ namespace Server.Service
             await _db.SaveChangesAsync();
         }
 
-        public async Task<int> GetAcceptCount(Guid userId)
+        public async Task<int> GetAcceptCountAsync(Guid userId)
         {
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
@@ -352,7 +352,7 @@ namespace Server.Service
 
             return count;
         }
-        public async Task<int> GetSendCount(Guid userId)
+        public async Task<int> GetSendCountAsync(Guid userId)
         {
             int count = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
@@ -361,7 +361,7 @@ namespace Server.Service
 
             return count;
         }
-        public async Task<int> GetStarredCount(Guid userId)
+        public async Task<int> GetStarredCountAsync(Guid userId)
         {
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
@@ -370,7 +370,7 @@ namespace Server.Service
 
             return count;
         }
-        public async Task<int> GetSpamCount(Guid userId)
+        public async Task<int> GetSpamCountAsync(Guid userId)
         {
             int count = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
@@ -380,7 +380,7 @@ namespace Server.Service
             return count;
         }
 
-        public async Task<FullLetterDTO> AppendAcceptNavigationInfo(FullLetterDTO fullLetter, Guid userId)
+        public async Task<FullLetterDTO> AppendAcceptNavigationInfoAsync(FullLetterDTO fullLetter, Guid userId)
         {
             var letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
@@ -400,7 +400,7 @@ namespace Server.Service
 
             return fullLetter;
         }
-        public async Task<FullLetterDTO> AppendSentNavigationInfo(FullLetterDTO fullLetter, Guid userId)
+        public async Task<FullLetterDTO> AppendSentNavigationInfoAsync(FullLetterDTO fullLetter, Guid userId)
         {
             var letters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
@@ -420,7 +420,7 @@ namespace Server.Service
 
             return fullLetter;
         }
-        public async Task<FullLetterDTO> AppendStarredNavigationInfo(FullLetterDTO fullLetter, Guid userId)
+        public async Task<FullLetterDTO> AppendStarredNavigationInfoAsync(FullLetterDTO fullLetter, Guid userId)
         {
             var letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)

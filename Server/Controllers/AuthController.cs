@@ -38,7 +38,7 @@ namespace Server.Controllers
                 return BadRequest(result.ErrorMessage);
             }
 
-            User user = await _authService.Register(request);
+            User user = await _authService.RegisterAsync(request);
 
             ClaimsPrincipal principal = _claimFactory.CreateClaims(user);
             await HttpContext.SignInAsync
@@ -61,7 +61,7 @@ namespace Server.Controllers
                 return BadRequest(result.ErrorMessage);
             }
 
-            User user = await _authService.Login(request);
+            User user = await _authService.LoginAsync(request);
             OperationResult userExistResult = new OperationResult();
 
             if (user == null)
