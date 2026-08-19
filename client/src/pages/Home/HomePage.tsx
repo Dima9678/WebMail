@@ -56,7 +56,9 @@ function homepage() {
             throw new Error(await response.text());
 
         const data = await response.json();
-
+        if (startIndex === 0) {
+            setlettersPage(0);
+        }
         setAcceptLetters(data);
         TotalLettersGet();
     }
@@ -76,7 +78,10 @@ function homepage() {
                         index === i
                             ? {
                                 ...letter,
-                                letterStates: letter.state
+                                state: {
+                                    ...letter.state,
+                                    starred: !letter.state.starred
+                                }
                             }
                             : letter
                     )

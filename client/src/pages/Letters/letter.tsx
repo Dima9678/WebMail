@@ -54,13 +54,6 @@ function Letter() {
         loadData();
     }, [id]);
 
-    useEffect(() => {
-        if (isSpam === true) {
-            setRenderIsSpamForm(true);
-        }
-        
-    }, [isSpam])
-
     async function LoadUser() {
         const userResponse = await fetch("https://localhost:7094/api/User", {
             credentials: "include"
@@ -183,6 +176,9 @@ function Letter() {
                 if (!r.ok) {
                     throw new Error(await r.text());
                 }
+                if (isSpam === false) {
+                    setRenderIsSpamForm(true)
+                }
                 setIsSpam(!isSpam);
             })
             .catch(console.error);
@@ -280,7 +276,6 @@ function Letter() {
     }
 
     const navigate = useNavigate();
-    console.log(user?.spamEmails);
     return (
         <div className="parent-container">
             <div className="main-container">

@@ -243,7 +243,7 @@ namespace Server.Service
                 .Where(l => l.Recipients.Any(r => r.Id == userId))
                 .Where(l => l.LetterStates.Any(r => r.UserId == userId && !r.IsSpam))
                 .Include(l => l.Addressee)
-                .Include(l => l.LetterStates)
+                .Include(l => l.LetterStates.Where(r => r.UserId == userId && !r.IsSpam))
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l))
                 .Skip(startIndex)
@@ -254,54 +254,47 @@ namespace Server.Service
         }
         public async Task<List<LetterDTO>> GetSentLetters(Guid userId, int startIndex, int endIndex)
         {
-            List<LetterDTO> userLetters = await _db.Letters
+            List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.AddresseeId == userId)
                 .Include(l => l.Addressee)
                 .Include(l => l.LetterStates.Where(r => r.Id == userId))//отправленное мной письмо спамом быть не может
                 .OrderByDescending(l => l.SendTime)
-                .Select(l => LetterMapper.ToDto(l)).ToListAsync();
+                .Select(l => LetterMapper.ToDto(l))
+                .Skip(startIndex)
+                .Take(endIndex - startIndex)
+                .ToListAsync();
 
-            List<LetterDTO> filtredetters = new List<LetterDTO>();
-
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                if (i < userLetters.Count)
-                {
-                    filtredetters.Add(userLetters[i]);
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return filtredetters;
+            return letters;
         }
-        public async Task<List<LetterDTO>> GetStarredLetters(Guid userId)
+        public async Task<List<LetterDTO>> GetStarredLetters(Guid userId, int startIndex, int endIndex)
         {
-            List<LetterDTO> userLetters = await _db.Letters
+            List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.Starred == true && !s.IsSpam))
-                .Include(l => l.LetterStates)
+                .Include(l => l.LetterStates.Where(r => r.UserId == userId))
                 .Include(l => l.Addressee)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l))
+                .Skip(startIndex)
+                .Take(endIndex - startIndex)
                 .ToListAsync();
 
-            return userLetters;
+            return letters;
         }
-        public async Task<List<LetterDTO>> GetSpamLetters(Guid userId)
+        public async Task<List<LetterDTO>> GetSpamLetters(Guid userId, int startIndex, int endIndex)
         {
-            List<LetterDTO> userLetters = await _db.Letters
+            List<LetterDTO> letters = await _db.Letters
                 .Where(l => l.Recipients.Any(r => r.Id == userId) || l.AddresseeId == userId)
                 .Where(l => l.LetterStates.Any(s => s.UserId == userId && s.IsSpam == true))
                 .Include(l => l.LetterStates)
                 .Include(l => l.Addressee)
                 .OrderByDescending(l => l.SendTime)
                 .Select(l => LetterMapper.ToDto(l))
+                .Skip(startIndex)
+                .Take(endIndex - startIndex)
                 .ToListAsync();
 
-            return userLetters;
+            return letters;
         }
 
         public async Task ChangeStarred(Guid letterId, Guid userId)

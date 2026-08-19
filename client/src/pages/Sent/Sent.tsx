@@ -248,7 +248,7 @@ function Sent() {
                             ) : (
 
                                 total === 0 ? (
-                                    <p className="please-sign">Входящих писем нет</p>
+                                    <p className="please-sign">Отправленных писем нет</p>
                                 ) : (
 
                                     sentLetters.map((letter, i) => (

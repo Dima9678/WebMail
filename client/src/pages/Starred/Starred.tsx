@@ -5,15 +5,15 @@ import type { Letter } from "../../interfaces/Letter";
 import type { User } from "../../interfaces/User";
 
 function Starred() {
-    const [maxOnPage, setMaxOnPage] = useState(20);
-    const [LettersPage,] = useState(1);
+    const [maxOnPage, setMaxOnPage] = useState(40);
+    const [lettersPage, setLettersPage] = useState(1);
     const [acceptLetters, setAcceptLetters] = useState<Letter[]>([]);
 
     const [user, setUser] = useState<User | null>(null);
 
-    const [startIndex, setStartIndex] = useState(maxOnPage * LettersPage - maxOnPage + 1);
-    const [endIndex, setEndIndex] = useState(maxOnPage * LettersPage);
-    const [messagesTotal, setMessagesTotal] = useState(0);
+    const [minLettersPage] = useState(0);
+
+    const [total, setTotal] = useState(0);
 
     useEffect(() => {
         fetch("https://localhost:7094/api/User", {
@@ -35,21 +35,16 @@ function Starred() {
                 }
             })
             .catch(console.error);
-
-        if (user != null) {
-
-            refreshLetters();
-        }
     }, []);
 
     useEffect(() => {
         if (user) {
-            refreshLetters();
+            refreshLetters(0, maxOnPage - 1);
         }
     }, [user]);
 
-    async function refreshLetters() {
-        const response = await fetch('https://localhost:7094/api/letter/starred',
+    async function refreshLetters(startIndex: number, endIndex: number) {
+        const response = await fetch(`https://localhost:7094/api/letter/starred/${startIndex}/${endIndex}`,
             {
                 credentials: "include",
             });
@@ -60,16 +55,11 @@ function Starred() {
         const data = await response.json();
 
         setAcceptLetters(data);
-
-        if (data.length < maxOnPage) {
-            setEndIndex(data.length);
-            setMaxOnPage(data.length);
-            setMessagesTotal(data.length)
-
-            if (data.length === 0) {
-                setStartIndex(0);
-            }
+        if (startIndex === 0) {
+            setLettersPage(0);
         }
+        setAcceptLetters(data);
+        TotalLettersGet();
     }
 
     function changeStarred(i: number) {
@@ -87,11 +77,7 @@ function Starred() {
                         index === i
                             ? {
                                 ...letter,
-                                letterStates: letter.letterStates.map(state =>
-                                    state.userId === user?.id
-                                        ? { ...state, starred: !state.starred }
-                                        : state
-                                )
+                                letterStates: letter.state
                             }
                             : letter
                     )
@@ -101,8 +87,8 @@ function Starred() {
     }
 
     function ReadStatusLetter({ letter, i, user }) {
-        const state = letter.letterStates.find(s => s.userId === user.id);
-
+        const state = letter.state;
+        console.log(state)
         return (
             state?.isRead ? (
                 <Link to={`/letter/${letter.id}`} state={{ from: "starred" }} key={i} className="letter-read">
@@ -140,6 +126,20 @@ function Starred() {
         );
     }
 
+    async function TotalLettersGet() {
+        const response = await fetch(`https://localhost:7094/api/letter/starred/count`, {
+            credentials: "include",
+            method: "GET"
+        })
+
+        if (!response.ok)
+            throw new Error(await response.text());
+
+        const data = await response.json();
+        setTotal(data);
+    }
+
+
     function StarredStatusLetter({ state, i, changeStarred }) {
         return (
             <>
@@ -162,6 +162,26 @@ function Starred() {
             </>
         );
     }
+
+    const ClickHandler = (event: React.MouseEvent<HTMLButtonElement>) => {
+        const value = event.currentTarget.value;
+
+        const newPage = value === "prev"
+            ? lettersPage - 1
+            : lettersPage + 1;
+
+        const newStart = newPage * maxOnPage;
+        const newEnd = Math.min(newStart + maxOnPage - 1, total - 1);
+
+        setLettersPage(newPage);
+
+        refreshLetters(newStart, newEnd);
+    };
+
+    const maxLettersPage = Math.ceil(total / maxOnPage);
+    var startIndex = lettersPage * maxOnPage;
+
+    const endIndex = Math.min(startIndex + maxOnPage - 1, total - 1);
 
     return (
         <div className="parent-container">
@@ -201,10 +221,25 @@ function Starred() {
                                 <img src="/images/loop.svg"></img>
                                 <input className="search-input" placeholder="Поиск по почте"></input>
                             </div>
-                            {user == null || messagesTotal === 0 ?(
+                            {user == null || total === 0 ?(
                                 <div className="pagination"></div>
                             ) : (
-                                <div className="pagination">{startIndex}-{endIndex} из {maxOnPage}</div>
+                                    <div className="pagination">
+                                        {lettersPage > minLettersPage ? (
+                                            <button value="prev" onClick={ClickHandler} className="pagination-button">назад</button>
+                                        ) : (
+                                            <></>
+                                        )}
+                                        <p>
+                                            {startIndex + 1}-{endIndex + 1} из {total}
+                                        </p>
+                                        {lettersPage < maxLettersPage - 1 ? (
+                                            <button value="next" onClick={ClickHandler} className="pagination-button">вперед</button>
+                                        ) : (
+                                            <></>
+                                        )}
+
+                                    </div>
                             )}
                         </div>
 
@@ -213,7 +248,7 @@ function Starred() {
                                 <p className="please-sign">Войдите в свой аккаунт или зарегиструйтесь</p>
                             ) : (
 
-                                messagesTotal === 0 ? (
+                                total === 0 ? (
                                     <p className="please-sign">Входящих писем нет</p>
                                 ) : (
 

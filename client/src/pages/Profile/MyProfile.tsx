@@ -109,7 +109,7 @@ function RenderModalForm({ user, setIsOpen }: RenderModalFormProps) {
                         <p className="myprofile-modal-form-heading">Изменение данных</p>
                         <input className="myprofile-modal-form-imput" value={name} onChange={(e) => setName(e.target.value)} placeholder="Имя"></input>
                         <input className="myprofile-modal-form-imput" value={surname} onChange={(e) => setSurname(e.target.value)} placeholder="Фамилия"></input>
-                        <input checked={isMan} type="checkbox" onChange={(e) => setIsMan(e.target.checked)}></input> <label>Мужик?</label>
+                        <input checked={isMan} type="checkbox" onChange={(e) => setIsMan(e.target.checked)}></input> <label>Галочка, если пол мужской</label>
                         <input className="myprofile-modal-form-imput" value={email} onChange={(e) => setEmail(e.target.value)} placeholder="Почта"></input>
                     </div>
                     {sucsessed ? (

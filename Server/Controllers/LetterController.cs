@@ -99,7 +99,7 @@ namespace Server.Controllers
         public async Task<IActionResult> GetSpam(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetSpamLetters(userId);
+            List<LetterDTO> userLetters = await _letterService.GetSpamLetters(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
 
@@ -113,11 +113,11 @@ namespace Server.Controllers
         }
 
         [Authorize]
-        [HttpGet("starred")]
-        public async Task<IActionResult> GetStarred()
+        [HttpGet("starred/{startIndex:int}/{endIndex:int}")]
+        public async Task<IActionResult> GetStarred(int startIndex, int endIndex)
         {
             Guid userId = Guid.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier));
-            List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId);
+            List<LetterDTO> userLetters = await _letterService.GetStarredLetters(userId, startIndex, endIndex);
             return Ok(userLetters);
         }
 
