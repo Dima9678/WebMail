@@ -27,7 +27,7 @@ namespace Server.Service
             };
 
             _db.Users.Add(user);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return user;
         }

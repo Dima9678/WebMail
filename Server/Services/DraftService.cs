@@ -73,7 +73,7 @@ namespace Server.Service
             };
 
             _db.Drafts.Add(draft);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return draft.Id;
         }

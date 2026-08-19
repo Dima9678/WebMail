@@ -67,7 +67,7 @@ namespace Server.Service
 
             };
             _db.Letters.Add(letter);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
         public async Task CreateReplyAsync(ReplyDTO replyText, Guid adresseeId, Guid parentLetterId)
         {
@@ -101,7 +101,7 @@ namespace Server.Service
             parentLetter.AddChild(letter);
 
             _db.Letters.Add(letter);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
         }
         public async Task<OperationResult> ForwardAsync(ForwardRequest request, Guid userId)
         {
@@ -181,7 +181,7 @@ namespace Server.Service
             };
 
             _db.Letters.Add(forwardLetter);
-            _db.SaveChanges();
+            await _db.SaveChangesAsync();
 
             return new OperationResult()
             {
