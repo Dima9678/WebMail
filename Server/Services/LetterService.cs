@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Intefraces;
 using Domain.Models;
 using Domain.Models.DTO;
 using Domain.Models.Requests;
@@ -8,7 +9,7 @@ using Server.Mappers;
 
 namespace Server.Service
 {
-    public class LetterService
+    public class LetterService : ILetterService
     {
         private readonly DatabaseContext _db;
         public LetterService(DatabaseContext db)
@@ -310,7 +311,7 @@ namespace Server.Service
 
             await _db.SaveChangesAsync();
         }
-        private async Task ChangeIsReadenAsync(Guid userId, Letter letterInDb)
+        public async Task ChangeIsReadenAsync(Guid userId, Letter letterInDb)
         {
             var state = letterInDb.LetterStates
        .FirstOrDefault(x => x.UserId == userId);

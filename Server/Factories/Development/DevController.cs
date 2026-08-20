@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore;
 using Persistence;
 using System.Security.Claims;
 
-namespace Server.Development
+namespace Server.Factories.Development
 {
     [ApiController]
     [Route("api/[controller]")]

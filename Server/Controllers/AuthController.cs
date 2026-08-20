@@ -1,14 +1,13 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using Domain;
+using Domain.Intefraces;
+using Domain.Models;
+using Domain.Models.Requests;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
-using Persistence;
 using Server.Factories;
 using Server.Normaizators;
-using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
-using Domain;
-using Domain.Models.Requests;
-using Domain.Models;
 
 namespace Server.Controllers
 {
@@ -17,9 +16,9 @@ namespace Server.Controllers
     public class AuthController : ControllerBase
     {
         private readonly ValidationCheck _val;
-        private readonly AuthService _authService;
+        private readonly IAuthService _authService;
         private readonly ClaimFactory _claimFactory;
-        public AuthController(AuthService service, ValidationCheck vaidation, ClaimFactory claimFactory)
+        public AuthController(IAuthService service, ValidationCheck vaidation, ClaimFactory claimFactory)
         {
             _authService = service;
             _val = vaidation;

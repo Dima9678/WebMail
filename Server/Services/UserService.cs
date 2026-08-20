@@ -1,12 +1,13 @@
 ﻿using Domain;
 using Domain.Models;
+using Domain.Intefraces;
 using Microsoft.EntityFrameworkCore;
 using Persistence;
 using Server.Mappers;
 
 namespace Server.Service
 {
-    public class UserService
+    public class UserService : IUserService
     {
         private DatabaseContext _db { get; set; }
         public UserService(DatabaseContext db)

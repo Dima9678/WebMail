@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Intefraces;
 using Domain.Models;
 using Domain.Models.DTO;
 using Domain.Models.Requests;
@@ -8,7 +9,7 @@ using Server.Mappers;
 
 namespace Server.Service
 {
-    public class DraftService
+    public class DraftService : IDraftService
     {
         private readonly DatabaseContext _db;
         public DraftService(DatabaseContext db)

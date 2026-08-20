@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Intefraces;
 using Domain.Models.Requests;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -6,7 +7,7 @@ using Persistence;
 
 namespace Server.Service
 {
-    public class AuthService
+    public class AuthService : IAuthService
     {
         private DatabaseContext _db { get; set; }
         private PasswordHasher<User> _hasher = new();
