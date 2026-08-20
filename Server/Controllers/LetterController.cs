@@ -1,10 +1,10 @@
-﻿using Domain.Models;
+﻿using Domain.Intefraces;
+using Domain.Models;
 using Domain.Models.DTO;
 using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Normaizators;
-using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
 
@@ -16,9 +16,9 @@ namespace Server.Controllers
     {
         private readonly ValidationCheck _validation;
 
-        private LetterService _letterService;
+        private ILetterService _letterService;
 
-        public LetterController(LetterService letterService, ValidationCheck validation)
+        public LetterController(ILetterService letterService, ValidationCheck validation)
         {
             _letterService = letterService;
             _validation = validation;

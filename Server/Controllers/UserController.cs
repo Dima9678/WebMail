@@ -1,11 +1,9 @@
 ﻿using Domain;
-using Domain.Models.Requests;
+using Domain.Intefraces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.AspNetCore.Mvc;
 using Server.Service;
 using System.Security.Claims;
-using System.Xml.Linq;
 
 namespace Server.Controllers
 {
@@ -14,9 +12,9 @@ namespace Server.Controllers
     [Route("api/[controller]")]
     public class UserController : ControllerBase
     {
-        private UserService _userService;
+        private readonly IUserService _userService;
 
-        public UserController(UserService userService)
+        public UserController(IUserService userService)
         {
             _userService = userService;
         }

@@ -1,3 +1,4 @@
+using Domain.Intefraces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,10 +26,10 @@ namespace Server
             builder.Services.AddScoped<ValidationCheck>();
             builder.Services.AddScoped<ClaimFactory>();
 
-            builder.Services.AddScoped<LetterService>();
-            builder.Services.AddScoped<AuthService>();
-            builder.Services.AddScoped<UserService>();
-            builder.Services.AddScoped<DraftService>();
+            builder.Services.AddScoped<ILetterService, LetterService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IDraftService, DraftService>();
 
             builder.Services
             .AddAuthentication("Cookies")

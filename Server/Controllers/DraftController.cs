@@ -1,10 +1,10 @@
-﻿using Domain.Models;
+﻿using Domain.Intefraces;
+using Domain.Models;
 using Domain.Models.DTO;
 using Domain.Models.Requests;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Mappers;
-using Server.Service;
 using Server.Validators;
 using System.Security.Claims;
 
@@ -15,9 +15,9 @@ namespace Server.Controllers
     public class DraftController : ControllerBase
     {
         private readonly ValidationCheck _validation;
-        private DraftService _draftService;
-        private LetterService _letterService;
-        public DraftController(DraftService draftService, ValidationCheck validation, LetterService letterService)
+        private IDraftService _draftService;
+        private ILetterService _letterService;
+        public DraftController(IDraftService draftService, ValidationCheck validation, ILetterService letterService)
         {
             _letterService = letterService;
             _draftService = draftService;
